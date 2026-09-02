@@ -26,7 +26,7 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
           'relative flex h-full items-center gap-3 p-4 sm:gap-4'
         )}
       >
-        <SidebarTrigger variant='outline' className='max-lg:scale-125' />
+        <SidebarTrigger variant='outline' className='size-11 lg:size-7' />
         <Separator orientation='vertical' className='h-6' />
         {children}
       </div>

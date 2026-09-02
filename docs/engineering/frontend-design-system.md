@@ -324,7 +324,8 @@ desktop sidebar와 mobile sheet 상태가 서로 달라지므로 같은 회귀 �
 - 모든 form control은 보이는 label 또는 명시적인 accessible name을 가진다.
 - error는 `aria-invalid`와 `aria-describedby`로 입력에 연결한다.
 - dialog는 title·description을 제공하고 Escape와 focus return을 유지한다.
-- 1024px 미만 overlay sidebar도 Enter로 열고 Escape로 닫은 뒤 직전 trigger로 focus를 돌려준다.
+- 1024px 미만 overlay sidebar는 trigger와 menu 행에 44px 실제 영역을 확보하고,
+  Enter로 열고 Escape로 닫은 뒤 직전 trigger로 focus를 돌려준다.
 - loading button은 disabled 상태와 `처리 중` accessible name을 제공한다.
 - `Button asChild`는 link를 감싸는 새 요소를 만들지 않고 단일 link에 style과 상태를
   위임한다.
@@ -366,6 +367,19 @@ corepack pnpm build
 - Web·API 전체 기존 test
 
 브라우저 근거는 `/dev/ui-kit`과 대표 product route를 1440·1280·1024px로 확인하고 keyboard-only walkthrough를 남긴다. `/dev/ui-kit`은 development에서만 접근 가능하며 production route에서는 not-found다.
+
+### 8.1 2026-09-02 반응형 재검증 이력
+
+| 검증 | 관찰 | 결정과 근거 |
+|---|---|---|
+| `/dashboard` 1440·1280·1024·900px, light·dark | 전체 폭 가로 overflow와 계산 text 대비 실패 없음 | 기존 surface·token·breakpoint 유지 |
+| `/dev/ui-kit` 업무 표 1024·900px, light·dark | 1024px에서 `653/653px`, 900px에서 `793/793px`로 scroll width와 client width가 같음 | 현재 열 구성은 내부 가로 scroll 없이 유지 |
+| 900px overlay sidebar | 이식 직후 trigger `35px`, menu 행 `32px`로 44px 계약 미달 | mobile trigger와 menu 행만 `44px`로 확대하고 desktop의 `28px` trigger·`32px` 행 밀도는 유지 |
+| keyboard walkthrough | Enter open, dialog 내부 focus, Escape close와 trigger focus return, desktop Ctrl+B state 전환 통과 | 기존 Radix Sheet와 keyboard state 소유권 유지 |
+
+모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
+Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
+가능성만 줄인다.
 
 ## 9. 금지 규칙
 
