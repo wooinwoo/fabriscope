@@ -162,10 +162,40 @@ export class ProcessCommandsService {
         orderBy: { sequence: "asc" },
       });
       const next = following[0];
-      if (next !== undefined && next.blockedReasonCodes.length === 0) {
+
+      const gatingInspections = await transaction.inspection.findMany({
+        where: {
+          workOrderId: step.workOrderId,
+          gate: "ROUTE_ADVANCE",
+          processStepName: step.processStepName,
+          executionStatus: { not: "CANCELLED" },
+        },
+      });
+      const reasonCodes: string[] = [];
+      for (const inspection of gatingInspections) {
+        if (inspection.executionStatus !== "COMPLETED") {
+          reasonCodes.push("INSPECTION_PENDING");
+          break;
+        }
+        if (inspection.verdict === "FAIL") {
+          reasonCodes.push("INSPECTION_FAILED");
+          break;
+        }
+        if (inspection.verdict === "HOLD") {
+          reasonCodes.push("INSPECTION_HELD");
+          break;
+        }
+      }
+
+      if (next !== undefined && reasonCodes.length === 0) {
         await transaction.processStepExecution.update({
           where: { id: next.id },
           data: { readiness: "READY" },
+        });
+      } else if (next !== undefined && reasonCodes.length > 0) {
+        await transaction.processStepExecution.update({
+          where: { id: next.id },
+          data: { readiness: "BLOCKED", blockedReasonCodes: reasonCodes },
         });
       }
 
