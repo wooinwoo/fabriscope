@@ -27,10 +27,7 @@ function WorkOrdersRoute() {
       onSearchChange={(next) => {
         void navigate({
           to: "/work-orders",
-          search: (prev: Record<string, unknown>) => ({
-            ...prev,
-            ...next,
-          }),
+          search: next,
           replace: true,
         });
       }}
