@@ -10,6 +10,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit --pretty false",
     "test": "vitest run",
     "db:check": "tsx scripts/check-database.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:verify-auth": "tsx scripts/check-auth-seed.ts",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate"
   },

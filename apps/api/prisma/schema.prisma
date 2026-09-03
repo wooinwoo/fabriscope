@@ -6,3 +6,57 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum RoleCode {
+  PRODUCTION_PLANNER
+  MATERIAL_MANAGER
+  SHOP_FLOOR_OPERATOR
+  QUALITY_ENGINEER
+  SYSTEM_ADMIN
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique @db.VarChar(254)
+  displayName  String     @db.VarChar(100)
+  passwordHash String     @db.VarChar(255)
+  isActive     Boolean    @default(true)
+  isDemo       Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  roles        UserRole[]
+
+  @@index([isDemo, isActive])
+}
+
+model Role {
+  code  RoleCode   @id
+  label String     @db.VarChar(50)
+  users UserRole[]
+}
+
+model UserRole {
+  userId   String
+  roleCode RoleCode
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     Role      @relation(fields: [roleCode], references: [code], onDelete: Restrict)
+  sessions Session[]
+
+  @@id([userId, roleCode])
+  @@index([roleCode])
+}
+
+model Session {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique @db.Char(64)
+  csrfToken  String    @db.VarChar(64)
+  userId     String
+  activeRole RoleCode
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  userRole   UserRole  @relation(fields: [userId, activeRole], references: [userId, roleCode], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+}

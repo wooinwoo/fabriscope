@@ -10,10 +10,6 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix("api");
-  app.enableCors({
-    credentials: true,
-    origin: process.env.WEB_ORIGIN ?? "http://localhost:5173",
-  });
   app.enableShutdownHooks();
 
   const port = parsePort(process.env.API_PORT);

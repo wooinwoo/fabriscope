@@ -38,6 +38,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate Prisma schema
+        run: pnpm db:validate
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+      - name: Start PostgreSQL
+        run: docker compose up -d --wait postgres
+
+      - name: Verify PostgreSQL connection
+        run: pnpm db:check
+
+      - name: Apply database migrations
+        run: pnpm db:migrate:deploy
+
+      - name: Seed and verify demo authentication
+        run: pnpm db:seed && pnpm db:verify-auth
+
       - name: Lint source
         run: pnpm lint
 
@@ -52,18 +70,6 @@ jobs:
 
       - name: Check documentation
         run: pnpm docs:check
-
-      - name: Validate Prisma schema
-        run: pnpm db:validate
-
-      - name: Validate Docker Compose
-        run: docker compose config
-
-      - name: Start PostgreSQL
-        run: docker compose up -d --wait postgres
-
-      - name: Verify PostgreSQL connection
-        run: pnpm db:check
 
       - name: Stop PostgreSQL
         if: always()
