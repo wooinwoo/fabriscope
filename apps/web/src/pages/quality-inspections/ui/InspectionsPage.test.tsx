@@ -60,7 +60,14 @@ function sampleResult(overrides: Partial<InspectionListResult> = {}): Inspection
 
 function renderPage() {
   const onSearchChange = vi.fn();
-  render(<InspectionsPage search={{}} onSearchChange={onSearchChange} />);
+  render(
+    <InspectionsPage
+      search={{}}
+      onSearchChange={onSearchChange}
+      csrfToken={"csrf"}
+      canVerdict
+    />,
+  );
   return { onSearchChange };
 }
 

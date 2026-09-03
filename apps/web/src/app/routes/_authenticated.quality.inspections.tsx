@@ -20,10 +20,13 @@ export const Route = createFileRoute("/_authenticated/quality/inspections")({
 function InspectionsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { session } = Route.useRouteContext();
 
   return (
     <InspectionsPage
       search={search}
+      csrfToken={session.csrfToken}
+      canVerdict={session.permissions.includes("inspection:execute")}
       onSearchChange={(next) => {
         void navigate({
           to: "/quality/inspections",

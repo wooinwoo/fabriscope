@@ -6,6 +6,7 @@ import {
   INSPECTION_VERDICT_LABELS,
   type InspectionListItem,
 } from "@/entities/inspection";
+import { InspectionVerdictPanel } from "@/features/inspection-verdict";
 import { ApiRequestError } from "@/shared/api";
 import {
   Badge,
@@ -56,11 +57,19 @@ type LoadState =
 interface InspectionsPageProps {
   search: InspectionsSearch;
   onSearchChange: (next: InspectionsSearch) => void;
+  csrfToken: string;
+  canVerdict: boolean;
 }
 
-export function InspectionsPage({ search, onSearchChange }: InspectionsPageProps) {
+export function InspectionsPage({
+  search,
+  onSearchChange,
+  csrfToken,
+  canVerdict,
+}: InspectionsPageProps) {
   const searchKey = JSON.stringify(search);
   const [reloadCount, setReloadCount] = useState(0);
+  const [verdictTarget, setVerdictTarget] = useState<InspectionListItem | null>(null);
   const [result, setResult] = useState<{
     key: string;
     reload: number;
@@ -187,8 +196,25 @@ export function InspectionsPage({ search, onSearchChange }: InspectionsPageProps
             </Badge>
           ),
       },
+      ...(canVerdict
+        ? [
+            {
+              key: "actions",
+              header: "행동",
+              cell: (row: InspectionListItem) =>
+                row.executionStatus === "PENDING" ||
+                row.executionStatus === "IN_PROGRESS" ? (
+                  <Button variant="secondary" onClick={() => setVerdictTarget(row)}>
+                    판정
+                  </Button>
+                ) : (
+                  <span className="text-text-subtle">—</span>
+                ),
+            } satisfies DataTableColumn<InspectionListItem>,
+          ]
+        : []),
     ],
-    [],
+    [canVerdict],
   );
 
   const hasActiveFilter =
@@ -325,6 +351,21 @@ export function InspectionsPage({ search, onSearchChange }: InspectionsPageProps
         />
       ) : (
         <>
+          {verdictTarget !== null ? (
+            <InspectionVerdictPanel
+              csrfToken={csrfToken}
+              onDone={() => {
+                setVerdictTarget(null);
+                setReloadCount((count) => count + 1);
+              }}
+              target={{
+                inspectionId: verdictTarget.id,
+                inspectionNumber: verdictTarget.inspectionNumber,
+                specName: verdictTarget.specName,
+                productionLotNumber: verdictTarget.productionLotNumber,
+              }}
+            />
+          ) : null}
           <DataTable
             caption="품질 검사 목록"
             columns={columns}

@@ -18,6 +18,7 @@ import { PrismaService } from "../src/database/prisma.service.js";
 import { DEMO_WORK_ORDERS } from "../prisma/demo-work-orders.js";
 import { DEMO_PROCESS_STEPS } from "../prisma/demo-process-steps.js";
 import { DEMO_MATERIAL_LOTS } from "../prisma/demo-material-lots.js";
+import { DEMO_INSPECTIONS } from "../prisma/demo-inspections.js";
 
 const allowedOrigin = "http://localhost:5173";
 let passwordHash: string;
@@ -101,6 +102,16 @@ class FakePrismaService {
     closedReason: string | null;
     closedAt: Date | null;
   }[] = [];
+  readonly inspections = DEMO_INSPECTIONS.map((inspection) => ({
+    ...inspection,
+    gate: inspection.gate,
+    executionStatus: inspection.executionStatus,
+    verdict: inspection.verdict,
+    id: `inspection-${inspection.inspectionNumber}`,
+    workOrderId: `work-order-${DEMO_WORK_ORDERS.findIndex(
+      (o) => o.orderNumber === inspection.workOrderNumber,
+    ) + 1}`,
+  }));
 
   constructor() {
     this.users = DEMO_ACCOUNTS.map((account) => ({
@@ -210,6 +221,33 @@ class FakePrismaService {
       }
       Object.assign(row, data);
       return row;
+    },
+  };
+
+  readonly inspection = {
+    findUnique: async () => null,
+    findMany: async ({
+      where,
+    }: {
+      where?: {
+        workOrderId?: string;
+        gate?: string;
+        processStepName?: string;
+        executionStatus?: { not?: string };
+      };
+    }) =>
+      this.inspections.filter(
+        (inspection) =>
+          (where?.workOrderId === undefined ||
+            inspection.workOrderId === where.workOrderId) &&
+          (where?.gate === undefined || inspection.gate === where.gate) &&
+          (where?.processStepName === undefined ||
+            inspection.processStepName === where.processStepName) &&
+          (where?.executionStatus?.not === undefined ||
+            inspection.executionStatus !== where.executionStatus.not),
+      ),
+    update: async () => {
+      throw new Error("이 테스트에서는 사용하지 않습니다.");
     },
   };
 
