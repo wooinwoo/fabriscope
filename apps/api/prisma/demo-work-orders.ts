@@ -1,9 +1,15 @@
-const dayOffset = (days: number, hour = 17) => {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  date.setHours(hour, 0, 0, 0);
-  return date;
+const seoulStartOfToday = () => {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  return Date.parse(`${parts}T00:00:00+09:00`);
 };
+
+const dayOffset = (days: number, hour = 17) =>
+  new Date(seoulStartOfToday() + days * 86_400_000 + hour * 3_600_000);
 
 export interface DemoWorkOrder {
   orderNumber: string;
