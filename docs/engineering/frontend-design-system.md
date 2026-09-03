@@ -472,6 +472,16 @@ surface와 업무 shell 양쪽 header에 모두 노출되는 지속적 컨트롤
 | 완료 시 다음 대기 공정을 실행 가능으로 승격하고 작업지시 진행률을 재계산 | 후속 공정의 READY는 선행 완료에서 유도된다는 계약의 projection이다. 차단 사유가 있는 공정은 승격하지 않는다 | 완료 후 다음 공정 READY·progressPercent 갱신 실측, blockedReasonCodes 보존 |
 | 실행 권한이 없으면 행동 열 자체를 제외 | 관찰자에게 실행 UI는 혼란만 더한다. route-contract의 권한 안내 규칙은 버튼이 존재해야 설명하는 화면에만 적용한다 | 품질 담당자에게 행동 열 미표시 실측 |
 
+### 8.10 2026-09-03 검사 판정 command surface 설계 근거와 검증 이력
+
+| 결정 | 근거 | 검증 |
+|---|---|---|
+| 판정 선택지를 PASS·FAIL·HOLD로 한정하고 완료 상태와 판정을 함께 기록 | 도메인 계약이 COMPLETED 검사는 반드시 판정을 가진다고 규정한다. 실행 상태와 판정을 한 enum에 섞지 않는다 | 미판정→판정 후 COMPLETED+verdict 실측, 재판정 409 |
+| FAIL·HOLD 선택 시 품질 처분·재측정 경고를 판정 확정 전에 표시 | FAIL은 자동 처분이 아니라 품질 담당자의 후속 처분 대상이라는 계약을 UI 언어로 미리 알린다 | jsdom userEvent로 FAIL·HOLD 경고 렌더 검증 |
+| 공정 완료의 다음 공정 승격을 ROUTE_ADVANCE 검사 게이트로 연결 | 유효 판정이 FAIL·HOLD이면 다음 공정을 거부한다는 계약의 첫 구현. 미판정·불합격·보류를 INSPECTION_PENDING·FAILED·HELD reasonCodes로 기록하고 취소 검사는 제외한다 | e2e에서 미판정 검사가 승격을 BLOCKED로 차단 실측 |
+| 이미 판정된 검사는 정정 흐름으로 유도 | 원 검사를 수정하지 않고 정정 chain으로 계약. 정정 UI는 후속 슬라이스 | 409 INSPECTION_ALREADY_VERDICTED 코드 유지 |
+| 브라우저 E2E는 기본 PASS 종단 흐름, 선택 UI는 jsdom 검증으로 분리 | headless CDP×Radix Select 선택 경합은 검증 도구 한계로 실제 결함이 아니다. 위험 경로(FAIL 경고·전송 값)는 userEvent가 신뢰되는 jsdom에서 증명한다 | 브라우저 8/8 + jsdom 3/3 |
+
 모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
 Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
 가능성만 줄인다.
