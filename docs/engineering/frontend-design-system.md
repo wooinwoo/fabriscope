@@ -406,6 +406,23 @@ surface와 업무 shell 양쪽 header에 모두 노출되는 지속적 컨트롤
 그대로 따르며, 이 surface는 읽기 전용이다. 공정 시작·완료 command는 SCR-04B에서
 별도 확인 절차와 함께 추가된다.
 
+### 8.4 2026-09-03 품질 검사 대기 surface 설계 근거와 검증 이력
+
+| 결정 | 근거 | 검증 |
+|---|---|---|
+| 판정 배지 4종(`합격` success, `불합격` danger, `보류` warning, `미판정` neutral) | route-contract가 미판정을 verdict key 부재로 구분하므로 null 판정도 하나의 상태로 보여야 하고, 톤은 자재 LOT·대기열과 같은 위험 언어를 따른다 | PENDING 3건·PASS 3건·FAIL/HOLD 필터 결과가 e2e와 브라우저에서 일치 |
+| 게이트 배지(`공정 진행` neutral, `LOT 완료` info) | LOT 완료 게이트가 작업지시 종결의 관문이라는 도메인 역할 차이를 색으로만 구분한다 | gate=LOT_COMPLETE 3행 실측 |
+| 열 구성: 검사·생산 LOT·공정·게이트·검사 규격·작업지시·실행 상태·판정 | SCR-05A가 검사 대상을 우선순위대로 판정하는 화면임을 규정한다. 검사 식별자와 대상 LOT를 앞에 두고 규격명은 판정 근거로 함께 보여준다 | 헤더 8열 실측, 900px 가로 overflow 0 |
+| 검사 규격명에 revision 명시(v3 등) | InspectionRequirement가 release snapshot이라는 도메인 계약에 따라 어떤 규격 version으로 판정했는지가 근거가 된다 | seed 규격명 렌더 확인 |
+
+품질 검사 surface의 해상도 감사(1440·1024·900px, light·dark)에서 가로 overflow와
+계산 텍스트 대비 실패는 0이었다. 44px 미만으로 측정된 요소는 모두 문서화된
+기준에 속한다: skip link는 8.2의 면제 사유, 32px sidebar 행·28px desktop trigger는
+8.1의 desktop 밀도 계약, 40px 입력·버튼은 token 표의 기본 밀도(터치 가능 영역을
+함께 확보한다고 명시), 16px resize rail은 desktop 마우스 전용이며 1024px 미만에서는
+렌더되지 않는다. 44px 터치 계약은 8.1·8.2에서 확정한 대로 1024px 미만의 지속적
+탐색 컨트롤(sidebar 행, theme toggle)에 적용한다.
+
 모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
 Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
 가능성만 줄인다.

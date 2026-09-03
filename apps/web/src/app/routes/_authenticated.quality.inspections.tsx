@@ -1,29 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   requireRoutePermission,
   RoutePermission,
 } from "@/app/session-policy";
-import { RoleHomePage } from "@/pages/role-home";
+import { InspectionsPage, readInspectionsSearch } from "@/pages/quality-inspections";
 
 export const Route = createFileRoute("/_authenticated/quality/inspections")({
+  validateSearch: (search: Record<string, unknown>) =>
+    readInspectionsSearch(search),
   beforeLoad: ({ context, location }) =>
     requireRoutePermission(
       context.session,
       RoutePermission.INSPECTION_READ,
       location.href,
     ),
-  component: InspectionLanding,
+  component: InspectionsRoute,
 });
 
-function InspectionLanding() {
-  const { session } = Route.useRouteContext();
+function InspectionsRoute() {
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+
   return (
-    <RoleHomePage
-      description="적용 규격과 측정값, 최근 유효 판정을 함께 확인합니다."
-      emptyDescription="검사 요구사항이 생기면 이 권한으로 적용 revision과 판정 대기 항목을 조회합니다."
-      emptyTitle="판정 대기 중인 가상 검사가 없습니다"
-      session={session}
-      title="품질검사"
+    <InspectionsPage
+      search={search}
+      onSearchChange={(next) => {
+        void navigate({
+          to: "/quality/inspections",
+          search: next,
+          replace: true,
+        });
+      }}
     />
   );
 }
