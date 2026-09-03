@@ -377,6 +377,21 @@ corepack pnpm build
 | 900px overlay sidebar | 이식 직후 trigger `35px`, menu 행 `32px`로 44px 계약 미달 | mobile trigger와 menu 행만 `44px`로 확대하고 desktop의 `28px` trigger·`32px` 행 밀도는 유지 |
 | keyboard walkthrough | Enter open, dialog 내부 focus, Escape close와 trigger focus return, desktop Ctrl+B state 전환 통과 | 기존 Radix Sheet와 keyboard state 소유권 유지 |
 
+### 8.2 2026-09-03 로그인 surface 검증 이력
+
+| 검증 | 관찰 | 결정과 근거 |
+|---|---|---|
+| `/login` 1440·1280·1024·900px, light·dark | 전체 폭 가로 overflow, 계산 text 대비 실패 없음 | 데모 인증 surface도 기존 token·breakpoint 계약 그대로 적용 |
+| `/login` keyboard walkthrough | 첫 Tab이 skip link에 도달하고 Enter로 `#main-content`로 이동, 역할 button Tab 도달, focus ring 표시, Enter로 역할 로그인과 랜딩까지 완결 | role list button이 native button이라 별도 keyboard 처리 없이 표준 동작 유지 |
+| 900px theme toggle | 기본 `size-9`(실측 40px)로 44px 계약 미달 | mobile에서만 `size-11`(44px)로 확대하고 desktop은 `size-9` 업무 밀도 유지. sidebar 44px 보정과 같은 방식 |
+| skip link 터치 영역 | 실측 `132x36px`로 44px 미달이나 비포커스 시 화면 밖에 있고 keyboard 전용 경로 | pointer 조작 대상이 아니므로 44px 계약에서 제외. 첫 Tab 도달과 Enter 동작으로 대신 검증 |
+| 로그인 실서버 E2E | 실DB seed 계정으로 로그인→역할 랜딩→허용 경로 접근→미허용 경로 `/forbidden` 차단→역할 전환→세션 무효 8/8 통과 | HttpOnly 세션과 route guard 계약이 실브라우저에서 동일하게 강제됨 |
+
+skip link는 키보드 사용자의 반복 탐색 비용을 줄이는 보조 경로이므로 터치 영역
+기준 대신 첫 포커스 도달성과 대상 이동만으로 검증한다. theme toggle은 로그인
+surface와 업무 shell 양쪽 header에 모두 노출되는 지속적 컨트롤이므로 mobile 44px
+계약을 공통으로 적용한다.
+
 모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
 Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
 가능성만 줄인다.

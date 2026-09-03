@@ -40,7 +40,7 @@ export function ThemeSwitch() {
       <DropdownMenuTrigger asChild>
         <Button
           aria-label="테마 변경"
-          className="relative"
+          className="relative size-11 lg:size-9"
           size="icon"
           type="button"
           variant="ghost"
