@@ -6,6 +6,7 @@ import {
   PROCESS_READINESS_LABELS,
   type ProcessExecutionListItem,
 } from "@/entities/process-execution";
+import { ProcessExecutionPanel, StartProcessAction } from "@/features/process-execution";
 import { ApiRequestError } from "@/shared/api";
 import {
   Badge,
@@ -51,6 +52,8 @@ type LoadState =
 interface ExecutionQueuePageProps {
   search: ExecutionQueueSearch;
   onSearchChange: (next: ExecutionQueueSearch) => void;
+  csrfToken: string;
+  canExecute: boolean;
 }
 
 function blockedReasonLabel(code: string): string {
@@ -62,9 +65,13 @@ function blockedReasonLabel(code: string): string {
 export function ExecutionQueuePage({
   search,
   onSearchChange,
+  csrfToken,
+  canExecute,
 }: ExecutionQueuePageProps) {
   const searchKey = JSON.stringify(search);
   const [reloadCount, setReloadCount] = useState(0);
+  const [completionTarget, setCompletionTarget] =
+    useState<ProcessExecutionListItem | null>(null);
   const [result, setResult] = useState<{
     key: string;
     reload: number;
@@ -197,8 +204,39 @@ export function ExecutionQueuePage({
             </span>
           ),
       },
+      ...(canExecute
+        ? [
+            {
+              key: "actions",
+              header: "행동",
+              cell: (row: ProcessExecutionListItem) =>
+                row.readiness === "READY" ? (
+                  <StartProcessAction
+                    csrfToken={csrfToken}
+                    onDone={() => setReloadCount((count) => count + 1)}
+                    target={{
+                      stepId: row.id,
+                      workOrderNumber: row.workOrderNumber,
+                      processStepName: row.processStepName,
+                      productionLotNumber: row.productionLotNumber,
+                      plannedQuantity: row.plannedQuantity,
+                    }}
+                  />
+                ) : row.readiness === "IN_PROGRESS" ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() => setCompletionTarget(row)}
+                  >
+                    완료 입력
+                  </Button>
+                ) : (
+                  <span className="text-text-subtle">—</span>
+                ),
+            } satisfies DataTableColumn<ProcessExecutionListItem>,
+          ]
+        : []),
     ],
-    [],
+    [canExecute, csrfToken],
   );
 
   const hasActiveFilter = search.q !== undefined || search.readiness !== undefined;
@@ -289,6 +327,22 @@ export function ExecutionQueuePage({
         />
       ) : (
         <>
+          {completionTarget !== null ? (
+            <ProcessExecutionPanel
+              csrfToken={csrfToken}
+              onDone={() => {
+                setCompletionTarget(null);
+                setReloadCount((count) => count + 1);
+              }}
+              target={{
+                stepId: completionTarget.id,
+                workOrderNumber: completionTarget.workOrderNumber,
+                processStepName: completionTarget.processStepName,
+                productionLotNumber: completionTarget.productionLotNumber,
+                plannedQuantity: completionTarget.plannedQuantity,
+              }}
+            />
+          ) : null}
           <DataTable
             caption="공정 실행 대기열"
             columns={columns}

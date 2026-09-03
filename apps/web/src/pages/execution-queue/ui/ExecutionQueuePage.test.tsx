@@ -59,7 +59,14 @@ function sampleResult(overrides: Partial<ProcessExecutionListResult> = {}): Proc
 
 function renderPage() {
   const onSearchChange = vi.fn();
-  render(<ExecutionQueuePage search={{}} onSearchChange={onSearchChange} />);
+  render(
+    <ExecutionQueuePage
+      search={{}}
+      onSearchChange={onSearchChange}
+      csrfToken={"csrf"}
+      canExecute
+    />,
+  );
   return { onSearchChange };
 }
 
