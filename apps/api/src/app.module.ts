@@ -4,6 +4,7 @@ import { OriginGuard } from "./auth/auth.guards.js";
 import { AuthModule } from "./auth/auth.module.js";
 import { HealthController } from "./health/health.controller.js";
 import { MaterialLotsModule } from "./material-lots/material-lots.module.js";
+import { AuditEventsModule } from "./audit-events/audit-events.module.js";
 import { InspectionsModule } from "./inspections/inspections.module.js";
 import { ProcessExecutionsModule } from "./process-executions/process-executions.module.js";
 import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
@@ -15,6 +16,7 @@ import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
     MaterialLotsModule,
     ProcessExecutionsModule,
     InspectionsModule,
+    AuditEventsModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -199,3 +199,32 @@ model Inspection {
   @@index([executionStatus, verdict])
   @@index([workOrderId])
 }
+
+enum AuditAction {
+  SESSION_LOGIN
+  SESSION_LOGOUT
+  WORK_ORDER_CREATED
+  WORK_ORDER_RELEASED
+  WORK_ORDER_CANCELLED
+  MATERIAL_RESERVED
+  MATERIAL_LOT_DISPOSITION_DECIDED
+  INSPECTION_VERDICTED
+}
+
+model AuditEvent {
+  id         String     @id @default(cuid())
+  occurredAt DateTime
+  actorId    String     @db.VarChar(64)
+  actorRole  RoleCode
+  actorName  String     @db.VarChar(100)
+  action     AuditAction
+  entityType String     @db.VarChar(40)
+  entityId   String     @db.VarChar(64)
+  summary    String     @db.VarChar(200)
+  requestId  String     @db.VarChar(64)
+  createdAt  DateTime   @default(now())
+
+  @@index([occurredAt])
+  @@index([actorRole, action])
+  @@index([entityType, entityId])
+}

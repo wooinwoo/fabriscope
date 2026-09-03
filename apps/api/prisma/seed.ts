@@ -8,6 +8,7 @@ import { DEMO_WORK_ORDERS } from "./demo-work-orders.js";
 import { DEMO_MATERIAL_LOTS, DEMO_MATERIALS } from "./demo-material-lots.js";
 import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
 import { DEMO_INSPECTIONS } from "./demo-inspections.js";
+import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -140,10 +141,15 @@ try {
         update: { ...inspectionData, workOrderId },
       });
     }
+
+    await transaction.auditEvent.deleteMany({});
+    await transaction.auditEvent.createMany({
+      data: DEMO_AUDIT_EVENTS.map((event) => ({ ...event })),
+    });
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();
