@@ -20,10 +20,13 @@ export const Route = createFileRoute("/_authenticated/execution/queue")({
 function ExecutionQueueRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { session } = Route.useRouteContext();
 
   return (
     <ExecutionQueuePage
       search={search}
+      csrfToken={session.csrfToken}
+      canExecute={session.permissions.includes("process-execution:execute")}
       onSearchChange={(next) => {
         void navigate({
           to: "/execution/queue",
