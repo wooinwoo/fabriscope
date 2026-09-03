@@ -7,19 +7,26 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { weeklyProduction } from "../model/dashboard-fixtures";
+import type { DashboardWeeklyPoint } from "@/entities/dashboard";
 
-export function Overview() {
+interface OverviewProps {
+  weekly: DashboardWeeklyPoint[];
+}
+
+export function Overview({ weekly }: OverviewProps) {
+  const data = weekly.map((point) => ({
+    name: point.weekday,
+    planned: point.plannedQuantity,
+    completed: point.progressQuantity,
+  }));
+
   return (
     <div
-      aria-label="월요일부터 일요일까지 계획 대비 완료 생산 수량 막대그래프"
+      aria-label="월요일부터 일요일까지 납기 계획 대비 진행 수량 막대그래프"
       role="img"
     >
       <ResponsiveContainer height={288} width="100%">
-        <BarChart
-          data={weeklyProduction}
-          margin={{ left: 4, right: 8, top: 8 }}
-        >
+        <BarChart data={data} margin={{ left: 4, right: 8, top: 8 }}>
           <CartesianGrid
             stroke="var(--border)"
             strokeDasharray="4 4"
@@ -48,25 +55,15 @@ export function Overview() {
               color: "var(--popover-foreground)",
               fontSize: 12,
             }}
-            cursor={{ fill: "var(--muted)", opacity: 0.4 }}
-            formatter={(value, name) => [
-              `${String(value)} EA`,
-              name === "planned" ? "계획" : "완료",
-            ]}
           />
           <Bar
             dataKey="planned"
             fill="var(--muted-foreground)"
-            fillOpacity={0.3}
-            maxBarSize={20}
-            radius={[4, 4, 0, 0]}
+            fillOpacity={0.35}
+            name="계획"
+            radius={[2, 2, 0, 0]}
           />
-          <Bar
-            dataKey="completed"
-            fill="var(--primary)"
-            maxBarSize={20}
-            radius={[4, 4, 0, 0]}
-          />
+          <Bar dataKey="completed" fill="var(--primary)" name="진행" radius={[2, 2, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
