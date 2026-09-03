@@ -7,6 +7,7 @@ import { hashPassword } from "../src/auth/password.js";
 import { DEMO_WORK_ORDERS } from "./demo-work-orders.js";
 import { DEMO_MATERIAL_LOTS, DEMO_MATERIALS } from "./demo-material-lots.js";
 import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
+import { DEMO_INSPECTIONS } from "./demo-inspections.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -127,10 +128,22 @@ try {
         update: { ...stepData, workOrderId },
       });
     }
+
+    for (const { workOrderNumber, ...inspectionData } of DEMO_INSPECTIONS) {
+      const workOrderId = workOrderIdByNumber.get(workOrderNumber);
+      if (workOrderId === undefined) {
+        throw new Error(`작업지시 seed가 없습니다: ${workOrderNumber}`);
+      }
+      await transaction.inspection.upsert({
+        where: { inspectionNumber: inspectionData.inspectionNumber },
+        create: { ...inspectionData, workOrderId },
+        update: { ...inspectionData, workOrderId },
+      });
+    }
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();

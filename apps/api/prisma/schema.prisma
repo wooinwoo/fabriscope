@@ -93,6 +93,7 @@ model WorkOrder {
   updatedAt          DateTime          @updatedAt
 
   processSteps       ProcessStepExecution[]
+  inspections        Inspection[]
 
   @@index([status, dueDate])
   @@index([dueDate])
@@ -160,4 +161,41 @@ model ProcessStepExecution {
   @@index([readiness])
   @@index([workOrderId, sequence])
   @@unique([workOrderId, sequence, productionLotNumber])
+}
+
+enum InspectionGate {
+  ROUTE_ADVANCE
+  LOT_COMPLETE
+}
+
+enum InspectionExecutionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum InspectionVerdict {
+  PASS
+  FAIL
+  HOLD
+}
+
+model Inspection {
+  id               String                    @id @default(cuid())
+  inspectionNumber String                    @unique @db.VarChar(24)
+  workOrderId      String
+  productionLotNumber String                 @db.VarChar(24)
+  processStepName  String                    @db.VarChar(60)
+  gate             InspectionGate
+  specName         String                    @db.VarChar(100)
+  executionStatus  InspectionExecutionStatus @default(PENDING)
+  verdict          InspectionVerdict?
+  completedAt      DateTime?
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+  workOrder        WorkOrder                 @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([executionStatus, verdict])
+  @@index([workOrderId])
 }
