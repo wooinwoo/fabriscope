@@ -65,7 +65,12 @@ function sampleDetail(overrides: Partial<WorkOrderDetail> = {}): WorkOrderDetail
 }
 
 function renderPage(
-  overrides: { canRelease?: boolean; canCancel?: boolean } = {},
+  overrides: {
+    canRelease?: boolean;
+    canCancel?: boolean;
+    canReserve?: boolean;
+    canReleaseAllocation?: boolean;
+  } = {},
 ) {
   render(
     <WorkOrderDetailPage
@@ -73,6 +78,8 @@ function renderPage(
       csrfToken="test-csrf"
       canRelease={overrides.canRelease ?? true}
       canCancel={overrides.canCancel ?? true}
+      canReserve={overrides.canReserve ?? false}
+      canReleaseAllocation={overrides.canReleaseAllocation ?? false}
     />,
   );
 }

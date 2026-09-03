@@ -27,6 +27,8 @@ function WorkOrderDetailRoute() {
       csrfToken={session.csrfToken}
       canRelease={session.permissions.includes("work-order:release")}
       canCancel={session.permissions.includes("work-order:cancel")}
+      canReserve={session.permissions.includes("material-allocation:create")}
+      canReleaseAllocation={session.permissions.includes("material-allocation:release")}
     />
   );
 }

@@ -14,6 +14,7 @@ import {
   type WorkOrderDetail,
 } from "@/entities/work-order";
 import { ApiRequestError } from "@/shared/api";
+import { MaterialReservationPanel } from "@/features/material-reservations";
 import {
   Badge,
   type BadgeTone,
@@ -59,6 +60,8 @@ interface WorkOrderDetailPageProps {
   csrfToken: string;
   canRelease: boolean;
   canCancel: boolean;
+  canReserve: boolean;
+  canReleaseAllocation: boolean;
 }
 
 function formatDateTime(isoDate: string): string {
@@ -77,6 +80,8 @@ export function WorkOrderDetailPage({
   csrfToken,
   canRelease,
   canCancel,
+  canReserve,
+  canReleaseAllocation,
 }: WorkOrderDetailPageProps) {
   const [reloadCount, setReloadCount] = useState(0);
   const [result, setResult] = useState<{
@@ -362,6 +367,15 @@ export function WorkOrderDetailPage({
           )}
         </CardContent>
       </Card>
+
+      <MaterialReservationPanel
+        canRelease={canReleaseAllocation}
+        canReserve={canReserve}
+        csrfToken={csrfToken}
+        isReleased={detail.status === "RELEASED"}
+        orderNumber={detail.orderNumber}
+        workOrderId={workOrderId}
+      />
 
       <section aria-label="작업지시 행동" className="space-y-3">
         <h2 className="sr-only">작업지시 행동</h2>

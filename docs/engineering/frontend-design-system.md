@@ -453,6 +453,16 @@ surface와 업무 shell 양쪽 header에 모두 노출되는 지속적 컨트롤
 | 오류는 계약 code로 구분해 복구 상태를 다르게 한다 | route-contract 392: 403·404·409·5xx가 서로 다른 복구 상태를 보인다. NOT_DRAFT·NOT_CANCELLABLE·HAS_EXECUTION를 409 code로 분리 | e2e에서 상태머신 거부 3종 409 code 검증 |
 | MVP 발행 검증은 현재 도메인 모델이 지원하는 범위로 한정 | BOM·공정 route revision 원장이 아직 없어 release snapshot 계약 전체를 검증할 수 없다. 초안 상태·계획수량·납기 유효성을 검증하고 revision 원장은 BOM 화면군과 함께 확장한다 | 납기 과거 400·비초안 409 검증, 한계를 이 표에 명시 |
 
+### 8.8 2026-09-03 자재 예약 surface 설계 근거와 검증 이력
+
+| 결정 | 근거 | 검증 |
+|---|---|---|
+| 예약 패널을 작업지시 상세에 배치 | route-contract가 예약 화면을 `/work-orders/$id/material-reservations`로 두지만 MVP는 상태 맥락(발행 여부)과 같은 화면에서 판단하는 것이 오조작을 줄인다. 별도 라우트는 요구사항 강조 기능이 필요할 때 분리한다 | 자재 담당자가 발행 지시 상세에서 즉시 예약·해제를 완료 |
+| 예약 가능 LOT은 가용 필터 결과만 노출 | 도메인 계약이 ACCEPTED·미만료·가용 잔량 예약만 허용한다. 품질 통제·만료 LOT는 선택 단계에서 제외하고 서버가 다시 검증한다 | QUARANTINED 409·가용 초과 409 e2e, 브라우저에서 가용 LOT만 옵션 표시 |
+| 서버는 예약 시점에 가용량을 transaction 안에서 재검증 | 동시 command로 조건이 달라지면 명시적 거부가 계약이다. LOT 잔량 증감과 allocation 생성을 같은 transaction으로 실행한다 | e2e에서 reservedQuantity 실측 증감, 해제 후 감소 |
+| 예약·해제 권한이 없으면 현황 조회와 권한 설명만 제공 | route-contract 3.2의 권한 안내 규칙을 예약에도 동일 적용한다 | planner에게 안내문 표시, 예약 폼 미노출 실측 |
+| fetch abort 경쟁 방지 가드를 모든 panel effect에 적용 | 생성 페이지에서 발견한 동일 결함 클래스(StrictMode 이중 effect에서 첫 fetch의 abort가 상태를 덮어씀)를 재발 방지 | 기본 LOT 선택이 안정적으로 설정됨을 브라우저 E2E로 확인 |
+
 모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
 Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
 가능성만 줄인다.
