@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import type { Prisma } from "../generated/prisma/client.js";
 import { PrismaService } from "../database/prisma.service.js";
 import {
@@ -12,6 +17,7 @@ import {
   type WorkOrderSortField,
 } from "./work-orders.contract.js";
 import type { WorkOrderPriority, WorkOrderStatus } from "../generated/prisma/enums.js";
+import { DEMO_PRODUCTS } from "./work-order-products.js";
 
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
@@ -143,6 +149,277 @@ export class WorkOrdersService {
     };
   }
 
+  products() {
+    return DEMO_PRODUCTS.map((product) => ({ ...product }));
+  }
+
+  async detail(id: string) {
+    const record = await this.prisma.workOrder.findUnique({
+      where: { id },
+      include: { inspections: true, processSteps: true },
+    });
+    if (record === null) {
+      throw new NotFoundException({
+        code: "WORK_ORDER_NOT_FOUND",
+        message: "작업지시를 찾을 수 없습니다.",
+      });
+    }
+    const recentAudits = await this.prisma.auditEvent.findMany({
+      where: { entityType: "WORK_ORDER", entityId: record.orderNumber },
+      orderBy: { occurredAt: "desc" },
+      take: 10,
+    });
+
+    return {
+      ...toListItem(record),
+      createdAt: record.createdAt.toISOString(),
+      steps: record.processSteps
+        .sort((left, right) => left.sequence - right.sequence)
+        .map((step) => ({
+          id: step.id,
+          sequence: step.sequence,
+          processStepName: step.processStepName,
+          productionLotNumber: step.productionLotNumber,
+          readiness: step.readiness,
+          blockedReasonCodes: step.blockedReasonCodes,
+        })),
+      inspections: record.inspections
+        .sort((left, right) => left.inspectionNumber.localeCompare(right.inspectionNumber))
+        .map((inspection) => ({
+          id: inspection.id,
+          inspectionNumber: inspection.inspectionNumber,
+          processStepName: inspection.processStepName,
+          gate: inspection.gate,
+          specName: inspection.specName,
+          executionStatus: inspection.executionStatus,
+          verdict: inspection.verdict,
+        })),
+      recentAudits: recentAudits.map((event) => ({
+        id: event.id,
+        occurredAt: event.occurredAt.toISOString(),
+        actorName: event.actorName,
+        actorRole: event.actorRole,
+        action: event.action,
+        summary: event.summary,
+      })),
+    };
+  }
+
+  async create(
+    input: {
+      productCode?: unknown;
+      plannedQuantity?: unknown;
+      dueDate?: unknown;
+      priority?: unknown;
+      memo?: unknown;
+    },
+    actor: CommandActor,
+  ) {
+    const product = DEMO_PRODUCTS.find(
+      (candidate) => candidate.code === input.productCode,
+    );
+    if (product === undefined) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "작업지시 생성 값이 올바르지 않습니다.",
+        detail: `알 수 없는 제품: ${String(input.productCode)}`,
+      });
+    }
+    const plannedQuantity = input.plannedQuantity;
+    if (
+      typeof plannedQuantity !== "number" ||
+      !Number.isInteger(plannedQuantity) ||
+      plannedQuantity < 1 ||
+      plannedQuantity > 100_000
+    ) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "계획수량은 1 이상 정수여야 합니다.",
+      });
+    }
+    if (typeof input.dueDate !== "string") {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "납기를 지정해 주세요.",
+      });
+    }
+    const dueDate = new Date(`${input.dueDate}T17:00:00+09:00`);
+    if (Number.isNaN(dueDate.getTime())) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "납기 형식이 올바르지 않습니다.",
+      });
+    }
+    if (dueDate.getTime() < seoulStartOfToday().getTime()) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "납기는 오늘 이후여야 합니다.",
+      });
+    }
+    const priority = input.priority;
+    if (
+      typeof priority !== "string" ||
+      !WORK_ORDER_PRIORITIES.includes(priority as WorkOrderPriority)
+    ) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "우선순위가 올바르지 않습니다.",
+      });
+    }
+    if (input.memo !== undefined && input.memo !== null && input.memo !== "") {
+      if (typeof input.memo !== "string" || input.memo.length > 500) {
+        throw new BadRequestException({
+          code: "INVALID_WORK_ORDER_INPUT",
+          message: "메모는 500자 이하여야 합니다.",
+        });
+      }
+    }
+
+    const orderNumber = await this.nextOrderNumber();
+    const record = await this.prisma.workOrder.create({
+      data: {
+        orderNumber,
+        productCode: product.code,
+        productName: product.name,
+        plannedQuantity,
+        unit: product.unit,
+        dueDate,
+        status: "DRAFT",
+        priority: priority as WorkOrderPriority,
+        ...(typeof input.memo === "string" && input.memo !== ""
+          ? { memo: input.memo }
+          : {}),
+      },
+    });
+
+    await this.recordAudit(record.orderNumber, "WORK_ORDER_CREATED", actor, {
+      summary: `${product.name} ${plannedQuantity}${product.unit} 초안 작업지시 생성`,
+    });
+
+    return this.detail(record.id);
+  }
+
+  async release(id: string, actor: CommandActor) {
+    const record = await this.prisma.workOrder.findUnique({ where: { id } });
+    if (record === null) {
+      throw new NotFoundException({
+        code: "WORK_ORDER_NOT_FOUND",
+        message: "작업지시를 찾을 수 없습니다.",
+      });
+    }
+    if (record.status !== "DRAFT") {
+      throw new ConflictException({
+        code: "WORK_ORDER_NOT_DRAFT",
+        message: "초안 상태의 작업지시만 발행할 수 있습니다.",
+        currentStatus: record.status,
+      });
+    }
+    if (record.dueDate.getTime() < seoulStartOfToday().getTime()) {
+      throw new ConflictException({
+        code: "WORK_ORDER_RELEASE_INVALID",
+        message: "납기가 이미 지나 발행할 수 없습니다.",
+      });
+    }
+
+    await this.prisma.workOrder.update({
+      where: { id },
+      data: { status: "RELEASED" },
+    });
+    await this.recordAudit(record.orderNumber, "WORK_ORDER_RELEASED", actor, {
+      summary: `${record.productName} ${record.plannedQuantity}${record.unit} 작업지시 발행`,
+    });
+
+    return this.detail(id);
+  }
+
+  async cancel(id: string, reason: unknown, actor: CommandActor) {
+    const record = await this.prisma.workOrder.findUnique({
+      where: { id },
+      include: { processSteps: true },
+    });
+    if (record === null) {
+      throw new NotFoundException({
+        code: "WORK_ORDER_NOT_FOUND",
+        message: "작업지시를 찾을 수 없습니다.",
+      });
+    }
+    if (record.status !== "DRAFT" && record.status !== "RELEASED") {
+      throw new ConflictException({
+        code: "WORK_ORDER_NOT_CANCELLABLE",
+        message: "실적이 없는 초안·발행 상태만 취소할 수 있습니다.",
+        currentStatus: record.status,
+      });
+    }
+    const hasExecution = record.processSteps.some(
+      (step) => step.readiness === "IN_PROGRESS" || step.readiness === "COMPLETED",
+    );
+    if (hasExecution) {
+      throw new ConflictException({
+        code: "WORK_ORDER_HAS_EXECUTION",
+        message: "공정 실적이 있어 취소할 수 없습니다.",
+      });
+    }
+    if (typeof reason !== "string" || reason.trim().length < 2 || reason.length > 500) {
+      throw new BadRequestException({
+        code: "INVALID_WORK_ORDER_INPUT",
+        message: "취소 사유는 2자 이상 500자 이하여야 합니다.",
+      });
+    }
+
+    await this.prisma.workOrder.update({
+      where: { id },
+      data: { status: "CANCELLED", blockedReason: null },
+    });
+    await this.recordAudit(record.orderNumber, "WORK_ORDER_CANCELLED", actor, {
+      summary: `작업지시 취소: ${reason.trim()}`,
+    });
+
+    return this.detail(id);
+  }
+
+  private async nextOrderNumber(): Promise<string> {
+    const rows = await this.prisma.workOrder.findMany({
+      select: { orderNumber: true },
+    });
+    const year = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+    }).format(new Date());
+    const prefix = `WO-${year}-`;
+    const max = rows.reduce((current, row) => {
+      if (!row.orderNumber.startsWith(prefix)) {
+        return current;
+      }
+      const suffix = Number(row.orderNumber.slice(prefix.length));
+      return Number.isInteger(suffix) && suffix > current ? suffix : current;
+    }, 100);
+    return `${prefix}${String(max + 1).padStart(3, "0")}`;
+  }
+
+  private async recordAudit(
+    orderNumber: string,
+    action:
+      | "WORK_ORDER_CREATED"
+      | "WORK_ORDER_RELEASED"
+      | "WORK_ORDER_CANCELLED",
+    actor: CommandActor,
+    { summary }: { summary: string },
+  ) {
+    await this.prisma.auditEvent.create({
+      data: {
+        occurredAt: new Date(),
+        actorId: actor.userId,
+        actorRole: actor.activeRole,
+        actorName: actor.displayName,
+        action,
+        entityType: "WORK_ORDER",
+        entityId: orderNumber,
+        summary,
+        requestId: newRequestId(),
+      },
+    });
+  }
+
   private buildWhere(query: WorkOrderQuery): Prisma.WorkOrderWhereInput {
     const where: Prisma.WorkOrderWhereInput = {};
     if (query.q) {
@@ -221,6 +498,8 @@ function toListItem(row: {
   progressPercent: number;
   currentStepName: string | null;
   blockedReason: string | null;
+  memo: string | null;
+  createdAt: Date;
 }): WorkOrderListItem {
   return {
     id: row.id,
@@ -235,5 +514,16 @@ function toListItem(row: {
     progressPercent: row.progressPercent,
     currentStepName: row.currentStepName,
     blockedReason: row.blockedReason,
+    memo: row.memo,
   };
+}
+
+export interface CommandActor {
+  userId: string;
+  displayName: string;
+  activeRole: "PRODUCTION_PLANNER" | "MATERIAL_MANAGER" | "SHOP_FLOOR_OPERATOR" | "QUALITY_ENGINEER" | "SYSTEM_ADMIN";
+}
+
+function newRequestId(): string {
+  return `req-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }

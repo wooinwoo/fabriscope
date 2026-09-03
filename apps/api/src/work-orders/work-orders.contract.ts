@@ -46,6 +46,7 @@ export interface WorkOrderListItem {
   progressPercent: number;
   currentStepName: string | null;
   blockedReason: string | null;
+  memo: string | null;
 }
 
 export interface WorkOrderListResult {
@@ -53,4 +54,47 @@ export interface WorkOrderListResult {
   page: number;
   pageSize: number;
   total: number;
+}
+
+export interface WorkOrderStepView {
+  id: string;
+  sequence: number;
+  processStepName: string;
+  productionLotNumber: string;
+  readiness: "WAITING" | "READY" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
+  blockedReasonCodes: readonly string[];
+}
+
+export interface WorkOrderInspectionView {
+  id: string;
+  inspectionNumber: string;
+  processStepName: string;
+  gate: "ROUTE_ADVANCE" | "LOT_COMPLETE";
+  specName: string;
+  executionStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  verdict: "PASS" | "FAIL" | "HOLD" | null;
+}
+
+export interface WorkOrderAuditView {
+  id: string;
+  occurredAt: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  summary: string;
+}
+
+export interface WorkOrderDetail extends WorkOrderListItem {
+  createdAt: string;
+  steps: WorkOrderStepView[];
+  inspections: WorkOrderInspectionView[];
+  recentAudits: WorkOrderAuditView[];
+}
+
+export interface WorkOrderCreateInput {
+  productCode: string;
+  plannedQuantity: number;
+  dueDate: string;
+  priority: WorkOrderPriority;
+  memo?: string;
 }

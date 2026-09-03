@@ -89,8 +89,9 @@ model WorkOrder {
   progressPercent Int               @default(0)
   currentStepName String?           @db.VarChar(60)
   blockedReason   String?           @db.VarChar(120)
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  memo            String?           @db.VarChar(500)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   processSteps       ProcessStepExecution[]
   inspections        Inspection[]
