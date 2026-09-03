@@ -5,6 +5,7 @@ import { ROLE_CONFIG } from "../src/auth/auth.contract.js";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/auth/demo-accounts.js";
 import { hashPassword } from "../src/auth/password.js";
 import { DEMO_WORK_ORDERS } from "./demo-work-orders.js";
+import { DEMO_MATERIAL_LOTS, DEMO_MATERIALS } from "./demo-material-lots.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -74,10 +75,32 @@ try {
         update: order,
       });
     }
+
+    const materialIdByCode = new Map<string, string>();
+    for (const material of DEMO_MATERIALS) {
+      const row = await transaction.material.upsert({
+        where: { code: material.code },
+        create: { ...material, isActive: true },
+        update: { name: material.name, unit: material.unit, isActive: true },
+      });
+      materialIdByCode.set(material.code, row.id);
+    }
+
+    for (const { materialCode, ...lotData } of DEMO_MATERIAL_LOTS) {
+      const materialId = materialIdByCode.get(materialCode);
+      if (materialId === undefined) {
+        throw new Error(`자재 기준정보가 없습니다: ${materialCode}`);
+      }
+      await transaction.materialLot.upsert({
+        where: { lotNumber: lotData.lotNumber },
+        create: { ...lotData, materialId },
+        update: { ...lotData, materialId },
+      });
+    }
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();

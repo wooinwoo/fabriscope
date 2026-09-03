@@ -95,3 +95,42 @@ model WorkOrder {
   @@index([status, dueDate])
   @@index([dueDate])
 }
+
+enum QualityDisposition {
+  PENDING
+  ACCEPTED
+  HOLD
+  QUARANTINED
+  REJECTED
+}
+
+model Material {
+  id        String       @id @default(cuid())
+  code      String       @unique @db.VarChar(30)
+  name      String       @db.VarChar(100)
+  unit      String       @db.VarChar(10)
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  lots      MaterialLot[]
+}
+
+model MaterialLot {
+  id                  String            @id @default(cuid())
+  lotNumber           String            @unique @db.VarChar(24)
+  materialId          String
+  receivedQuantity    Int
+  onHand              Int
+  reservedQuantity    Int
+  consumedQuantity    Int               @default(0)
+  scrappedQuantity    Int               @default(0)
+  qualityDisposition  QualityDisposition @default(PENDING)
+  expiresAt           DateTime?
+  receivedAt          DateTime          @default(now())
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  material            Material          @relation(fields: [materialId], references: [id], onDelete: Restrict)
+
+  @@index([qualityDisposition, expiresAt])
+  @@index([materialId])
+}
