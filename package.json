@@ -15,7 +15,7 @@
     "db:check": "corepack pnpm --filter @sensor-mes/api db:check",
     "db:migrate": "corepack pnpm --filter @sensor-mes/api db:migrate",
     "db:migrate:deploy": "corepack pnpm --filter @sensor-mes/api db:migrate:deploy",
-    "db:seed": "corepack pnpm --filter @sensor-mes/api db:seed",
+    "db:seed": "corepack pnpm --filter @sensor-mes/api prisma:generate && corepack pnpm --filter @sensor-mes/api db:seed",
     "db:verify-auth": "corepack pnpm --filter @sensor-mes/api db:verify-auth",
     "db:validate": "corepack pnpm --filter @sensor-mes/api prisma:validate",
     "lint": "eslint .",
