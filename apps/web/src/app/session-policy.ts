@@ -15,6 +15,7 @@ export const RoutePermission = {
   MATERIAL_LOT_READ: "material-lot:read",
   PROCESS_EXECUTION_READ: "process-execution:read",
   INSPECTION_READ: "inspection:read",
+  QUALITY_INCIDENT_READ: "quality-incident:read",
   AUDIT_EVENT_READ: "audit-event:read",
 } as const;
 
@@ -24,6 +25,7 @@ const implementedRoutePermission: Record<string, string> = {
   "/materials/lots": RoutePermission.MATERIAL_LOT_READ,
   "/execution/queue": RoutePermission.PROCESS_EXECUTION_READ,
   "/quality/inspections": RoutePermission.INSPECTION_READ,
+  "/quality/incidents": RoutePermission.QUALITY_INCIDENT_READ,
   "/audit-events": RoutePermission.AUDIT_EVENT_READ,
 };
 
