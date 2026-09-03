@@ -4,6 +4,7 @@
  */
 import { Link } from "@tanstack/react-router";
 import { PanelsTopLeft, ShieldCheck } from "lucide-react";
+import { SwitchRoleButton } from "@/features/auth/switch-role";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -12,12 +13,16 @@ import {
 } from "@/shared/ui";
 
 interface NavUserProps {
+  csrfToken: string;
   currentRole: string;
+  onSignedOut: () => void;
   showDevelopmentTools: boolean;
 }
 
 export function NavUser({
+  csrfToken,
   currentRole,
+  onSignedOut,
   showDevelopmentTools,
 }: NavUserProps) {
   const { setOpenMobile } = useSidebar();
@@ -42,6 +47,7 @@ export function NavUser({
           </div>
         </div>
       </SidebarMenuItem>
+      <SwitchRoleButton csrfToken={csrfToken} onSignedOut={onSignedOut} />
       {showDevelopmentTools ? (
         <SidebarMenuItem>
           <SidebarMenuButton asChild tooltip="UI 시스템 점검">

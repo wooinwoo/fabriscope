@@ -9,12 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as LoginRouteImport } from "./routes/login";
 import { Route as AuthenticatedRouteImport } from "./routes/_authenticated";
 import { Route as IndexRouteImport } from "./routes/index";
+import { Route as AuthenticatedWorkOrdersRouteImport } from "./routes/_authenticated.work-orders";
 import { Route as AuthenticatedForbiddenRouteImport } from "./routes/_authenticated.forbidden";
 import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated.dashboard";
+import { Route as AuthenticatedAuditEventsRouteImport } from "./routes/_authenticated.audit-events";
+import { Route as AuthenticatedQualityInspectionsRouteImport } from "./routes/_authenticated.quality.inspections";
+import { Route as AuthenticatedMaterialsLotsRouteImport } from "./routes/_authenticated.materials.lots";
+import { Route as AuthenticatedExecutionQueueRouteImport } from "./routes/_authenticated.execution.queue";
 import { Route as AuthenticatedDevUiKitRouteImport } from "./routes/_authenticated.dev.ui-kit";
 
+const LoginRoute = LoginRouteImport.update({
+  id: "/login",
+  path: "/login",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
@@ -23,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
+} as any);
+const AuthenticatedWorkOrdersRoute = AuthenticatedWorkOrdersRouteImport.update({
+  id: "/work-orders",
+  path: "/work-orders",
+  getParentRoute: () => AuthenticatedRoute,
 } as any);
 const AuthenticatedForbiddenRoute = AuthenticatedForbiddenRouteImport.update({
   id: "/forbidden",
@@ -34,6 +50,30 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: "/dashboard",
   getParentRoute: () => AuthenticatedRoute,
 } as any);
+const AuthenticatedAuditEventsRoute =
+  AuthenticatedAuditEventsRouteImport.update({
+    id: "/audit-events",
+    path: "/audit-events",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
+const AuthenticatedQualityInspectionsRoute =
+  AuthenticatedQualityInspectionsRouteImport.update({
+    id: "/quality/inspections",
+    path: "/quality/inspections",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
+const AuthenticatedMaterialsLotsRoute =
+  AuthenticatedMaterialsLotsRouteImport.update({
+    id: "/materials/lots",
+    path: "/materials/lots",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
+const AuthenticatedExecutionQueueRoute =
+  AuthenticatedExecutionQueueRouteImport.update({
+    id: "/execution/queue",
+    path: "/execution/queue",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
 const AuthenticatedDevUiKitRoute = AuthenticatedDevUiKitRouteImport.update({
   id: "/dev/ui-kit",
   path: "/dev/ui-kit",
@@ -42,45 +82,97 @@ const AuthenticatedDevUiKitRoute = AuthenticatedDevUiKitRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/login": typeof LoginRoute;
+  "/audit-events": typeof AuthenticatedAuditEventsRoute;
   "/dashboard": typeof AuthenticatedDashboardRoute;
   "/forbidden": typeof AuthenticatedForbiddenRoute;
+  "/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
+  "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
+  "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/login": typeof LoginRoute;
+  "/audit-events": typeof AuthenticatedAuditEventsRoute;
   "/dashboard": typeof AuthenticatedDashboardRoute;
   "/forbidden": typeof AuthenticatedForbiddenRoute;
+  "/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
+  "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
+  "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/_authenticated": typeof AuthenticatedRouteWithChildren;
+  "/login": typeof LoginRoute;
+  "/_authenticated/audit-events": typeof AuthenticatedAuditEventsRoute;
   "/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
   "/_authenticated/forbidden": typeof AuthenticatedForbiddenRoute;
+  "/_authenticated/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/_authenticated/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
+  "/_authenticated/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/_authenticated/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
+  "/_authenticated/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/dashboard" | "/forbidden" | "/dev/ui-kit";
+  fullPaths:
+    | "/"
+    | "/login"
+    | "/audit-events"
+    | "/dashboard"
+    | "/forbidden"
+    | "/work-orders"
+    | "/dev/ui-kit"
+    | "/execution/queue"
+    | "/materials/lots"
+    | "/quality/inspections";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/dashboard" | "/forbidden" | "/dev/ui-kit";
+  to:
+    | "/"
+    | "/login"
+    | "/audit-events"
+    | "/dashboard"
+    | "/forbidden"
+    | "/work-orders"
+    | "/dev/ui-kit"
+    | "/execution/queue"
+    | "/materials/lots"
+    | "/quality/inspections";
   id:
     | "__root__"
     | "/"
     | "/_authenticated"
+    | "/login"
+    | "/_authenticated/audit-events"
     | "/_authenticated/dashboard"
     | "/_authenticated/forbidden"
-    | "/_authenticated/dev/ui-kit";
+    | "/_authenticated/work-orders"
+    | "/_authenticated/dev/ui-kit"
+    | "/_authenticated/execution/queue"
+    | "/_authenticated/materials/lots"
+    | "/_authenticated/quality/inspections";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+  LoginRoute: typeof LoginRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/_authenticated": {
       id: "/_authenticated";
       path: "";
@@ -94,6 +186,13 @@ declare module "@tanstack/react-router" {
       fullPath: "/";
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated/work-orders": {
+      id: "/_authenticated/work-orders";
+      path: "/work-orders";
+      fullPath: "/work-orders";
+      preLoaderRoute: typeof AuthenticatedWorkOrdersRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
     };
     "/_authenticated/forbidden": {
       id: "/_authenticated/forbidden";
@@ -109,6 +208,34 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/audit-events": {
+      id: "/_authenticated/audit-events";
+      path: "/audit-events";
+      fullPath: "/audit-events";
+      preLoaderRoute: typeof AuthenticatedAuditEventsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/quality/inspections": {
+      id: "/_authenticated/quality/inspections";
+      path: "/quality/inspections";
+      fullPath: "/quality/inspections";
+      preLoaderRoute: typeof AuthenticatedQualityInspectionsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/materials/lots": {
+      id: "/_authenticated/materials/lots";
+      path: "/materials/lots";
+      fullPath: "/materials/lots";
+      preLoaderRoute: typeof AuthenticatedMaterialsLotsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/execution/queue": {
+      id: "/_authenticated/execution/queue";
+      path: "/execution/queue";
+      fullPath: "/execution/queue";
+      preLoaderRoute: typeof AuthenticatedExecutionQueueRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
     "/_authenticated/dev/ui-kit": {
       id: "/_authenticated/dev/ui-kit";
       path: "/dev/ui-kit";
@@ -120,15 +247,25 @@ declare module "@tanstack/react-router" {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAuditEventsRoute: typeof AuthenticatedAuditEventsRoute;
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
   AuthenticatedForbiddenRoute: typeof AuthenticatedForbiddenRoute;
+  AuthenticatedWorkOrdersRoute: typeof AuthenticatedWorkOrdersRoute;
   AuthenticatedDevUiKitRoute: typeof AuthenticatedDevUiKitRoute;
+  AuthenticatedExecutionQueueRoute: typeof AuthenticatedExecutionQueueRoute;
+  AuthenticatedMaterialsLotsRoute: typeof AuthenticatedMaterialsLotsRoute;
+  AuthenticatedQualityInspectionsRoute: typeof AuthenticatedQualityInspectionsRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAuditEventsRoute: AuthenticatedAuditEventsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedForbiddenRoute: AuthenticatedForbiddenRoute,
+  AuthenticatedWorkOrdersRoute: AuthenticatedWorkOrdersRoute,
   AuthenticatedDevUiKitRoute: AuthenticatedDevUiKitRoute,
+  AuthenticatedExecutionQueueRoute: AuthenticatedExecutionQueueRoute,
+  AuthenticatedMaterialsLotsRoute: AuthenticatedMaterialsLotsRoute,
+  AuthenticatedQualityInspectionsRoute: AuthenticatedQualityInspectionsRoute,
 };
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -138,6 +275,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

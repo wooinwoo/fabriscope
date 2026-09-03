@@ -13,18 +13,25 @@ import { ThemeSwitch } from "./ThemeSwitch";
 
 export interface AppShellProps {
   children: ReactNode;
+  csrfToken: string;
   navigation: NavigationGroup[];
+  onSignedOut: () => void;
   pathname: string;
   pageTitle: string;
   currentRole: string;
 }
 
-export type AppShellConfiguration = Omit<AppShellProps, "children">;
+export type AppShellConfiguration = Omit<
+  AppShellProps,
+  "children" | "csrfToken" | "onSignedOut"
+>;
 
 export function AppShell({
   children,
+  csrfToken,
   currentRole,
   navigation,
+  onSignedOut,
   pageTitle,
   pathname,
 }: AppShellProps) {
@@ -34,8 +41,10 @@ export function AppShell({
     <SidebarProvider defaultOpen={defaultOpen}>
       <SkipToMain />
       <AppSidebar
+        csrfToken={csrfToken}
         currentRole={currentRole}
         navigation={navigation}
+        onSignedOut={onSignedOut}
         pathname={pathname}
       />
       <SidebarInset

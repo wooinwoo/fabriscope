@@ -15,15 +15,19 @@ import { NavGroup } from "./NavGroup";
 import { NavUser } from "./NavUser";
 
 interface AppSidebarProps {
+  csrfToken: string;
   currentRole: string;
   navigation: NavigationGroup[];
+  onSignedOut: () => void;
   pathname: string;
   showDevelopmentTools?: boolean;
 }
 
 export function AppSidebar({
+  csrfToken,
   currentRole,
   navigation,
+  onSignedOut,
   pathname,
   showDevelopmentTools = import.meta.env.DEV,
 }: AppSidebarProps) {
@@ -41,7 +45,9 @@ export function AppSidebar({
       </SidebarContent>
       <SidebarFooter>
         <NavUser
+          csrfToken={csrfToken}
           currentRole={currentRole}
+          onSignedOut={onSignedOut}
           showDevelopmentTools={showDevelopmentTools}
         />
       </SidebarFooter>

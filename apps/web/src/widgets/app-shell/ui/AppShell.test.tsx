@@ -20,6 +20,7 @@ vi.mock("@tanstack/react-router", () => ({
 test("실제 기능이 없는 전역 조작과 내부 화면 ID를 노출하지 않는다", () => {
   render(
     <AppShell
+      csrfToken="csrf-token"
       currentRole="시스템 관리자"
       navigation={[
         {
@@ -31,6 +32,7 @@ test("실제 기능이 없는 전역 조작과 내부 화면 ID를 노출하지 
       ]}
       pageTitle="운영 대시보드"
       pathname="/dashboard"
+      onSignedOut={() => undefined}
     >
       본문
     </AppShell>,
@@ -45,6 +47,7 @@ test("실제 기능이 없는 전역 조작과 내부 화면 ID를 노출하지 
     screen.queryByRole("button", { name: /LOT·작업지시 검색/ }),
   ).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "알림" })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "역할 전환" })).toBeInTheDocument();
   expect(
     screen.queryByRole("button", { name: "워크스페이스 전환" }),
   ).not.toBeInTheDocument();

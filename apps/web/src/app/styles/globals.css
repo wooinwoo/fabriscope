@@ -23,6 +23,11 @@
     text-rendering: optimizeLegibility;
   }
 
+  ::selection {
+    background: var(--mes-color-accent-soft);
+    color: var(--mes-color-text-strong);
+  }
+
   button,
   input,
   select,

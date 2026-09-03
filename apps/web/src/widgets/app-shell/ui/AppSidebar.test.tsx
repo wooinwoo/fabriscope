@@ -23,6 +23,7 @@ describe("shadcn-admin 기반 MES 앱 사이드바", () => {
     const { container } = render(
       <SidebarProvider defaultOpen>
         <AppSidebar
+          csrfToken="csrf-token"
           currentRole="시스템 관리자"
           navigation={[
             {
@@ -37,6 +38,7 @@ describe("shadcn-admin 기반 MES 앱 사이드바", () => {
             },
           ]}
           pathname="/dashboard"
+          onSignedOut={() => undefined}
           showDevelopmentTools={false}
         />
         <SidebarInset>본문</SidebarInset>

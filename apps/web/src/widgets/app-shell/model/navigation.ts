@@ -13,7 +13,13 @@ export type NavigationIcon =
 export interface NavigationItem {
   label: string;
   icon: NavigationIcon;
-  to?: "/dashboard";
+  to?:
+    | "/dashboard"
+    | "/work-orders"
+    | "/materials/lots"
+    | "/execution/queue"
+    | "/quality/inspections"
+    | "/audit-events";
   pending?: boolean;
 }
 
