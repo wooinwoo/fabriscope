@@ -1,29 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   requireRoutePermission,
   RoutePermission,
 } from "@/app/session-policy";
-import { RoleHomePage } from "@/pages/role-home";
+import { ExecutionQueuePage, readExecutionQueueSearch } from "@/pages/execution-queue";
 
 export const Route = createFileRoute("/_authenticated/execution/queue")({
+  validateSearch: (search: Record<string, unknown>) =>
+    readExecutionQueueSearch(search),
   beforeLoad: ({ context, location }) =>
     requireRoutePermission(
       context.session,
       RoutePermission.PROCESS_EXECUTION_READ,
       location.href,
     ),
-  component: ExecutionLanding,
+  component: ExecutionQueueRoute,
 });
 
-function ExecutionLanding() {
-  const { session } = Route.useRouteContext();
+function ExecutionQueueRoute() {
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+
   return (
-    <RoleHomePage
-      description="현재 작업 대상과 공정 순서를 확인하고 생산 실적을 기록합니다."
-      emptyDescription="릴리스된 작업지시가 생기면 이 권한으로 공정 대기열과 투입 가능한 생산 LOT를 확인합니다."
-      emptyTitle="실행 대기 중인 가상 공정이 없습니다"
-      session={session}
-      title="공정 실행"
+    <ExecutionQueuePage
+      search={search}
+      onSearchChange={(next) => {
+        void navigate({
+          to: "/execution/queue",
+          search: next,
+          replace: true,
+        });
+      }}
     />
   );
 }

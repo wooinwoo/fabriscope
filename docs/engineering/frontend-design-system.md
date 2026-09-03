@@ -392,6 +392,20 @@ skip link는 키보드 사용자의 반복 탐색 비용을 줄이는 보조 경
 surface와 업무 shell 양쪽 header에 모두 노출되는 지속적 컨트롤이므로 mobile 44px
 계약을 공통으로 적용한다.
 
+### 8.3 2026-09-03 실행 대기열·자재 LOT surface 설계 근거와 검증 이력
+
+| 결정 | 근거 | 검증 |
+|---|---|---|
+| 준비 상태 배지 5종(`대기` neutral, `실행 가능` info, `진행 중` warning, `완료` success, `차단` danger) | `ManufacturingStatusSummary`가 이미 확정한 생산 진행 상태 언어(planned·ready·in-progress·completed)를 그대로 확장하고 차단만 danger로 추가했다. 새로운 색 체계를 만들지 않는다 | 실브라우저 E2E에서 라벨·톤 렌더 확인, 대비는 8.1과 동일 계산식으로 0 실패 |
+| 대기열 열 구성: 작업지시·생산 LOT·공정(순서)·제품·계획수량·준비 상태·차단 사유 | `ui-layout-contracts` 3.3이 SCR-04A의 대상 식별자·현재 공정·핵심 수량 우선을 요구한다. 생산 LOT를 작업지시 다음에 두어 작업자가 LOT 단위로 공정을 찾는 흐름과 일치시켰다 | 헤더 7열 실측 일치, 900px 가로 overflow 0 |
+| 차단 사유는 기계 판독 `reasonCodes`를 사람 라벨로 변환해 표시 | 도메인 계약이 `reasonCodes[]`를 기계 판독 계약으로 유지하고, 화면은 업무 언어로 설명해야 한다 | `MATERIAL_SHORTAGE`→자재 부족, `INSPECTION_HELD`→검사 보류 매핑이 e2e와 브라우저에서 동일 확인 |
+| 자재 LOT 가용 0은 danger 배지, 만료·D-7 임박은 배지 구분 | 가용 부족이 자재 담당자의 조치 트리거라는 SCR-03 목적과 일치한다 | availability=expired 1행·QUARANTINED 1행 실측 |
+| 목록 필터 상태는 전부 URL search가 소유 | route-contract 일반 규칙(공유 가능한 보기 상태는 search parameter) | 필터 적용 후 URL query와 표 행 수가 일치함을 E2E로 확인, 조건 초기화가 잔여 조건 없이 `''`로 돌아감 |
+
+실행 대기열의 `READY`는 저장 상태가 아니라 계산 projection이라는 도메인 계약을
+그대로 따르며, 이 surface는 읽기 전용이다. 공정 시작·완료 command는 SCR-04B에서
+별도 확인 절차와 함께 추가된다.
+
 모바일 rail은 좁은 edge target을 추가하므로 overlay에서는 숨긴다. 외부 영역 클릭,
 Escape와 메뉴 선택 닫기가 이미 같은 복구 경로를 제공하므로 기능 손실 없이 오조작
 가능성만 줄인다.
