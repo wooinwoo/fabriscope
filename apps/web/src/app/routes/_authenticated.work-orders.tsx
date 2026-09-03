@@ -20,10 +20,21 @@ export const Route = createFileRoute("/_authenticated/work-orders")({
 function WorkOrdersRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { session } = Route.useRouteContext();
 
   return (
     <WorkOrdersPage
       search={search}
+      canCreate={session.permissions.includes("work-order:create")}
+      onCreate={() => {
+        void navigate({ to: "/work-orders/new" });
+      }}
+      onOpenDetail={(workOrderId) => {
+        void navigate({
+          to: "/work-orders/$workOrderId",
+          params: { workOrderId },
+        });
+      }}
       onSearchChange={(next) => {
         void navigate({
           to: "/work-orders",

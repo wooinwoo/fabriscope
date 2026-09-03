@@ -34,6 +34,7 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
         progressPercent: 45,
         currentStepName: "조립 2공정",
         blockedReason: null,
+      memo: null,
       },
       {
         id: "work-order-2",
@@ -48,6 +49,7 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
         progressPercent: 0,
         currentStepName: "라인 투입 대기",
         blockedReason: "자재 LOT 부족 (SEN-MAT-014)",
+      memo: null,
       },
     ],
     page: 1,
@@ -59,8 +61,17 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
 
 function renderPage(search: WorkOrdersListSearch = {}) {
   const onSearchChange = vi.fn();
-  render(<WorkOrdersPage search={search} onSearchChange={onSearchChange} />);
-  return { onSearchChange };
+  const onOpenDetail = vi.fn();
+  render(
+    <WorkOrdersPage
+      search={search}
+      onSearchChange={onSearchChange}
+      onOpenDetail={onOpenDetail}
+      canCreate
+      onCreate={() => undefined}
+    />,
+  );
+  return { onSearchChange, onOpenDetail };
 }
 
 describe("WorkOrdersPage", () => {

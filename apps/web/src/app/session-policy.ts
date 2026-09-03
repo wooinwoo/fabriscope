@@ -9,6 +9,9 @@ import type { LoginReason } from "@/features/auth/login-as-role";
 export const RoutePermission = {
   DASHBOARD_READ: "dashboard:read",
   WORK_ORDER_READ: "work-order:read",
+  WORK_ORDER_CREATE: "work-order:create",
+  WORK_ORDER_RELEASE: "work-order:release",
+  WORK_ORDER_CANCEL: "work-order:cancel",
   MATERIAL_LOT_READ: "material-lot:read",
   PROCESS_EXECUTION_READ: "process-execution:read",
   INSPECTION_READ: "inspection:read",

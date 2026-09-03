@@ -8,6 +8,8 @@ const seoulStartOfToday = () => {
   return Date.parse(`${parts}T00:00:00+09:00`);
 };
 
+export { DEMO_PRODUCTS, type DemoProduct } from "../src/work-orders/work-order-products.js";
+
 const dayOffset = (days: number, hour = 17) =>
   new Date(seoulStartOfToday() + days * 86_400_000 + hour * 3_600_000);
 
