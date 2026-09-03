@@ -4,6 +4,7 @@ import { PrismaClient } from "../src/generated/prisma/client.js";
 import { ROLE_CONFIG } from "../src/auth/auth.contract.js";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/auth/demo-accounts.js";
 import { hashPassword } from "../src/auth/password.js";
+import { DEMO_WORK_ORDERS } from "./demo-work-orders.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -65,9 +66,19 @@ try {
         update: {},
       });
     }
+
+    for (const order of DEMO_WORK_ORDERS) {
+      await transaction.workOrder.upsert({
+        where: { orderNumber: order.orderNumber },
+        create: order,
+        update: order,
+      });
+    }
   });
 
-  console.log(`가상 데모 계정 ${DEMO_ACCOUNTS.length}개 seed 완료`);
+  console.log(
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건 seed 완료`,
+  );
 } finally {
   await prisma.$disconnect();
 }

@@ -60,3 +60,38 @@ model Session {
   @@index([userId, revokedAt])
   @@index([expiresAt])
 }
+
+enum WorkOrderStatus {
+  DRAFT
+  RELEASED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum WorkOrderPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model WorkOrder {
+  id              String            @id @default(cuid())
+  orderNumber     String            @unique @db.VarChar(20)
+  productCode     String            @db.VarChar(30)
+  productName     String            @db.VarChar(100)
+  plannedQuantity Int
+  unit            String            @db.VarChar(10)
+  dueDate         DateTime
+  status          WorkOrderStatus   @default(DRAFT)
+  priority        WorkOrderPriority @default(NORMAL)
+  progressPercent Int               @default(0)
+  currentStepName String?           @db.VarChar(60)
+  blockedReason   String?           @db.VarChar(120)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([status, dueDate])
+  @@index([dueDate])
+}
