@@ -57,9 +57,18 @@ type LoadState =
 interface WorkOrdersPageProps {
   search: WorkOrdersListSearch;
   onSearchChange: (next: WorkOrdersListSearch) => void;
+  onOpenDetail: (workOrderId: string) => void;
+  canCreate: boolean;
+  onCreate: () => void;
 }
 
-export function WorkOrdersPage({ search, onSearchChange }: WorkOrdersPageProps) {
+export function WorkOrdersPage({
+  search,
+  onSearchChange,
+  onOpenDetail,
+  canCreate,
+  onCreate,
+}: WorkOrdersPageProps) {
   const searchKey = JSON.stringify(search);
   const [reloadCount, setReloadCount] = useState(0);
   const [result, setResult] = useState<{
@@ -121,9 +130,13 @@ export function WorkOrdersPage({ search, onSearchChange }: WorkOrdersPageProps) 
         key: "orderNumber",
         header: "작업지시",
         cell: (row) => (
-          <span className="font-mono text-xs font-bold text-text-strong">
+          <button
+            className="font-mono text-xs font-bold text-accent-strong underline-offset-4 hover:underline"
+            onClick={() => onOpenDetail(row.id)}
+            type="button"
+          >
             {row.orderNumber}
-          </span>
+          </button>
         ),
       },
       {
@@ -234,6 +247,11 @@ export function WorkOrdersPage({ search, onSearchChange }: WorkOrdersPageProps) 
   return (
     <Main id="main-content" tabIndex={-1}>
       <PageHeading
+        actions={
+          canCreate ? (
+            <Button onClick={onCreate}>작업지시 생성</Button>
+          ) : undefined
+        }
         description="생산 계획과 작업 진행의 기준이 되는 작업지시를 확인합니다."
         meta={<span>가상 데모 데이터</span>}
         title="작업지시"

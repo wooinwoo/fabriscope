@@ -57,6 +57,7 @@ export interface WorkOrderListItem {
   progressPercent: number;
   currentStepName: string | null;
   blockedReason: string | null;
+  memo: string | null;
 }
 
 export interface WorkOrderListResult {
@@ -65,6 +66,75 @@ export interface WorkOrderListResult {
   pageSize: number;
   total: number;
 }
+
+export interface WorkOrderStepView {
+  id: string;
+  sequence: number;
+  processStepName: string;
+  productionLotNumber: string;
+  readiness: "WAITING" | "READY" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
+  blockedReasonCodes: readonly string[];
+}
+
+export interface WorkOrderInspectionView {
+  id: string;
+  inspectionNumber: string;
+  processStepName: string;
+  gate: "ROUTE_ADVANCE" | "LOT_COMPLETE";
+  specName: string;
+  executionStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  verdict: "PASS" | "FAIL" | "HOLD" | null;
+}
+
+export interface WorkOrderAuditView {
+  id: string;
+  occurredAt: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  summary: string;
+}
+
+export interface WorkOrderDetail extends WorkOrderListItem {
+  createdAt: string;
+  steps: WorkOrderStepView[];
+  inspections: WorkOrderInspectionView[];
+  recentAudits: WorkOrderAuditView[];
+}
+
+export interface WorkOrderProduct {
+  code: string;
+  name: string;
+  unit: string;
+}
+
+export const WORK_ORDER_READINESS_LABELS = {
+  WAITING: "대기",
+  READY: "실행 가능",
+  IN_PROGRESS: "진행 중",
+  COMPLETED: "완료",
+  BLOCKED: "차단",
+} as const;
+
+export const WORK_ORDER_GATE_LABELS = {
+  ROUTE_ADVANCE: "공정 진행",
+  LOT_COMPLETE: "LOT 완료",
+} as const;
+
+export const WORK_ORDER_EXECUTION_STATUS_LABELS = {
+  PENDING: "대기",
+  IN_PROGRESS: "진행 중",
+  COMPLETED: "완료",
+  CANCELLED: "취소",
+} as const;
+
+export const WORK_ORDER_VERDICT_LABELS = {
+  PASS: "합격",
+  FAIL: "불합격",
+  HOLD: "보류",
+} as const;
+
+export type WorkOrderVerdict = keyof typeof WORK_ORDER_VERDICT_LABELS;
 
 export function toPriorityBadgeValue(
   priority: WorkOrderPriority,

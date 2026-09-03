@@ -16,6 +16,8 @@ import { Route as AuthenticatedWorkOrdersRouteImport } from "./routes/_authentic
 import { Route as AuthenticatedForbiddenRouteImport } from "./routes/_authenticated.forbidden";
 import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated.dashboard";
 import { Route as AuthenticatedAuditEventsRouteImport } from "./routes/_authenticated.audit-events";
+import { Route as AuthenticatedWorkOrdersNewRouteImport } from "./routes/_authenticated.work-orders_.new";
+import { Route as AuthenticatedWorkOrdersWorkOrderIdRouteImport } from "./routes/_authenticated.work-orders_.$workOrderId";
 import { Route as AuthenticatedQualityInspectionsRouteImport } from "./routes/_authenticated.quality.inspections";
 import { Route as AuthenticatedMaterialsLotsRouteImport } from "./routes/_authenticated.materials.lots";
 import { Route as AuthenticatedExecutionQueueRouteImport } from "./routes/_authenticated.execution.queue";
@@ -56,6 +58,18 @@ const AuthenticatedAuditEventsRoute =
     path: "/audit-events",
     getParentRoute: () => AuthenticatedRoute,
   } as any);
+const AuthenticatedWorkOrdersNewRoute =
+  AuthenticatedWorkOrdersNewRouteImport.update({
+    id: "/work-orders_/new",
+    path: "/work-orders/new",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
+const AuthenticatedWorkOrdersWorkOrderIdRoute =
+  AuthenticatedWorkOrdersWorkOrderIdRouteImport.update({
+    id: "/work-orders_/$workOrderId",
+    path: "/work-orders/$workOrderId",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
 const AuthenticatedQualityInspectionsRoute =
   AuthenticatedQualityInspectionsRouteImport.update({
     id: "/quality/inspections",
@@ -91,6 +105,8 @@ export interface FileRoutesByFullPath {
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
+  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/work-orders/new": typeof AuthenticatedWorkOrdersNewRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
@@ -103,6 +119,8 @@ export interface FileRoutesByTo {
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
+  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/work-orders/new": typeof AuthenticatedWorkOrdersNewRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -117,6 +135,8 @@ export interface FileRoutesById {
   "/_authenticated/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/_authenticated/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/_authenticated/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
+  "/_authenticated/work-orders_/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/_authenticated/work-orders_/new": typeof AuthenticatedWorkOrdersNewRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -130,7 +150,9 @@ export interface FileRouteTypes {
     | "/dev/ui-kit"
     | "/execution/queue"
     | "/materials/lots"
-    | "/quality/inspections";
+    | "/quality/inspections"
+    | "/work-orders/$workOrderId"
+    | "/work-orders/new";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
@@ -142,7 +164,9 @@ export interface FileRouteTypes {
     | "/dev/ui-kit"
     | "/execution/queue"
     | "/materials/lots"
-    | "/quality/inspections";
+    | "/quality/inspections"
+    | "/work-orders/$workOrderId"
+    | "/work-orders/new";
   id:
     | "__root__"
     | "/"
@@ -155,7 +179,9 @@ export interface FileRouteTypes {
     | "/_authenticated/dev/ui-kit"
     | "/_authenticated/execution/queue"
     | "/_authenticated/materials/lots"
-    | "/_authenticated/quality/inspections";
+    | "/_authenticated/quality/inspections"
+    | "/_authenticated/work-orders_/$workOrderId"
+    | "/_authenticated/work-orders_/new";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -215,6 +241,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedAuditEventsRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/work-orders_/new": {
+      id: "/_authenticated/work-orders_/new";
+      path: "/work-orders/new";
+      fullPath: "/work-orders/new";
+      preLoaderRoute: typeof AuthenticatedWorkOrdersNewRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/work-orders_/$workOrderId": {
+      id: "/_authenticated/work-orders_/$workOrderId";
+      path: "/work-orders/$workOrderId";
+      fullPath: "/work-orders/$workOrderId";
+      preLoaderRoute: typeof AuthenticatedWorkOrdersWorkOrderIdRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
     "/_authenticated/quality/inspections": {
       id: "/_authenticated/quality/inspections";
       path: "/quality/inspections";
@@ -255,6 +295,8 @@ interface AuthenticatedRouteChildren {
   AuthenticatedExecutionQueueRoute: typeof AuthenticatedExecutionQueueRoute;
   AuthenticatedMaterialsLotsRoute: typeof AuthenticatedMaterialsLotsRoute;
   AuthenticatedQualityInspectionsRoute: typeof AuthenticatedQualityInspectionsRoute;
+  AuthenticatedWorkOrdersWorkOrderIdRoute: typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  AuthenticatedWorkOrdersNewRoute: typeof AuthenticatedWorkOrdersNewRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -266,6 +308,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedExecutionQueueRoute: AuthenticatedExecutionQueueRoute,
   AuthenticatedMaterialsLotsRoute: AuthenticatedMaterialsLotsRoute,
   AuthenticatedQualityInspectionsRoute: AuthenticatedQualityInspectionsRoute,
+  AuthenticatedWorkOrdersWorkOrderIdRoute:
+    AuthenticatedWorkOrdersWorkOrderIdRoute,
+  AuthenticatedWorkOrdersNewRoute: AuthenticatedWorkOrdersNewRoute,
 };
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
