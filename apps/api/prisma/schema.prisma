@@ -89,8 +89,10 @@ model WorkOrder {
   progressPercent Int               @default(0)
   currentStepName String?           @db.VarChar(60)
   blockedReason   String?           @db.VarChar(120)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  processSteps       ProcessStepExecution[]
 
   @@index([status, dueDate])
   @@index([dueDate])
@@ -133,4 +135,29 @@ model MaterialLot {
 
   @@index([qualityDisposition, expiresAt])
   @@index([materialId])
+}
+
+enum ProcessReadiness {
+  WAITING
+  READY
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+model ProcessStepExecution {
+  id                 String          @id @default(cuid())
+  workOrderId        String
+  sequence           Int
+  processStepName    String          @db.VarChar(60)
+  productionLotNumber String         @db.VarChar(24)
+  readiness          ProcessReadiness @default(WAITING)
+  blockedReasonCodes String[]        @default([])
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  workOrder          WorkOrder       @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([readiness])
+  @@index([workOrderId, sequence])
+  @@unique([workOrderId, sequence, productionLotNumber])
 }

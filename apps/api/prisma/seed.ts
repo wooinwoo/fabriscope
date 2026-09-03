@@ -6,6 +6,7 @@ import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../src/auth/demo-accounts.js";
 import { hashPassword } from "../src/auth/password.js";
 import { DEMO_WORK_ORDERS } from "./demo-work-orders.js";
 import { DEMO_MATERIAL_LOTS, DEMO_MATERIALS } from "./demo-material-lots.js";
+import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -97,10 +98,39 @@ try {
         update: { ...lotData, materialId },
       });
     }
+
+    const workOrderIdByNumber = new Map<string, string>();
+    for (const order of DEMO_WORK_ORDERS) {
+      const row = await transaction.workOrder.findUnique({
+        where: { orderNumber: order.orderNumber },
+        select: { id: true },
+      });
+      if (row !== null) {
+        workOrderIdByNumber.set(order.orderNumber, row.id);
+      }
+    }
+
+    for (const { workOrderNumber, ...stepData } of DEMO_PROCESS_STEPS) {
+      const workOrderId = workOrderIdByNumber.get(workOrderNumber);
+      if (workOrderId === undefined) {
+        throw new Error(`작업지시 seed가 없습니다: ${workOrderNumber}`);
+      }
+      await transaction.processStepExecution.upsert({
+        where: {
+          workOrderId_sequence_productionLotNumber: {
+            workOrderId,
+            sequence: stepData.sequence,
+            productionLotNumber: stepData.productionLotNumber,
+          },
+        },
+        create: { ...stepData, workOrderId },
+        update: { ...stepData, workOrderId },
+      });
+    }
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();
