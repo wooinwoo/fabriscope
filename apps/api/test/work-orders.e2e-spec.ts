@@ -148,6 +148,9 @@ function fieldMatches(row: FakeWorkOrderRow, condition: unknown, field: string) 
     if ("in" in filter) {
       return (filter.in as unknown[]).includes(value);
     }
+    if ("notIn" in filter) {
+      return !(filter.notIn as unknown[]).includes(value);
+    }
     if ("not" in filter) {
       return value !== filter.not;
     }
@@ -308,10 +311,10 @@ describe("work order list API", () => {
       .query({ due: "overdue" })
       .set("Origin", allowedOrigin)
       .expect(200);
-    expect(overdue.body.total).toBe(2);
+    expect(overdue.body.total).toBe(1);
     expect(
       (overdue.body.items as { orderNumber: string }[]).map((item) => item.orderNumber).sort(),
-    ).toEqual(["WO-2026-092", "WO-2026-095"]);
+    ).toEqual(["WO-2026-092"]);
 
     const urgent = await agent
       .get("/api/work-orders")

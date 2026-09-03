@@ -154,6 +154,8 @@ export class WorkOrdersService {
     }
     if (query.status.length > 0) {
       where.status = { in: [...query.status] };
+    } else if (query.due === "overdue") {
+      where.status = { notIn: ["COMPLETED", "CANCELLED"] };
     }
     if (query.priority.length > 0) {
       where.priority = { in: [...query.priority] };
