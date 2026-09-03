@@ -157,6 +157,11 @@ model ProcessStepExecution {
   productionLotNumber String         @db.VarChar(24)
   readiness          ProcessReadiness @default(WAITING)
   blockedReasonCodes String[]        @default([])
+  startedAt          DateTime?
+  completedAt        DateTime?
+  goodQuantity       Int?
+  defectQuantity     Int?
+  executionMemo      String?         @db.VarChar(300)
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
   workOrder          WorkOrder       @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
@@ -212,6 +217,8 @@ enum AuditAction {
   MATERIAL_RESERVED
   MATERIAL_RESERVATION_RELEASED
   MATERIAL_LOT_DISPOSITION_DECIDED
+  PROCESS_STARTED
+  PROCESS_COMPLETED
   INSPECTION_VERDICTED
 }
 
