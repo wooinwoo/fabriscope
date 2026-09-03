@@ -221,6 +221,37 @@ enum AuditAction {
   PROCESS_STARTED
   PROCESS_COMPLETED
   INSPECTION_VERDICTED
+  QUALITY_INCIDENT_REGISTERED
+}
+
+enum QualityIncidentStatus {
+  OPEN
+  ASSESSED
+  CONTAINED
+  CLOSED
+}
+
+enum QualityIncidentSourceType {
+  MATERIAL_LOT
+  PRODUCTION_LOT
+  FINISHED_UNIT
+}
+
+model QualityIncident {
+  id             String                    @id @default(cuid())
+  incidentNumber String                    @unique @db.VarChar(24)
+  title          String                    @db.VarChar(120)
+  sourceType     QualityIncidentSourceType
+  sourceLotNumber String                  @db.VarChar(24)
+  description    String?                   @db.VarChar(500)
+  status         QualityIncidentStatus    @default(OPEN)
+  detectedAt     DateTime
+  resolvedAt     DateTime?
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+
+  @@index([status, detectedAt])
+  @@index([sourceType, sourceLotNumber])
 }
 
 model AuditEvent {

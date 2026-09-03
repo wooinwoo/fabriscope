@@ -9,6 +9,7 @@ import { AuditEventsModule } from "./audit-events/audit-events.module.js";
 import { DashboardModule } from "./dashboard/dashboard.module.js";
 import { InspectionsModule } from "./inspections/inspections.module.js";
 import { ProcessExecutionsModule } from "./process-executions/process-executions.module.js";
+import { QualityIncidentsModule } from "./quality-incidents/quality-incidents.module.js";
 import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
 
 @Module({
@@ -19,6 +20,7 @@ import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
     MaterialReservationsModule,
     ProcessExecutionsModule,
     InspectionsModule,
+    QualityIncidentsModule,
     AuditEventsModule,
     DashboardModule,
   ],
