@@ -31,7 +31,7 @@ interface FakeSessionRow {
 
 interface FakeTraceNode {
   id: string;
-  nodeType: "MATERIAL_LOT" | "PRODUCTION_LOT";
+  nodeType: "MATERIAL_LOT" | "PRODUCTION_LOT" | "FINISHED_UNIT";
   label: string;
   materialLotId: string | null;
   productionLotNumber: string | null;
@@ -40,7 +40,7 @@ interface FakeTraceNode {
 
 interface FakeLotRelation {
   id: string;
-  relationType: "CONSUME";
+  relationType: "CONSUME" | "SPLIT" | "MERGE" | "TRANSFORM" | "SERIALIZE";
   quantity: number;
   parentNodeId: string;
   childNodeId: string;
@@ -101,6 +101,30 @@ class FakePrismaService {
       productionLotNumber: "PL-2026-095A",
       createdAt: new Date("2026-09-02T01:30:00Z"),
     },
+    {
+      id: "trace-p-3",
+      nodeType: "PRODUCTION_LOT",
+      label: "PL-2026-097A",
+      materialLotId: null,
+      productionLotNumber: "PL-2026-097A",
+      createdAt: new Date("2026-09-02T02:00:00Z"),
+    },
+    {
+      id: "trace-p-4",
+      nodeType: "PRODUCTION_LOT",
+      label: "PL-2026-097B",
+      materialLotId: null,
+      productionLotNumber: "PL-2026-097B",
+      createdAt: new Date("2026-09-02T02:10:00Z"),
+    },
+    {
+      id: "trace-f-1",
+      nodeType: "FINISHED_UNIT",
+      label: "FU-2026-0001",
+      materialLotId: null,
+      productionLotNumber: null,
+      createdAt: new Date("2026-09-03T03:00:00Z"),
+    },
   ];
 
   readonly lotRelations: FakeLotRelation[] = [
@@ -130,6 +154,24 @@ class FakePrismaService {
       childNodeId: "trace-p-2",
       processStepExecutionId: "step-7",
       createdAt: new Date("2026-09-02T01:40:00Z"),
+    },
+    {
+      id: "relation-4",
+      relationType: "SPLIT",
+      quantity: 60,
+      parentNodeId: "trace-p-3",
+      childNodeId: "trace-p-4",
+      processStepExecutionId: null,
+      createdAt: new Date("2026-09-02T02:15:00Z"),
+    },
+    {
+      id: "relation-5",
+      relationType: "SERIALIZE",
+      quantity: 1,
+      parentNodeId: "trace-p-2",
+      childNodeId: "trace-f-1",
+      processStepExecutionId: null,
+      createdAt: new Date("2026-09-03T03:05:00Z"),
     },
   ];
 
@@ -351,12 +393,26 @@ describe("traceability nodes", () => {
       .set("Origin", allowedOrigin)
       .expect(200);
 
-    expect(response.body.total).toBe(2);
+    expect(response.body.total).toBe(4);
     expect(
       response.body.items.every(
         (item: { nodeType: string }) => item.nodeType === "PRODUCTION_LOT",
       ),
     ).toBe(true);
+  });
+
+  it("nodeType 필터로 완제품 일련번호를 조회한다", async () => {
+    const { agent } = await loginAs("QUALITY_ENGINEER");
+    const response = await agent
+      .get("/api/traceability/nodes?nodeType=FINISHED_UNIT")
+      .set("Origin", allowedOrigin)
+      .expect(200);
+
+    expect(response.body.total).toBe(1);
+    expect(response.body.items[0]).toMatchObject({
+      label: "FU-2026-0001",
+      nodeType: "FINISHED_UNIT",
+    });
   });
 
   it("허용되지 않는 nodeType은 400을 받는다", async () => {
@@ -402,6 +458,51 @@ describe("traceability nodes", () => {
       quantity: 35,
       node: { label: "PL-2026-095A" },
     });
+  });
+
+  it("분할된 생산 LOT 상세는 SPLIT 관계를 downstream으로 반환한다", async () => {
+    const { agent } = await loginAs("QUALITY_ENGINEER");
+    const response = await agent
+      .get("/api/traceability/nodes/trace-p-3")
+      .set("Origin", allowedOrigin)
+      .expect(200);
+
+    expect(response.body.downstream).toHaveLength(1);
+    expect(response.body.downstream[0]).toMatchObject({
+      relationType: "SPLIT",
+      quantity: 60,
+      node: { label: "PL-2026-097B", nodeType: "PRODUCTION_LOT" },
+    });
+  });
+
+  it("시리얼화된 생산 LOT 상세는 완제품 일련번호를 downstream으로 반환한다", async () => {
+    const { agent } = await loginAs("QUALITY_ENGINEER");
+    const response = await agent
+      .get("/api/traceability/nodes/trace-p-2")
+      .set("Origin", allowedOrigin)
+      .expect(200);
+
+    expect(response.body.downstream).toHaveLength(1);
+    expect(response.body.downstream[0]).toMatchObject({
+      relationType: "SERIALIZE",
+      quantity: 1,
+      node: { label: "FU-2026-0001", nodeType: "FINISHED_UNIT" },
+    });
+  });
+
+  it("완제품 일련번호 상세는 시리얼화 원천 LOT를 upstream으로 반환한다", async () => {
+    const { agent } = await loginAs("QUALITY_ENGINEER");
+    const response = await agent
+      .get("/api/traceability/nodes/trace-f-1")
+      .set("Origin", allowedOrigin)
+      .expect(200);
+
+    expect(response.body.upstream).toHaveLength(1);
+    expect(response.body.upstream[0]).toMatchObject({
+      relationType: "SERIALIZE",
+      node: { label: "PL-2026-095A", nodeType: "PRODUCTION_LOT" },
+    });
+    expect(response.body.downstream).toHaveLength(0);
   });
 
   it("존재하지 않는 추적 노드는 404를 받는다", async () => {

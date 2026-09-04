@@ -122,41 +122,117 @@ try {
       });
     }
 
-    for (const relation of DEMO_TRACE_RELATIONS) {
-      const materialLotId = materialLotIdByNumber.get(relation.materialLotNumber);
-      if (materialLotId === undefined) {
-        throw new Error(`자재 LOT seed가 없습니다: ${relation.materialLotNumber}`);
-      }
-      const materialNode = await transaction.traceNode.upsert({
-        where: { materialLotId },
+    const upsertProductionNode = async (lotNumber: string) =>
+      transaction.traceNode.upsert({
+        where: { productionLotNumber: lotNumber },
         create: {
-          nodeType: "MATERIAL_LOT",
-          label: relation.materialLotNumber,
-          materialLotId,
+          nodeType: "PRODUCTION_LOT",
+          label: lotNumber,
+          productionLotNumber: lotNumber,
         },
         update: {},
       });
-      const productionNode = await transaction.traceNode.findUnique({
-        where: { productionLotNumber: relation.productionLotNumber },
-      });
-      if (productionNode === null) {
-        throw new Error(
-          `생산 LOT 추적 노드가 없습니다: ${relation.productionLotNumber}`,
-        );
-      }
-      await transaction.lotRelation.upsert({
-        where: {
-          relationType_parentNodeId_childNodeId: {
+
+    for (const relation of DEMO_TRACE_RELATIONS) {
+      if (relation.kind === "CONSUME") {
+        const materialLotId = materialLotIdByNumber.get(relation.materialLotNumber);
+        if (materialLotId === undefined) {
+          throw new Error(`자재 LOT seed가 없습니다: ${relation.materialLotNumber}`);
+        }
+        const materialNode = await transaction.traceNode.upsert({
+          where: { materialLotId },
+          create: {
+            nodeType: "MATERIAL_LOT",
+            label: relation.materialLotNumber,
+            materialLotId,
+          },
+          update: {},
+        });
+        const productionNode = await transaction.traceNode.findUnique({
+          where: { productionLotNumber: relation.productionLotNumber },
+        });
+        if (productionNode === null) {
+          throw new Error(
+            `생산 LOT 추적 노드가 없습니다: ${relation.productionLotNumber}`,
+          );
+        }
+        await transaction.lotRelation.upsert({
+          where: {
+            relationType_parentNodeId_childNodeId: {
+              relationType: "CONSUME",
+              parentNodeId: materialNode.id,
+              childNodeId: productionNode.id,
+            },
+          },
+          create: {
             relationType: "CONSUME",
+            quantity: relation.quantity,
             parentNodeId: materialNode.id,
             childNodeId: productionNode.id,
           },
+          update: { quantity: relation.quantity },
+        });
+        continue;
+      }
+
+      if (relation.kind === "SERIALIZE") {
+        const productionNode = await transaction.traceNode.findUnique({
+          where: { productionLotNumber: relation.productionLotNumber },
+        });
+        if (productionNode === null) {
+          throw new Error(
+            `생산 LOT 추적 노드가 없습니다: ${relation.productionLotNumber}`,
+          );
+        }
+        const existingFinishedNode = await transaction.traceNode.findFirst({
+          where: { nodeType: "FINISHED_UNIT", label: relation.serialNumber },
+        });
+        const finishedNode =
+          existingFinishedNode ??
+          (await transaction.traceNode.create({
+            data: {
+              nodeType: "FINISHED_UNIT",
+              label: relation.serialNumber,
+            },
+          }));
+        await transaction.lotRelation.upsert({
+          where: {
+            relationType_parentNodeId_childNodeId: {
+              relationType: "SERIALIZE",
+              parentNodeId: productionNode.id,
+              childNodeId: finishedNode.id,
+            },
+          },
+          create: {
+            relationType: "SERIALIZE",
+            quantity: 1,
+            parentNodeId: productionNode.id,
+            childNodeId: finishedNode.id,
+          },
+          update: { quantity: 1 },
+        });
+        continue;
+      }
+
+      const parentNode = await upsertProductionNode(
+        relation.parentProductionLotNumber,
+      );
+      const childNode = await upsertProductionNode(
+        relation.childProductionLotNumber,
+      );
+      await transaction.lotRelation.upsert({
+        where: {
+          relationType_parentNodeId_childNodeId: {
+            relationType: relation.kind,
+            parentNodeId: parentNode.id,
+            childNodeId: childNode.id,
+          },
         },
         create: {
-          relationType: "CONSUME",
+          relationType: relation.kind,
           quantity: relation.quantity,
-          parentNodeId: materialNode.id,
-          childNodeId: productionNode.id,
+          parentNodeId: parentNode.id,
+          childNodeId: childNode.id,
         },
         update: { quantity: relation.quantity },
       });
