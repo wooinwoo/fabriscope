@@ -99,6 +99,7 @@ model WorkOrder {
   bomRevisionId      String?
   bomRevision        BomRevision?        @relation(fields: [bomRevisionId], references: [id], onDelete: SetNull)
   materialRequirements WorkOrderMaterialRequirement[]
+  inspectionRequirements InspectionRequirement[]
 
   @@index([status, dueDate])
   @@index([dueDate])
@@ -360,6 +361,43 @@ model WorkOrderMaterialRequirement {
   material                    Material    @relation(fields: [materialId], references: [id], onDelete: Restrict)
 
   @@unique([workOrderId, materialId])
+  @@index([workOrderId])
+}
+
+enum InspectionSpecLifecycle {
+  DRAFT
+  PUBLISHED
+  INACTIVE
+}
+
+model InspectionSpecRevision {
+  id              String                    @id @default(cuid())
+  revisionNumber  String                    @unique @db.VarChar(24)
+  productCode     String                    @db.VarChar(30)
+  specName        String                    @db.VarChar(100)
+  gate            InspectionGate
+  processStepName String?                   @db.VarChar(60)
+  description     String?                   @db.VarChar(300)
+  lifecycle       InspectionSpecLifecycle   @default(DRAFT)
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  requirements    InspectionRequirement[]
+
+  @@index([productCode, lifecycle])
+}
+
+model InspectionRequirement {
+  id                        String                  @id @default(cuid())
+  workOrderId               String
+  inspectionSpecRevisionId  String
+  specName                  String                  @db.VarChar(100)
+  gate                      InspectionGate
+  processStepName           String?                 @db.VarChar(60)
+  createdAt                 DateTime                @default(now())
+  workOrder                 WorkOrder               @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  inspectionSpecRevision    InspectionSpecRevision  @relation(fields: [inspectionSpecRevisionId], references: [id], onDelete: Restrict)
+
+  @@unique([workOrderId, inspectionSpecRevisionId])
   @@index([workOrderId])
 }
 
