@@ -321,12 +321,63 @@ export class WorkOrdersService {
       });
     }
 
-    await this.prisma.workOrder.update({
-      where: { id },
-      data: { status: "RELEASED" },
+    let requirementCount = 0;
+    await this.prisma.$transaction(async (transaction) => {
+      await transaction.workOrder.update({
+        where: { id },
+        data: { status: "RELEASED" },
+      });
+
+      if (record.bomRevisionId !== null) {
+        const revision = await transaction.bomRevision.findUnique({
+          where: { id: record.bomRevisionId },
+          include: { items: { include: { material: true } } },
+        });
+        if (revision === null) {
+          throw new ConflictException({
+            code: "WORK_ORDER_BOM_REVISION_NOT_FOUND",
+            message: "작업지시에 지정된 BOM revision을 찾을 수 없습니다.",
+          });
+        }
+        if (revision.lifecycle !== "PUBLISHED") {
+          throw new ConflictException({
+            code: "WORK_ORDER_BOM_REVISION_NOT_PUBLISHED",
+            message: "발행 상태의 BOM revision만 스냅샷할 수 있습니다.",
+            lifecycle: revision.lifecycle,
+          });
+        }
+        const formatScaled = (value: bigint): string => {
+          const digits = value.toString().padStart(7, "0");
+          return `${digits.slice(0, -6)}.${digits.slice(-6)}`;
+        };
+        for (const item of revision.items) {
+          const perProduct = BigInt(
+            item.quantityPerProductBaseUom.toFixed(6).replace(".", ""),
+          );
+          const requiredScaled = BigInt(record.plannedQuantity) * perProduct;
+          await transaction.workOrderMaterialRequirement.upsert({
+            where: {
+              workOrderId_materialId: {
+                workOrderId: id,
+                materialId: item.materialId,
+              },
+            },
+            create: {
+              workOrderId: id,
+              bomRevisionId: revision.id,
+              materialId: item.materialId,
+              quantityPerProductBaseUom: item.quantityPerProductBaseUom,
+              requiredQuantity: formatScaled(requiredScaled),
+              unit: item.material.unit,
+            },
+            update: {},
+          });
+          requirementCount += 1;
+        }
+      }
     });
     await this.recordAudit(record.orderNumber, "WORK_ORDER_RELEASED", actor, {
-      summary: `${record.productName} ${record.plannedQuantity}${record.unit} 작업지시 발행`,
+      summary: `${record.productName} ${record.plannedQuantity}${record.unit} 작업지시 발행${requirementCount > 0 ? ` (BOM 스냅샷 ${requirementCount}항목)` : ""}`,
     });
 
     return this.detail(id);

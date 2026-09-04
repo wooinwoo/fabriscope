@@ -214,6 +214,17 @@ try {
       }
     }
 
+    const bomRevisionRow = await transaction.bomRevision.findUnique({
+      where: { revisionNumber: "BOM-2026-R003" },
+      select: { id: true },
+    });
+    if (bomRevisionRow !== null) {
+      await transaction.workOrder.updateMany({
+        where: { orderNumber: "WO-2026-093", bomRevisionId: null },
+        data: { bomRevisionId: bomRevisionRow.id },
+      });
+    }
+
     const workOrderIdByNumber = new Map<string, string>();
     for (const order of DEMO_WORK_ORDERS) {
       const row = await transaction.workOrder.findUnique({

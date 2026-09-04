@@ -36,6 +36,7 @@ interface FakeWorkOrderRow {
   currentStepName: string | null;
   blockedReason: string | null;
   memo: string | null;
+  bomRevisionId: string | null;
   createdAt: Date;
   processSteps: { readiness: string }[];
   inspections: {
@@ -84,6 +85,7 @@ class FakePrismaService {
     priority: order.priority,
     id: `work-order-${index + 1}`,
     memo: null,
+    bomRevisionId: null,
     createdAt: new Date(Date.now() - (index + 1) * 3_600_000),
     processSteps: DEMO_PROCESS_STEPS.filter(
       (step) => step.workOrderNumber === order.orderNumber,
@@ -175,6 +177,7 @@ class FakePrismaService {
         currentStepName: null,
         blockedReason: null,
         memo: (data.memo as string | undefined) ?? null,
+        bomRevisionId: null,
         createdAt: new Date(),
         processSteps: [],
         inspections: [],
