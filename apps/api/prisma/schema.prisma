@@ -136,6 +136,7 @@ model MaterialLot {
   updatedAt           DateTime          @updatedAt
   material            Material          @relation(fields: [materialId], references: [id], onDelete: Restrict)
   allocations         MaterialAllocation[]
+  traceNode           TraceNode?
 
   @@index([qualityDisposition, expiresAt])
   @@index([materialId])
@@ -292,4 +293,45 @@ model MaterialAllocation {
 
   @@index([workOrderId, status])
   @@index([materialLotId, status])
+}
+
+enum TraceNodeType {
+  MATERIAL_LOT
+  PRODUCTION_LOT
+}
+
+enum LotRelationType {
+  CONSUME
+}
+
+model TraceNode {
+  id                  String        @id @default(cuid())
+  nodeType            TraceNodeType
+  label               String        @db.VarChar(24)
+  materialLotId       String?       @unique
+  productionLotNumber String?       @unique @db.VarChar(24)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  materialLot         MaterialLot?  @relation(fields: [materialLotId], references: [id], onDelete: Cascade)
+  parentRelations     LotRelation[] @relation("LotRelationParent")
+  childRelations      LotRelation[] @relation("LotRelationChild")
+
+  @@index([nodeType, label])
+}
+
+model LotRelation {
+  id                      String          @id @default(cuid())
+  relationType            LotRelationType
+  quantity                Int
+  parentNodeId            String
+  childNodeId             String
+  processStepExecutionId  String?
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  parentNode              TraceNode       @relation("LotRelationParent", fields: [parentNodeId], references: [id], onDelete: Cascade)
+  childNode               TraceNode       @relation("LotRelationChild", fields: [childNodeId], references: [id], onDelete: Cascade)
+
+  @@unique([relationType, parentNodeId, childNodeId])
+  @@index([childNodeId])
+  @@index([parentNodeId])
 }
