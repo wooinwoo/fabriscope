@@ -24,6 +24,13 @@ function MaterialLotDetailRoute() {
   return (
     <MaterialLotDetailPage
       materialLotId={materialLotId}
+      onOpenTrace={(lotNumber) => {
+        void navigate({
+          to: "/traceability",
+          search: { q: lotNumber },
+          replace: true,
+        });
+      }}
       onBack={() => {
         void navigate({ to: "/materials/lots", search: {}, replace: true });
       }}

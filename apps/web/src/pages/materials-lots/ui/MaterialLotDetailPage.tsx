@@ -49,11 +49,13 @@ function formatDateTime(isoDate: string): string {
 interface MaterialLotDetailPageProps {
   materialLotId: string;
   onBack: () => void;
+  onOpenTrace?: (lotNumber: string) => void;
 }
 
 export function MaterialLotDetailPage({
   materialLotId,
   onBack,
+  onOpenTrace,
 }: MaterialLotDetailPageProps) {
   const [reloadCount, setReloadCount] = useState(0);
   const [result, setResult] = useState<{
@@ -130,6 +132,13 @@ export function MaterialLotDetailPage({
         description={`${detail.materialName} (${detail.materialCode})`}
         meta={<span>가상 데모 데이터</span>}
         title={detail.lotNumber}
+        actions={
+          onOpenTrace !== undefined ? (
+            <Button variant="secondary" onClick={() => onOpenTrace(detail.lotNumber)}>
+              계보 추적하기
+            </Button>
+          ) : undefined
+        }
       />
 
       <div className="flex flex-wrap items-center gap-3">
