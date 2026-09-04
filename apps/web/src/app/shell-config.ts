@@ -65,7 +65,7 @@ const navigation: { label: string; items: ConfiguredNavigationItem[] }[] = [
       {
         label: "부적합·격리",
         icon: "incident",
-        pending: true,
+        to: "/quality/incidents",
         permission: "quality-incident:read",
       },
     ],
@@ -106,6 +106,7 @@ const routeTitles: Record<string, { title: string }> = {
   "/materials/lots": { title: "자재 LOT" },
   "/execution/queue": { title: "공정 실행" },
   "/quality/inspections": { title: "품질검사" },
+  "/quality/incidents": { title: "부적합·격리" },
   "/audit-events": { title: "감사이력" },
   "/dev/ui-kit": { title: "UI 시스템 점검" },
   "/forbidden": { title: "접근 권한 없음" },

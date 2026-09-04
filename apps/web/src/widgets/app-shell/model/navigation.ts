@@ -19,6 +19,7 @@ export interface NavigationItem {
     | "/materials/lots"
     | "/execution/queue"
     | "/quality/inspections"
+    | "/quality/incidents"
     | "/audit-events";
   pending?: boolean;
 }

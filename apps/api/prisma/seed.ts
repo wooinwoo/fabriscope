@@ -9,6 +9,7 @@ import { DEMO_MATERIAL_LOTS, DEMO_MATERIALS } from "./demo-material-lots.js";
 import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
 import { DEMO_INSPECTIONS } from "./demo-inspections.js";
 import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
+import { DEMO_QUALITY_INCIDENTS } from "./demo-quality-incidents.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -142,6 +143,14 @@ try {
       });
     }
 
+    for (const incident of DEMO_QUALITY_INCIDENTS) {
+      await transaction.qualityIncident.upsert({
+        where: { incidentNumber: incident.incidentNumber },
+        create: incident,
+        update: incident,
+      });
+    }
+
     await transaction.auditEvent.deleteMany({});
     await transaction.auditEvent.createMany({
       data: DEMO_AUDIT_EVENTS.map((event) => ({ ...event })),
@@ -149,7 +158,7 @@ try {
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 부적합 ${DEMO_QUALITY_INCIDENTS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();

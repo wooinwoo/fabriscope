@@ -63,7 +63,14 @@ function sampleResult(overrides: Partial<MaterialLotListResult> = {}): MaterialL
 
 function renderPage(search: MaterialLotsListSearch = {}) {
   const onSearchChange = vi.fn();
-  render(<MaterialLotsPage search={search} onSearchChange={onSearchChange} />);
+  render(
+    <MaterialLotsPage
+      search={search}
+      onSearchChange={onSearchChange}
+      csrfToken="test-csrf"
+      canDecideQuality={false}
+    />,
+  );
   return { onSearchChange };
 }
 
@@ -114,5 +121,22 @@ describe("MaterialLotsPage", () => {
     await user.click(await screen.findByRole("option", { name: "가용 부족" }));
 
     expect(onSearchChange).toHaveBeenCalledWith({ availability: "shortage" });
+  });
+
+  it("품질 처분 권한이 있으면 통제 중 LOT에서 처분 행동을 제공한다", async () => {
+    fetchMock.mockResolvedValue(sampleResult());
+    render(
+      <MaterialLotsPage
+        search={{}}
+        onSearchChange={vi.fn()}
+        csrfToken="test-csrf"
+        canDecideQuality
+      />,
+    );
+
+    await screen.findByText("ML-2026-0323");
+    expect(
+      screen.getAllByRole("button", { name: "품질 처분" }).length,
+    ).toBeGreaterThan(0);
   });
 });

@@ -20,10 +20,13 @@ export const Route = createFileRoute("/_authenticated/materials/lots")({
 function MaterialLotsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { session } = Route.useRouteContext();
 
   return (
     <MaterialLotsPage
       search={search}
+      csrfToken={session.csrfToken}
+      canDecideQuality={session.permissions.includes("material-lot:decide-quality")}
       onSearchChange={(next) => {
         void navigate({
           to: "/materials/lots",
