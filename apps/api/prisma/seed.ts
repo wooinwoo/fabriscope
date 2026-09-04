@@ -12,6 +12,7 @@ import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
 import { DEMO_QUALITY_INCIDENTS } from "./demo-quality-incidents.js";
 import { DEMO_TRACE_RELATIONS } from "./demo-trace.js";
 import { DEMO_BOM_REVISIONS, DEMO_PRODUCTS } from "./demo-boms.js";
+import { DEMO_INSPECTION_SPEC_REVISIONS } from "./demo-inspection-specs.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -225,6 +226,29 @@ try {
       });
     }
 
+    for (const spec of DEMO_INSPECTION_SPEC_REVISIONS) {
+      await transaction.inspectionSpecRevision.upsert({
+        where: { revisionNumber: spec.revisionNumber },
+        create: {
+          revisionNumber: spec.revisionNumber,
+          productCode: spec.productCode,
+          specName: spec.specName,
+          gate: spec.gate,
+          ...(spec.processStepName === undefined ? {} : { processStepName: spec.processStepName }),
+          ...(spec.description === undefined ? {} : { description: spec.description }),
+          lifecycle: spec.lifecycle,
+        },
+        update: {
+          productCode: spec.productCode,
+          specName: spec.specName,
+          gate: spec.gate,
+          processStepName: spec.processStepName ?? null,
+          description: spec.description ?? null,
+          lifecycle: spec.lifecycle,
+        },
+      });
+    }
+
     const workOrderIdByNumber = new Map<string, string>();
     for (const order of DEMO_WORK_ORDERS) {
       const row = await transaction.workOrder.findUnique({
@@ -281,7 +305,7 @@ try {
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 부적합 ${DEMO_QUALITY_INCIDENTS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건, 계보 ${DEMO_TRACE_RELATIONS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 부적합 ${DEMO_QUALITY_INCIDENTS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건, 계보 ${DEMO_TRACE_RELATIONS.length}건, 검사규격 ${DEMO_INSPECTION_SPEC_REVISIONS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();
