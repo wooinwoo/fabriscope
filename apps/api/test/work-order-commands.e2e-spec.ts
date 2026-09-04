@@ -444,6 +444,7 @@ describe("work order commands", () => {
       currentStepName: null,
       blockedReason: null,
       memo: null,
+      bomRevisionId: null,
       createdAt: new Date(),
       processSteps: [{ readiness: "IN_PROGRESS" }],
       inspections: [],
