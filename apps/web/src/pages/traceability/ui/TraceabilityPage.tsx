@@ -30,6 +30,7 @@ import {
 const NODE_TYPE_TONES: Record<TraceNodeType, BadgeTone> = {
   MATERIAL_LOT: "info",
   PRODUCTION_LOT: "success",
+  FINISHED_UNIT: "warning",
 };
 
 const PAGE_SIZE = 20;

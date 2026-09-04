@@ -366,10 +366,15 @@ model WorkOrderMaterialRequirement {
 enum TraceNodeType {
   MATERIAL_LOT
   PRODUCTION_LOT
+  FINISHED_UNIT
 }
 
 enum LotRelationType {
   CONSUME
+  SPLIT
+  MERGE
+  TRANSFORM
+  SERIALIZE
 }
 
 model TraceNode {
