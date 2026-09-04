@@ -11,6 +11,7 @@ import { InspectionsModule } from "./inspections/inspections.module.js";
 import { ProcessExecutionsModule } from "./process-executions/process-executions.module.js";
 import { QualityIncidentsModule } from "./quality-incidents/quality-incidents.module.js";
 import { TraceabilityModule } from "./traceability/traceability.module.js";
+import { BomsModule } from "./boms/boms.module.js";
 import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
 
 @Module({
@@ -23,6 +24,7 @@ import { WorkOrdersModule } from "./work-orders/work-orders.module.js";
     InspectionsModule,
     QualityIncidentsModule,
     TraceabilityModule,
+    BomsModule,
     AuditEventsModule,
     DashboardModule,
   ],
