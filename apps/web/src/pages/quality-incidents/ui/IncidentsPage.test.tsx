@@ -62,6 +62,7 @@ function renderPage(
     <IncidentsPage
       search={search}
       onSearchChange={onSearchChange}
+      onOpenDetail={vi.fn()}
       csrfToken="test-csrf"
       canRegister={options.canRegister ?? false}
     />,

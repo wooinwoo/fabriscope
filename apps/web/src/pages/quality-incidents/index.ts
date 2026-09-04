@@ -1,4 +1,5 @@
 export { IncidentsPage } from "./ui/IncidentsPage";
+export { QualityIncidentDetailPage } from "./ui/QualityIncidentDetailPage";
 export {
   readIncidentsSearch,
   toIncidentsParams,

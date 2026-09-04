@@ -43,3 +43,15 @@ export interface QualityIncidentListResult {
   pageSize: number;
   total: number;
 }
+
+export interface QualityIncidentAuditView {
+  id: string;
+  action: string;
+  actorName: string;
+  summary: string;
+  occurredAt: string;
+}
+
+export interface QualityIncidentDetail extends QualityIncidentListItem {
+  audits: QualityIncidentAuditView[];
+}

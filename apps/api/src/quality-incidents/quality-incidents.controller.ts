@@ -4,6 +4,7 @@ import {
   Get,
   Header,
   HttpCode,
+  Param,
   Post,
   Query,
   Req,
@@ -16,6 +17,7 @@ import type { CommandActor } from "../work-orders/work-orders.service.js";
 import { QualityIncidentsService } from "./quality-incidents.service.js";
 import type {
   QualityIncidentListItem,
+  QualityIncidentDetail,
   QualityIncidentListResult,
 } from "./quality-incidents.contract.js";
 
@@ -45,6 +47,13 @@ export class QualityIncidentsController {
     return this.qualityIncidentsService.list(
       this.qualityIncidentsService.parseQuery(query),
     );
+  }
+
+  @Get(":id")
+  @Header("Cache-Control", "no-store")
+  @RequirePermissions(Permission.QUALITY_INCIDENT_READ)
+  async detail(@Param("id") id: string): Promise<QualityIncidentDetail> {
+    return this.qualityIncidentsService.detail(id);
   }
 
   @Post()

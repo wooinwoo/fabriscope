@@ -93,7 +93,7 @@ const navigation: { label: string; items: ConfiguredNavigationItem[] }[] = [
       {
         label: "사용자",
         icon: "users",
-        pending: true,
+        to: "/admin/users",
         permission: "user:manage",
       },
     ],
@@ -110,6 +110,7 @@ const routeTitles: Record<string, { title: string }> = {
   "/quality/incidents": { title: "부적합·격리" },
   "/traceability": { title: "LOT 계보" },
   "/audit-events": { title: "감사이력" },
+  "/admin/users": { title: "사용자" },
   "/dev/ui-kit": { title: "UI 시스템 점검" },
   "/forbidden": { title: "접근 권한 없음" },
 };
