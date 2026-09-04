@@ -20,6 +20,7 @@ export interface NavigationItem {
     | "/execution/queue"
     | "/quality/inspections"
     | "/quality/incidents"
+    | "/traceability"
     | "/audit-events";
   pending?: boolean;
 }

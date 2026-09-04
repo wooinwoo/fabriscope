@@ -76,7 +76,7 @@ const navigation: { label: string; items: ConfiguredNavigationItem[] }[] = [
       {
         label: "LOT 계보",
         icon: "trace",
-        pending: true,
+        to: "/traceability",
         permission: "trace:read",
       },
     ],
@@ -107,6 +107,7 @@ const routeTitles: Record<string, { title: string }> = {
   "/execution/queue": { title: "공정 실행" },
   "/quality/inspections": { title: "품질검사" },
   "/quality/incidents": { title: "부적합·격리" },
+  "/traceability": { title: "LOT 계보" },
   "/audit-events": { title: "감사이력" },
   "/dev/ui-kit": { title: "UI 시스템 점검" },
   "/forbidden": { title: "접근 권한 없음" },

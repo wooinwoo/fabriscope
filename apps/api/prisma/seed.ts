@@ -10,6 +10,7 @@ import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
 import { DEMO_INSPECTIONS } from "./demo-inspections.js";
 import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
 import { DEMO_QUALITY_INCIDENTS } from "./demo-quality-incidents.js";
+import { DEMO_TRACE_RELATIONS } from "./demo-trace.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -90,15 +91,72 @@ try {
       materialIdByCode.set(material.code, row.id);
     }
 
+    const materialLotIdByNumber = new Map<string, string>();
     for (const { materialCode, ...lotData } of DEMO_MATERIAL_LOTS) {
       const materialId = materialIdByCode.get(materialCode);
       if (materialId === undefined) {
         throw new Error(`자재 기준정보가 없습니다: ${materialCode}`);
       }
-      await transaction.materialLot.upsert({
+      const row = await transaction.materialLot.upsert({
         where: { lotNumber: lotData.lotNumber },
         create: { ...lotData, materialId },
         update: { ...lotData, materialId },
+      });
+      materialLotIdByNumber.set(row.lotNumber, row.id);
+    }
+
+    const productionLotNumbers = [
+      ...new Set(DEMO_PROCESS_STEPS.map((step) => step.productionLotNumber)),
+    ];
+    for (const lotNumber of productionLotNumbers) {
+      await transaction.traceNode.upsert({
+        where: { productionLotNumber: lotNumber },
+        create: {
+          nodeType: "PRODUCTION_LOT",
+          label: lotNumber,
+          productionLotNumber: lotNumber,
+        },
+        update: {},
+      });
+    }
+
+    for (const relation of DEMO_TRACE_RELATIONS) {
+      const materialLotId = materialLotIdByNumber.get(relation.materialLotNumber);
+      if (materialLotId === undefined) {
+        throw new Error(`자재 LOT seed가 없습니다: ${relation.materialLotNumber}`);
+      }
+      const materialNode = await transaction.traceNode.upsert({
+        where: { materialLotId },
+        create: {
+          nodeType: "MATERIAL_LOT",
+          label: relation.materialLotNumber,
+          materialLotId,
+        },
+        update: {},
+      });
+      const productionNode = await transaction.traceNode.findUnique({
+        where: { productionLotNumber: relation.productionLotNumber },
+      });
+      if (productionNode === null) {
+        throw new Error(
+          `생산 LOT 추적 노드가 없습니다: ${relation.productionLotNumber}`,
+        );
+      }
+      await transaction.lotRelation.upsert({
+        where: {
+          relationType_parentNodeId_childNodeId: {
+            relationType: "CONSUME",
+            parentNodeId: materialNode.id,
+            childNodeId: productionNode.id,
+          },
+        },
+        create: {
+          relationType: "CONSUME",
+          quantity: relation.quantity,
+          parentNodeId: materialNode.id,
+          childNodeId: productionNode.id,
+        },
+        update: { quantity: relation.quantity },
       });
     }
 
@@ -158,7 +216,7 @@ try {
   });
 
   console.log(
-    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 부적합 ${DEMO_QUALITY_INCIDENTS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건 seed 완료`,
+    `가상 데모 계정 ${DEMO_ACCOUNTS.length}개, 작업지시 ${DEMO_WORK_ORDERS.length}건, 자재 LOT ${DEMO_MATERIAL_LOTS.length}건, 공정 ${DEMO_PROCESS_STEPS.length}건, 검사 ${DEMO_INSPECTIONS.length}건, 부적합 ${DEMO_QUALITY_INCIDENTS.length}건, 감사 ${DEMO_AUDIT_EVENTS.length}건, 계보 ${DEMO_TRACE_RELATIONS.length}건 seed 완료`,
   );
 } finally {
   await prisma.$disconnect();

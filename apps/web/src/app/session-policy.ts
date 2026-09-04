@@ -16,6 +16,7 @@ export const RoutePermission = {
   PROCESS_EXECUTION_READ: "process-execution:read",
   INSPECTION_READ: "inspection:read",
   QUALITY_INCIDENT_READ: "quality-incident:read",
+  TRACE_READ: "trace:read",
   AUDIT_EVENT_READ: "audit-event:read",
 } as const;
 
@@ -26,6 +27,8 @@ const implementedRoutePermission: Record<string, string> = {
   "/execution/queue": RoutePermission.PROCESS_EXECUTION_READ,
   "/quality/inspections": RoutePermission.INSPECTION_READ,
   "/quality/incidents": RoutePermission.QUALITY_INCIDENT_READ,
+  "/traceability": RoutePermission.TRACE_READ,
+  "/traceability/$traceNodeId": RoutePermission.TRACE_READ,
   "/audit-events": RoutePermission.AUDIT_EVENT_READ,
 };
 
