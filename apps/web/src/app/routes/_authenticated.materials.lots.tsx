@@ -27,6 +27,12 @@ function MaterialLotsRoute() {
       search={search}
       csrfToken={session.csrfToken}
       canDecideQuality={session.permissions.includes("material-lot:decide-quality")}
+      onOpenDetail={(materialLotId) => {
+        void navigate({
+          to: "/materials/lots/$materialLotId",
+          params: { materialLotId },
+        });
+      }}
       onSearchChange={(next) => {
         void navigate({
           to: "/materials/lots",

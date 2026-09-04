@@ -67,6 +67,7 @@ function renderPage(search: MaterialLotsListSearch = {}) {
     <MaterialLotsPage
       search={search}
       onSearchChange={onSearchChange}
+      onOpenDetail={vi.fn()}
       csrfToken="test-csrf"
       canDecideQuality={false}
     />,
@@ -129,6 +130,7 @@ describe("MaterialLotsPage", () => {
       <MaterialLotsPage
         search={{}}
         onSearchChange={vi.fn()}
+        onOpenDetail={vi.fn()}
         csrfToken="test-csrf"
         canDecideQuality
       />,
@@ -138,5 +140,24 @@ describe("MaterialLotsPage", () => {
     expect(
       screen.getAllByRole("button", { name: "품질 처분" }).length,
     ).toBeGreaterThan(0);
+  });
+
+  it("LOT 번호를 누르면 상세 화면으로 이동을 요청한다", async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    fetchMock.mockResolvedValue(sampleResult());
+    const onOpenDetail = vi.fn();
+    render(
+      <MaterialLotsPage
+        search={{}}
+        onSearchChange={vi.fn()}
+        onOpenDetail={onOpenDetail}
+        csrfToken="test-csrf"
+        canDecideQuality={false}
+      />,
+    );
+
+    await user.click(await screen.findByRole("button", { name: "ML-2026-0323" }));
+
+    expect(onOpenDetail).toHaveBeenCalledWith("lot-1");
   });
 });

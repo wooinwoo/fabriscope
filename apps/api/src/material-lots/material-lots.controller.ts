@@ -20,7 +20,10 @@ import type { HttpRequest } from "../auth/auth.http.js";
 import type { CommandActor } from "../work-orders/work-orders.service.js";
 import { MaterialLotDispositionService } from "./material-lot-disposition.service.js";
 import { MaterialLotsService } from "./material-lots.service.js";
-import type { MaterialLotListResult } from "./material-lots.contract.js";
+import type {
+  MaterialLotDetail,
+  MaterialLotListResult,
+} from "./material-lots.contract.js";
 
 function toActor(request: HttpRequest): CommandActor {
   const auth = request.auth;
@@ -49,6 +52,13 @@ export class MaterialLotsController {
     @Query() query: Record<string, string | string[] | undefined>,
   ): Promise<MaterialLotListResult> {
     return this.materialLotsService.list(this.materialLotsService.parseQuery(query));
+  }
+
+  @Get(":id")
+  @Header("Cache-Control", "no-store")
+  @RequirePermissions(Permission.MATERIAL_LOT_READ)
+  async detail(@Param("id") id: string): Promise<MaterialLotDetail> {
+    return this.materialLotsService.detail(id);
   }
 
   @Post(":id/disposition")
