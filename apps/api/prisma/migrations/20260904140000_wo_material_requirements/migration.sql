@@ -22,7 +22,7 @@ CREATE UNIQUE INDEX "WorkOrderMaterialRequirement_workOrderId_materialId_key" ON
 CREATE INDEX "WorkOrderMaterialRequirement_workOrderId_idx" ON "WorkOrderMaterialRequirement"("workOrderId");
 
 -- AddForeignKey
-ALTER TABLE "WorkOrder" ADD CONSTRAINT "WorkOrderMaterialRequirement_workOrderId_fkey" FOREIGN KEY ("workOrderId") REFERENCES "WorkOrder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WorkOrderMaterialRequirement" ADD CONSTRAINT "WorkOrderMaterialRequirement_workOrderId_fkey" FOREIGN KEY ("workOrderId") REFERENCES "WorkOrder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "WorkOrderMaterialRequirement" ADD CONSTRAINT "WorkOrderMaterialRequirement_bomRevisionId_fkey" FOREIGN KEY ("bomRevisionId") REFERENCES "BomRevision"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
