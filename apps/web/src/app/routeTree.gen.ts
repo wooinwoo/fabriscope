@@ -23,6 +23,7 @@ import { Route as AuthenticatedTraceabilityTraceNodeIdRouteImport } from "./rout
 import { Route as AuthenticatedQualityInspectionsRouteImport } from "./routes/_authenticated.quality.inspections";
 import { Route as AuthenticatedQualityIncidentsRouteImport } from "./routes/_authenticated.quality.incidents";
 import { Route as AuthenticatedMaterialsLotsRouteImport } from "./routes/_authenticated.materials.lots";
+import { Route as AuthenticatedMaterialsBomsRouteImport } from "./routes/_authenticated.materials.boms";
 import { Route as AuthenticatedExecutionQueueRouteImport } from "./routes/_authenticated.execution.queue";
 import { Route as AuthenticatedDevUiKitRouteImport } from "./routes/_authenticated.dev.ui-kit";
 import { Route as AuthenticatedQualityInspectionsInspectionIdRouteImport } from "./routes/_authenticated.quality.inspections_.$inspectionId";
@@ -105,6 +106,12 @@ const AuthenticatedMaterialsLotsRoute =
     path: "/materials/lots",
     getParentRoute: () => AuthenticatedRoute,
   } as any);
+const AuthenticatedMaterialsBomsRoute =
+  AuthenticatedMaterialsBomsRouteImport.update({
+    id: "/materials/boms",
+    path: "/materials/boms",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
 const AuthenticatedExecutionQueueRoute =
   AuthenticatedExecutionQueueRouteImport.update({
     id: "/execution/queue",
@@ -139,6 +146,7 @@ export interface FileRoutesByFullPath {
   "/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
   "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
@@ -158,6 +166,7 @@ export interface FileRoutesByTo {
   "/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
   "/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
@@ -179,6 +188,7 @@ export interface FileRoutesById {
   "/_authenticated/work-orders": typeof AuthenticatedWorkOrdersRoute;
   "/_authenticated/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/_authenticated/execution/queue": typeof AuthenticatedExecutionQueueRoute;
+  "/_authenticated/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
   "/_authenticated/materials/lots": typeof AuthenticatedMaterialsLotsRoute;
   "/_authenticated/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/_authenticated/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | "/work-orders"
     | "/dev/ui-kit"
     | "/execution/queue"
+    | "/materials/boms"
     | "/materials/lots"
     | "/quality/incidents"
     | "/quality/inspections"
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | "/work-orders"
     | "/dev/ui-kit"
     | "/execution/queue"
+    | "/materials/boms"
     | "/materials/lots"
     | "/quality/incidents"
     | "/quality/inspections"
@@ -239,6 +251,7 @@ export interface FileRouteTypes {
     | "/_authenticated/work-orders"
     | "/_authenticated/dev/ui-kit"
     | "/_authenticated/execution/queue"
+    | "/_authenticated/materials/boms"
     | "/_authenticated/materials/lots"
     | "/_authenticated/quality/incidents"
     | "/_authenticated/quality/inspections"
@@ -355,6 +368,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedMaterialsLotsRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/materials/boms": {
+      id: "/_authenticated/materials/boms";
+      path: "/materials/boms";
+      fullPath: "/materials/boms";
+      preLoaderRoute: typeof AuthenticatedMaterialsBomsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
     "/_authenticated/execution/queue": {
       id: "/_authenticated/execution/queue";
       path: "/execution/queue";
@@ -394,6 +414,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedWorkOrdersRoute: typeof AuthenticatedWorkOrdersRoute;
   AuthenticatedDevUiKitRoute: typeof AuthenticatedDevUiKitRoute;
   AuthenticatedExecutionQueueRoute: typeof AuthenticatedExecutionQueueRoute;
+  AuthenticatedMaterialsBomsRoute: typeof AuthenticatedMaterialsBomsRoute;
   AuthenticatedMaterialsLotsRoute: typeof AuthenticatedMaterialsLotsRoute;
   AuthenticatedQualityIncidentsRoute: typeof AuthenticatedQualityIncidentsRoute;
   AuthenticatedQualityInspectionsRoute: typeof AuthenticatedQualityInspectionsRoute;
@@ -412,6 +433,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedWorkOrdersRoute: AuthenticatedWorkOrdersRoute,
   AuthenticatedDevUiKitRoute: AuthenticatedDevUiKitRoute,
   AuthenticatedExecutionQueueRoute: AuthenticatedExecutionQueueRoute,
+  AuthenticatedMaterialsBomsRoute: AuthenticatedMaterialsBomsRoute,
   AuthenticatedMaterialsLotsRoute: AuthenticatedMaterialsLotsRoute,
   AuthenticatedQualityIncidentsRoute: AuthenticatedQualityIncidentsRoute,
   AuthenticatedQualityInspectionsRoute: AuthenticatedQualityInspectionsRoute,

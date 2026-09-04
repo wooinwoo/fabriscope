@@ -42,7 +42,7 @@ const navigation: { label: string; items: ConfiguredNavigationItem[] }[] = [
       {
         label: "BOM 기준정보",
         icon: "bom",
-        pending: true,
+        to: "/materials/boms",
         permission: "master-data:read",
       },
       {
@@ -104,6 +104,7 @@ const routeTitles: Record<string, { title: string }> = {
   "/dashboard": { title: "운영 대시보드" },
   "/work-orders": { title: "작업지시" },
   "/materials/lots": { title: "자재 LOT" },
+  "/materials/boms": { title: "BOM 기준정보" },
   "/execution/queue": { title: "공정 실행" },
   "/quality/inspections": { title: "품질검사" },
   "/quality/incidents": { title: "부적합·격리" },

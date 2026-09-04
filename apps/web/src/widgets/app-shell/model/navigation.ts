@@ -17,6 +17,7 @@ export interface NavigationItem {
     | "/dashboard"
     | "/work-orders"
     | "/materials/lots"
+    | "/materials/boms"
     | "/execution/queue"
     | "/quality/inspections"
     | "/quality/incidents"

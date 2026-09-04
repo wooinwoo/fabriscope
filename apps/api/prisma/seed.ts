@@ -11,6 +11,7 @@ import { DEMO_INSPECTIONS } from "./demo-inspections.js";
 import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
 import { DEMO_QUALITY_INCIDENTS } from "./demo-quality-incidents.js";
 import { DEMO_TRACE_RELATIONS } from "./demo-trace.js";
+import { DEMO_BOM_REVISIONS, DEMO_PRODUCTS } from "./demo-boms.js";
 
 const localDatabaseUrl =
   "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
@@ -158,6 +159,59 @@ try {
         },
         update: { quantity: relation.quantity },
       });
+    }
+
+    const productIdByCode = new Map<string, string>();
+    for (const product of DEMO_PRODUCTS) {
+      const row = await transaction.product.upsert({
+        where: { code: product.code },
+        create: { ...product, isActive: true },
+        update: { name: product.name, baseUom: product.baseUom, isActive: true },
+      });
+      productIdByCode.set(row.code, row.id);
+    }
+
+    for (const revision of DEMO_BOM_REVISIONS) {
+      const {
+        items: bomItems,
+        productCode: bomProductCode,
+        productName: bomProductName,
+        productBaseUom: bomProductBaseUom,
+        ...revisionData
+      } = revision;
+      void bomProductName;
+      void bomProductBaseUom;
+      const productId = productIdByCode.get(bomProductCode);
+      if (productId === undefined) {
+        throw new Error(`제품 seed가 없습니다: ${bomProductCode}`);
+      }
+      const row = await transaction.bomRevision.upsert({
+        where: { revisionNumber: revisionData.revisionNumber },
+        create: { ...revisionData, productId },
+        update: { ...revisionData, productId },
+      });
+      for (const item of bomItems) {
+        const materialId = materialIdByCode.get(item.materialCode);
+        if (materialId === undefined) {
+          throw new Error(`자재 기준정보가 없습니다: ${item.materialCode}`);
+        }
+        await transaction.bomItem.upsert({
+          where: {
+            bomRevisionId_materialId: {
+              bomRevisionId: row.id,
+              materialId,
+            },
+          },
+          create: {
+            bomRevisionId: row.id,
+            materialId,
+            quantityPerProductBaseUom: item.quantityPerProductBaseUom,
+          },
+          update: {
+            quantityPerProductBaseUom: item.quantityPerProductBaseUom,
+          },
+        });
+      }
     }
 
     const workOrderIdByNumber = new Map<string, string>();
