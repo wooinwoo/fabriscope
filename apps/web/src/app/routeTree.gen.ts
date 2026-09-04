@@ -26,8 +26,12 @@ import { Route as AuthenticatedMaterialsLotsRouteImport } from "./routes/_authen
 import { Route as AuthenticatedMaterialsBomsRouteImport } from "./routes/_authenticated.materials.boms";
 import { Route as AuthenticatedExecutionQueueRouteImport } from "./routes/_authenticated.execution.queue";
 import { Route as AuthenticatedDevUiKitRouteImport } from "./routes/_authenticated.dev.ui-kit";
+import { Route as AuthenticatedAdminUsersRouteImport } from "./routes/_authenticated.admin.users";
+import { Route as AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRouteImport } from "./routes/_authenticated.work-orders_.$workOrderId.material-reservations";
 import { Route as AuthenticatedQualityInspectionsInspectionIdRouteImport } from "./routes/_authenticated.quality.inspections_.$inspectionId";
+import { Route as AuthenticatedQualityIncidentsQualityIncidentIdRouteImport } from "./routes/_authenticated.quality.incidents_.$qualityIncidentId";
 import { Route as AuthenticatedMaterialsLotsMaterialLotIdRouteImport } from "./routes/_authenticated.materials.lots_.$materialLotId";
+import { Route as AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRouteImport } from "./routes/_authenticated.execution.lots_.$productionLotId.steps_.$processStepRevisionId";
 
 const LoginRoute = LoginRouteImport.update({
   id: "/login",
@@ -123,10 +127,27 @@ const AuthenticatedDevUiKitRoute = AuthenticatedDevUiKitRouteImport.update({
   path: "/dev/ui-kit",
   getParentRoute: () => AuthenticatedRoute,
 } as any);
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: "/admin/users",
+  path: "/admin/users",
+  getParentRoute: () => AuthenticatedRoute,
+} as any);
+const AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute =
+  AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRouteImport.update({
+    id: "/material-reservations",
+    path: "/material-reservations",
+    getParentRoute: () => AuthenticatedWorkOrdersWorkOrderIdRoute,
+  } as any);
 const AuthenticatedQualityInspectionsInspectionIdRoute =
   AuthenticatedQualityInspectionsInspectionIdRouteImport.update({
     id: "/quality/inspections_/$inspectionId",
     path: "/quality/inspections/$inspectionId",
+    getParentRoute: () => AuthenticatedRoute,
+  } as any);
+const AuthenticatedQualityIncidentsQualityIncidentIdRoute =
+  AuthenticatedQualityIncidentsQualityIncidentIdRouteImport.update({
+    id: "/quality/incidents_/$qualityIncidentId",
+    path: "/quality/incidents/$qualityIncidentId",
     getParentRoute: () => AuthenticatedRoute,
   } as any);
 const AuthenticatedMaterialsLotsMaterialLotIdRoute =
@@ -135,6 +156,14 @@ const AuthenticatedMaterialsLotsMaterialLotIdRoute =
     path: "/materials/lots/$materialLotId",
     getParentRoute: () => AuthenticatedRoute,
   } as any);
+const AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute =
+  AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRouteImport.update(
+    {
+      id: "/execution/lots_/$productionLotId/steps_/$processStepRevisionId",
+      path: "/execution/lots/$productionLotId/steps/$processStepRevisionId",
+      getParentRoute: () => AuthenticatedRoute,
+    } as any,
+  );
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
@@ -144,6 +173,7 @@ export interface FileRoutesByFullPath {
   "/forbidden": typeof AuthenticatedForbiddenRoute;
   "/traceability": typeof AuthenticatedTraceabilityRoute;
   "/work-orders": typeof AuthenticatedWorkOrdersRoute;
+  "/admin/users": typeof AuthenticatedAdminUsersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
@@ -151,10 +181,13 @@ export interface FileRoutesByFullPath {
   "/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
   "/traceability/$traceNodeId": typeof AuthenticatedTraceabilityTraceNodeIdRoute;
-  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren;
   "/work-orders/new": typeof AuthenticatedWorkOrdersNewRoute;
   "/materials/lots/$materialLotId": typeof AuthenticatedMaterialsLotsMaterialLotIdRoute;
+  "/quality/incidents/$qualityIncidentId": typeof AuthenticatedQualityIncidentsQualityIncidentIdRoute;
   "/quality/inspections/$inspectionId": typeof AuthenticatedQualityInspectionsInspectionIdRoute;
+  "/work-orders/$workOrderId/material-reservations": typeof AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute;
+  "/execution/lots/$productionLotId/steps/$processStepRevisionId": typeof AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
@@ -164,6 +197,7 @@ export interface FileRoutesByTo {
   "/forbidden": typeof AuthenticatedForbiddenRoute;
   "/traceability": typeof AuthenticatedTraceabilityRoute;
   "/work-orders": typeof AuthenticatedWorkOrdersRoute;
+  "/admin/users": typeof AuthenticatedAdminUsersRoute;
   "/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
@@ -171,10 +205,13 @@ export interface FileRoutesByTo {
   "/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
   "/traceability/$traceNodeId": typeof AuthenticatedTraceabilityTraceNodeIdRoute;
-  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/work-orders/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren;
   "/work-orders/new": typeof AuthenticatedWorkOrdersNewRoute;
   "/materials/lots/$materialLotId": typeof AuthenticatedMaterialsLotsMaterialLotIdRoute;
+  "/quality/incidents/$qualityIncidentId": typeof AuthenticatedQualityIncidentsQualityIncidentIdRoute;
   "/quality/inspections/$inspectionId": typeof AuthenticatedQualityInspectionsInspectionIdRoute;
+  "/work-orders/$workOrderId/material-reservations": typeof AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute;
+  "/execution/lots/$productionLotId/steps/$processStepRevisionId": typeof AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -186,6 +223,7 @@ export interface FileRoutesById {
   "/_authenticated/forbidden": typeof AuthenticatedForbiddenRoute;
   "/_authenticated/traceability": typeof AuthenticatedTraceabilityRoute;
   "/_authenticated/work-orders": typeof AuthenticatedWorkOrdersRoute;
+  "/_authenticated/admin/users": typeof AuthenticatedAdminUsersRoute;
   "/_authenticated/dev/ui-kit": typeof AuthenticatedDevUiKitRoute;
   "/_authenticated/execution/queue": typeof AuthenticatedExecutionQueueRoute;
   "/_authenticated/materials/boms": typeof AuthenticatedMaterialsBomsRoute;
@@ -193,10 +231,13 @@ export interface FileRoutesById {
   "/_authenticated/quality/incidents": typeof AuthenticatedQualityIncidentsRoute;
   "/_authenticated/quality/inspections": typeof AuthenticatedQualityInspectionsRoute;
   "/_authenticated/traceability_/$traceNodeId": typeof AuthenticatedTraceabilityTraceNodeIdRoute;
-  "/_authenticated/work-orders_/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  "/_authenticated/work-orders_/$workOrderId": typeof AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren;
   "/_authenticated/work-orders_/new": typeof AuthenticatedWorkOrdersNewRoute;
   "/_authenticated/materials/lots_/$materialLotId": typeof AuthenticatedMaterialsLotsMaterialLotIdRoute;
+  "/_authenticated/quality/incidents_/$qualityIncidentId": typeof AuthenticatedQualityIncidentsQualityIncidentIdRoute;
   "/_authenticated/quality/inspections_/$inspectionId": typeof AuthenticatedQualityInspectionsInspectionIdRoute;
+  "/_authenticated/work-orders_/$workOrderId/material-reservations": typeof AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute;
+  "/_authenticated/execution/lots_/$productionLotId/steps_/$processStepRevisionId": typeof AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -208,6 +249,7 @@ export interface FileRouteTypes {
     | "/forbidden"
     | "/traceability"
     | "/work-orders"
+    | "/admin/users"
     | "/dev/ui-kit"
     | "/execution/queue"
     | "/materials/boms"
@@ -218,7 +260,10 @@ export interface FileRouteTypes {
     | "/work-orders/$workOrderId"
     | "/work-orders/new"
     | "/materials/lots/$materialLotId"
-    | "/quality/inspections/$inspectionId";
+    | "/quality/incidents/$qualityIncidentId"
+    | "/quality/inspections/$inspectionId"
+    | "/work-orders/$workOrderId/material-reservations"
+    | "/execution/lots/$productionLotId/steps/$processStepRevisionId";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
@@ -228,6 +273,7 @@ export interface FileRouteTypes {
     | "/forbidden"
     | "/traceability"
     | "/work-orders"
+    | "/admin/users"
     | "/dev/ui-kit"
     | "/execution/queue"
     | "/materials/boms"
@@ -238,7 +284,10 @@ export interface FileRouteTypes {
     | "/work-orders/$workOrderId"
     | "/work-orders/new"
     | "/materials/lots/$materialLotId"
-    | "/quality/inspections/$inspectionId";
+    | "/quality/incidents/$qualityIncidentId"
+    | "/quality/inspections/$inspectionId"
+    | "/work-orders/$workOrderId/material-reservations"
+    | "/execution/lots/$productionLotId/steps/$processStepRevisionId";
   id:
     | "__root__"
     | "/"
@@ -249,6 +298,7 @@ export interface FileRouteTypes {
     | "/_authenticated/forbidden"
     | "/_authenticated/traceability"
     | "/_authenticated/work-orders"
+    | "/_authenticated/admin/users"
     | "/_authenticated/dev/ui-kit"
     | "/_authenticated/execution/queue"
     | "/_authenticated/materials/boms"
@@ -259,7 +309,10 @@ export interface FileRouteTypes {
     | "/_authenticated/work-orders_/$workOrderId"
     | "/_authenticated/work-orders_/new"
     | "/_authenticated/materials/lots_/$materialLotId"
-    | "/_authenticated/quality/inspections_/$inspectionId";
+    | "/_authenticated/quality/incidents_/$qualityIncidentId"
+    | "/_authenticated/quality/inspections_/$inspectionId"
+    | "/_authenticated/work-orders_/$workOrderId/material-reservations"
+    | "/_authenticated/execution/lots_/$productionLotId/steps_/$processStepRevisionId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -389,11 +442,32 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedDevUiKitRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/admin/users": {
+      id: "/_authenticated/admin/users";
+      path: "/admin/users";
+      fullPath: "/admin/users";
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/work-orders_/$workOrderId/material-reservations": {
+      id: "/_authenticated/work-orders_/$workOrderId/material-reservations";
+      path: "/material-reservations";
+      fullPath: "/work-orders/$workOrderId/material-reservations";
+      preLoaderRoute: typeof AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRouteImport;
+      parentRoute: typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+    };
     "/_authenticated/quality/inspections_/$inspectionId": {
       id: "/_authenticated/quality/inspections_/$inspectionId";
       path: "/quality/inspections/$inspectionId";
       fullPath: "/quality/inspections/$inspectionId";
       preLoaderRoute: typeof AuthenticatedQualityInspectionsInspectionIdRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/quality/incidents_/$qualityIncidentId": {
+      id: "/_authenticated/quality/incidents_/$qualityIncidentId";
+      path: "/quality/incidents/$qualityIncidentId";
+      fullPath: "/quality/incidents/$qualityIncidentId";
+      preLoaderRoute: typeof AuthenticatedQualityIncidentsQualityIncidentIdRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
     "/_authenticated/materials/lots_/$materialLotId": {
@@ -403,8 +477,30 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthenticatedMaterialsLotsMaterialLotIdRouteImport;
       parentRoute: typeof AuthenticatedRoute;
     };
+    "/_authenticated/execution/lots_/$productionLotId/steps_/$processStepRevisionId": {
+      id: "/_authenticated/execution/lots_/$productionLotId/steps_/$processStepRevisionId";
+      path: "/execution/lots/$productionLotId/steps/$processStepRevisionId";
+      fullPath: "/execution/lots/$productionLotId/steps/$processStepRevisionId";
+      preLoaderRoute: typeof AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
   }
 }
+
+interface AuthenticatedWorkOrdersWorkOrderIdRouteChildren {
+  AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute: typeof AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute;
+}
+
+const AuthenticatedWorkOrdersWorkOrderIdRouteChildren: AuthenticatedWorkOrdersWorkOrderIdRouteChildren =
+  {
+    AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute:
+      AuthenticatedWorkOrdersWorkOrderIdMaterialReservationsRoute,
+  };
+
+const AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren =
+  AuthenticatedWorkOrdersWorkOrderIdRoute._addFileChildren(
+    AuthenticatedWorkOrdersWorkOrderIdRouteChildren,
+  );
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAuditEventsRoute: typeof AuthenticatedAuditEventsRoute;
@@ -412,6 +508,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedForbiddenRoute: typeof AuthenticatedForbiddenRoute;
   AuthenticatedTraceabilityRoute: typeof AuthenticatedTraceabilityRoute;
   AuthenticatedWorkOrdersRoute: typeof AuthenticatedWorkOrdersRoute;
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute;
   AuthenticatedDevUiKitRoute: typeof AuthenticatedDevUiKitRoute;
   AuthenticatedExecutionQueueRoute: typeof AuthenticatedExecutionQueueRoute;
   AuthenticatedMaterialsBomsRoute: typeof AuthenticatedMaterialsBomsRoute;
@@ -419,10 +516,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedQualityIncidentsRoute: typeof AuthenticatedQualityIncidentsRoute;
   AuthenticatedQualityInspectionsRoute: typeof AuthenticatedQualityInspectionsRoute;
   AuthenticatedTraceabilityTraceNodeIdRoute: typeof AuthenticatedTraceabilityTraceNodeIdRoute;
-  AuthenticatedWorkOrdersWorkOrderIdRoute: typeof AuthenticatedWorkOrdersWorkOrderIdRoute;
+  AuthenticatedWorkOrdersWorkOrderIdRoute: typeof AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren;
   AuthenticatedWorkOrdersNewRoute: typeof AuthenticatedWorkOrdersNewRoute;
   AuthenticatedMaterialsLotsMaterialLotIdRoute: typeof AuthenticatedMaterialsLotsMaterialLotIdRoute;
+  AuthenticatedQualityIncidentsQualityIncidentIdRoute: typeof AuthenticatedQualityIncidentsQualityIncidentIdRoute;
   AuthenticatedQualityInspectionsInspectionIdRoute: typeof AuthenticatedQualityInspectionsInspectionIdRoute;
+  AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute: typeof AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -431,6 +530,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedForbiddenRoute: AuthenticatedForbiddenRoute,
   AuthenticatedTraceabilityRoute: AuthenticatedTraceabilityRoute,
   AuthenticatedWorkOrdersRoute: AuthenticatedWorkOrdersRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedDevUiKitRoute: AuthenticatedDevUiKitRoute,
   AuthenticatedExecutionQueueRoute: AuthenticatedExecutionQueueRoute,
   AuthenticatedMaterialsBomsRoute: AuthenticatedMaterialsBomsRoute,
@@ -440,12 +540,16 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedTraceabilityTraceNodeIdRoute:
     AuthenticatedTraceabilityTraceNodeIdRoute,
   AuthenticatedWorkOrdersWorkOrderIdRoute:
-    AuthenticatedWorkOrdersWorkOrderIdRoute,
+    AuthenticatedWorkOrdersWorkOrderIdRouteWithChildren,
   AuthenticatedWorkOrdersNewRoute: AuthenticatedWorkOrdersNewRoute,
   AuthenticatedMaterialsLotsMaterialLotIdRoute:
     AuthenticatedMaterialsLotsMaterialLotIdRoute,
+  AuthenticatedQualityIncidentsQualityIncidentIdRoute:
+    AuthenticatedQualityIncidentsQualityIncidentIdRoute,
   AuthenticatedQualityInspectionsInspectionIdRoute:
     AuthenticatedQualityInspectionsInspectionIdRoute,
+  AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute:
+    AuthenticatedExecutionLotsProductionLotIdStepsProcessStepRevisionIdRoute,
 };
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

@@ -27,6 +27,12 @@ function IncidentsRoute() {
       search={search}
       csrfToken={session.csrfToken}
       canRegister={session.permissions.includes("quality-incident:create")}
+      onOpenDetail={(qualityIncidentId) => {
+        void navigate({
+          to: "/quality/incidents/$qualityIncidentId",
+          params: { qualityIncidentId },
+        });
+      }}
       onSearchChange={(next) => {
         void navigate({
           to: "/quality/incidents",

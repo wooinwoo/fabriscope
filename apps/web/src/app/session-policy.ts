@@ -19,19 +19,25 @@ export const RoutePermission = {
   QUALITY_INCIDENT_READ: "quality-incident:read",
   TRACE_READ: "trace:read",
   AUDIT_EVENT_READ: "audit-event:read",
+  USER_MANAGE: "user:manage",
 } as const;
 
 const implementedRoutePermission: Record<string, string> = {
   "/dashboard": RoutePermission.DASHBOARD_READ,
   "/work-orders": RoutePermission.WORK_ORDER_READ,
+  "/work-orders/$workOrderId": RoutePermission.WORK_ORDER_READ,
+  "/work-orders/$workOrderId/material-reservations": RoutePermission.WORK_ORDER_READ,
   "/materials/lots": RoutePermission.MATERIAL_LOT_READ,
   "/materials/boms": RoutePermission.MASTER_DATA_READ,
   "/execution/queue": RoutePermission.PROCESS_EXECUTION_READ,
+  "/execution/lots/$productionLotId/steps/$processStepRevisionId": RoutePermission.PROCESS_EXECUTION_READ,
   "/quality/inspections": RoutePermission.INSPECTION_READ,
   "/quality/incidents": RoutePermission.QUALITY_INCIDENT_READ,
+  "/quality/incidents/$qualityIncidentId": RoutePermission.QUALITY_INCIDENT_READ,
   "/traceability": RoutePermission.TRACE_READ,
   "/traceability/$traceNodeId": RoutePermission.TRACE_READ,
   "/audit-events": RoutePermission.AUDIT_EVENT_READ,
+  "/admin/users": RoutePermission.USER_MANAGE,
 };
 
 export function resolvePostLoginPath(

@@ -22,7 +22,8 @@ export interface NavigationItem {
     | "/quality/inspections"
     | "/quality/incidents"
     | "/traceability"
-    | "/audit-events";
+    | "/audit-events"
+    | "/admin/users";
   pending?: boolean;
 }
 

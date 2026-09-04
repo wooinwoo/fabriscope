@@ -10,6 +10,7 @@ import {
   QUALITY_INCIDENT_SORT_FIELDS,
   QUALITY_INCIDENT_SOURCE_TYPES,
   QUALITY_INCIDENT_STATUSES,
+  type QualityIncidentDetail,
   type QualityIncidentListItem,
   type QualityIncidentListResult,
   type QualityIncidentSortField,
@@ -133,6 +134,37 @@ export class QualityIncidentsService {
       page: query.page,
       pageSize: query.pageSize,
       total,
+    };
+  }
+
+  async detail(id: string): Promise<QualityIncidentDetail> {
+    const incident = await this.prisma.qualityIncident.findUnique({
+      where: { id },
+    });
+    if (incident === null) {
+      throw new NotFoundException({
+        code: "QUALITY_INCIDENT_NOT_FOUND",
+        message: "부적합 사건을 찾을 수 없습니다.",
+      });
+    }
+    const audits = await this.prisma.auditEvent.findMany({
+      where: {
+        entityType: "QUALITY_INCIDENT",
+        entityId: incident.incidentNumber,
+      },
+      orderBy: { occurredAt: "desc" },
+      take: 10,
+    });
+
+    return {
+      ...this.toListItem(incident),
+      audits: audits.map((event) => ({
+        id: event.id,
+        action: event.action,
+        actorName: event.actorName,
+        summary: event.summary,
+        occurredAt: event.occurredAt.toISOString(),
+      })),
     };
   }
 

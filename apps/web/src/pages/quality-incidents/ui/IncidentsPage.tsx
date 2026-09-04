@@ -63,6 +63,7 @@ interface IncidentsPageProps {
   onSearchChange: (next: IncidentsSearch) => void;
   csrfToken: string;
   canRegister: boolean;
+  onOpenDetail: (qualityIncidentId: string) => void;
 }
 
 export function IncidentsPage({
@@ -70,6 +71,7 @@ export function IncidentsPage({
   onSearchChange,
   csrfToken,
   canRegister,
+  onOpenDetail,
 }: IncidentsPageProps) {
   const searchKey = JSON.stringify(search);
   const [reloadCount, setReloadCount] = useState(0);
@@ -185,8 +187,17 @@ export function IncidentsPage({
           </time>
         ),
       },
+      {
+        key: "open",
+        header: "상세",
+        cell: (row) => (
+          <Button variant="ghost" size="compact" onClick={() => onOpenDetail(row.id)}>
+            상세 열기
+          </Button>
+        ),
+      },
     ],
-    [],
+    [onOpenDetail],
   );
 
   const hasActiveFilter =

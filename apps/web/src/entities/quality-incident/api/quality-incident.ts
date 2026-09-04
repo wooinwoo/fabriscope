@@ -1,5 +1,8 @@
 import { requestJson } from "@/shared/api";
-import type { QualityIncidentListResult } from "../model/quality-incident";
+import type {
+  QualityIncidentDetail,
+  QualityIncidentListResult,
+} from "../model/quality-incident";
 
 export async function fetchQualityIncidents(
   searchParams: URLSearchParams,
@@ -8,6 +11,16 @@ export async function fetchQualityIncidents(
   const query = searchParams.toString();
   return requestJson<QualityIncidentListResult>(
     `/api/quality-incidents${query === "" ? "" : `?${query}`}`,
+    { ...(signal !== undefined ? { signal } : {}) },
+  );
+}
+
+export async function fetchQualityIncidentDetail(
+  qualityIncidentId: string,
+  signal?: AbortSignal,
+): Promise<QualityIncidentDetail> {
+  return requestJson<QualityIncidentDetail>(
+    `/api/quality-incidents/${encodeURIComponent(qualityIncidentId)}`,
     { ...(signal !== undefined ? { signal } : {}) },
   );
 }
