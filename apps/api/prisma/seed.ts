@@ -215,10 +215,18 @@ try {
     }
 
     const bomRevisionRow = await transaction.bomRevision.findUnique({
-      where: { revisionNumber: "BOM-2026-R003" },
-      select: { id: true },
+      where: { revisionNumber: "BOM-2026-R004" },
+      select: { id: true, productId: true, product: { select: { code: true } } },
     });
-    if (bomRevisionRow !== null) {
+    const orderProductRow = await transaction.workOrder.findUnique({
+      where: { orderNumber: "WO-2026-093" },
+      select: { productCode: true },
+    });
+    if (
+      bomRevisionRow !== null &&
+      orderProductRow !== null &&
+      bomRevisionRow.product.code === orderProductRow.productCode
+    ) {
       await transaction.workOrder.updateMany({
         where: { orderNumber: "WO-2026-093", bomRevisionId: null },
         data: { bomRevisionId: bomRevisionRow.id },
