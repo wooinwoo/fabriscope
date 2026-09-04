@@ -57,6 +57,7 @@ type LoadState =
 interface MaterialLotsPageProps {
   search: MaterialLotsListSearch;
   onSearchChange: (next: MaterialLotsListSearch) => void;
+  onOpenDetail: (materialLotId: string) => void;
   csrfToken: string;
   canDecideQuality: boolean;
 }
@@ -86,6 +87,7 @@ function ExpiryCell({ expiresAt }: { expiresAt: string | null }) {
 export function MaterialLotsPage({
   search,
   onSearchChange,
+  onOpenDetail,
   csrfToken,
   canDecideQuality,
 }: MaterialLotsPageProps) {
@@ -152,9 +154,13 @@ export function MaterialLotsPage({
         key: "lotNumber",
         header: "자재 LOT",
         cell: (row) => (
-          <span className="font-mono text-xs font-bold text-text-strong">
+          <button
+            className="font-mono text-xs font-bold text-accent-strong underline-offset-4 hover:underline"
+            onClick={() => onOpenDetail(row.id)}
+            type="button"
+          >
             {row.lotNumber}
-          </span>
+          </button>
         ),
       },
       {
@@ -255,7 +261,7 @@ export function MaterialLotsPage({
           ]
         : []),
     ],
-    [canDecideQuality],
+    [canDecideQuality, onOpenDetail],
   );
 
   const hasActiveFilter =
