@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { verdictInspection } from "../api/inspection-verdict";
 import { ApiRequestError } from "@/shared/api";
 import { Badge, Button, Input, Select } from "@/shared/ui";
@@ -22,18 +22,32 @@ const VERDICT_OPTIONS = [
   { label: "보류 (HOLD)", value: "HOLD" },
 ] as const;
 
-export function InspectionVerdictPanel({
+export function InspectionVerdictPanel(props: InspectionVerdictPanelProps) {
+  return <InspectionVerdictForm key={props.target.inspectionId} {...props} />;
+}
+
+function InspectionVerdictForm({
   target,
   csrfToken,
   onDone,
 }: InspectionVerdictPanelProps) {
-  const [verdict, setVerdict] = useState<string>("PASS");
+  const [verdict, setVerdict] = useState("");
   const [memo, setMemo] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const active = useRef(true);
+
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
 
   async function submit() {
-    if (pending) {
+    if (
+      pending || (verdict !== "PASS" && verdict !== "FAIL" && verdict !== "HOLD")
+    ) {
       return;
     }
     setPending(true);
@@ -42,13 +56,18 @@ export function InspectionVerdictPanel({
       await verdictInspection(
         target.inspectionId,
         {
-          verdict: verdict as "PASS" | "FAIL" | "HOLD",
+          verdict,
           ...(memo.trim() === "" ? {} : { memo: memo.trim() }),
         },
         csrfToken,
       );
-      onDone();
+      if (active.current) {
+        onDone();
+      }
     } catch (cause: unknown) {
+      if (!active.current) {
+        return;
+      }
       setError(
         cause instanceof ApiRequestError
           ? cause.message
@@ -70,6 +89,8 @@ export function InspectionVerdictPanel({
         <div className="min-w-44">
           <Select
             label="판정"
+            placeholder="판정을 선택해 주세요"
+            disabled={pending}
             options={VERDICT_OPTIONS.map((option) => ({ ...option }))}
             value={verdict}
             onValueChange={setVerdict}
@@ -77,6 +98,7 @@ export function InspectionVerdictPanel({
         </div>
         <div className="min-w-56 flex-1">
           <Input
+            disabled={pending}
             hint="선택 사항입니다."
             id="verdict-memo"
             label="판정 메모"
@@ -85,14 +107,18 @@ export function InspectionVerdictPanel({
             value={memo}
           />
         </div>
-        <Button loading={pending} onClick={() => void submit()}>
+        <Button
+          disabled={verdict === ""}
+          loading={pending}
+          onClick={() => void submit()}
+        >
           판정 확정
         </Button>
-        <Button variant="ghost" onClick={onDone}>
+        <Button variant="ghost" disabled={pending} onClick={onDone}>
           취소
         </Button>
       </div>
-      {verdict !== "PASS" ? (
+      {verdict !== "" && verdict !== "PASS" ? (
         <p className="mt-3">
           <Badge tone={verdict === "FAIL" ? "danger" : "warning"}>
             {verdict === "FAIL"

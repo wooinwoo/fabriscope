@@ -127,7 +127,12 @@ describe("InspectionDetailPage", () => {
     verdictMock.mockResolvedValue({ ok: true });
     renderPage({ canVerdict: true });
 
-    await screen.findByRole("button", { name: "판정 확정" });
+    const submit = await screen.findByRole("button", { name: "판정 확정" });
+    expect(submit).toBeDisabled();
+    await user.click(screen.getByRole("combobox", { name: "판정" }));
+    await user.click(
+      await screen.findByRole("option", { name: "합격 (PASS)", exact: true }),
+    );
 
     current = sampleDetail({ executionStatus: "COMPLETED", verdict: "PASS" });
     await user.click(screen.getByRole("button", { name: "판정 확정" }));

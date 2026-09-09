@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
-import { fetchMaterialLots } from "@/entities/material-lot";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fetchMaterialLots, type MaterialLotListItem } from "@/entities/material-lot";
 import {
   fetchMaterialReservations,
   releaseMaterialAllocation,
@@ -30,6 +30,25 @@ const lotsMock = vi.mocked(fetchMaterialLots);
 const reserveMock = vi.mocked(reserveMaterial);
 const releaseMock = vi.mocked(releaseMaterialAllocation);
 
+const availableLot: MaterialLotListItem = {
+  id: "lot-1",
+  lotNumber: "ML-2026-0301",
+  materialCode: "SEN-MAT-014",
+  materialName: "적외선 감지 다이오드 어레이",
+  unit: "EA",
+  receivedQuantity: 200,
+  onHand: 200,
+  reservedQuantity: 0,
+  consumedQuantity: 0,
+  scrappedQuantity: 0,
+  availableQuantity: 200,
+  qualityDisposition: "ACCEPTED",
+  expiresAt: null,
+  receivedAt: "2026-08-14T00:00:00.000Z",
+};
+
+const availablePage = { items: [availableLot], page: 1, pageSize: 100, total: 1 };
+
 function renderPanel(overrides: { canReserve?: boolean; canRelease?: boolean } = {}) {
   render(
     <MaterialReservationPanel
@@ -44,6 +63,10 @@ function renderPanel(overrides: { canReserve?: boolean; canRelease?: boolean } =
 }
 
 describe("MaterialReservationPanel", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
   it("활성 예약과 해제 행동을 표시한다", async () => {
     reservationsMock.mockResolvedValue([
       {
@@ -142,5 +165,127 @@ describe("MaterialReservationPanel", () => {
     await waitFor(() => {
       expect(releaseMock).toHaveBeenCalledWith("alloc-1", "csrf");
     });
+  });
+
+  it("첫 페이지 뒤의 가용 LOT도 선택하고 예약할 수 있다", async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    reservationsMock.mockResolvedValue([]);
+    lotsMock.mockImplementation(async (params) => {
+      const page = Number(params.get("page"));
+      return {
+        items: page === 1
+          ? Array.from({ length: 100 }, (_, index) => ({
+              ...availableLot,
+              id: `lot-${index + 1}`,
+              lotNumber: `ML-${index + 1}`,
+            }))
+          : [{ ...availableLot, id: "lot-101", lotNumber: "ML-101" }],
+        page,
+        pageSize: 100,
+        total: 101,
+      };
+    });
+    reserveMock.mockResolvedValue([]);
+    renderPanel();
+
+    await waitFor(() => expect(screen.getByRole("combobox")).toBeEnabled());
+    await user.click(screen.getByRole("combobox"));
+    await user.click(await screen.findByRole("option", { name: /ML-101 / }));
+    await user.click(screen.getByRole("button", { name: "예약" }));
+
+    await waitFor(() => expect(reserveMock).toHaveBeenCalledWith(
+      "wo-1", { materialLotId: "lot-101", quantity: 10 }, "csrf",
+    ));
+    expect(lotsMock.mock.calls[1]?.[0].get("page")).toBe("2");
+  });
+
+  it.each(["reservations", "lots"])("%s 조회 실패를 빈 목록으로 숨기지 않고 재시도한다", async (source) => {
+    reservationsMock.mockResolvedValue([]);
+    lotsMock.mockResolvedValue(availablePage);
+    if (source === "reservations") {
+      reservationsMock.mockRejectedValueOnce(new Error("unavailable"));
+    } else {
+      lotsMock.mockRejectedValueOnce(new Error("unavailable"));
+    }
+    renderPanel();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("불러오지 못했습니다");
+    expect(screen.queryByText("아직 예약된 자재가 없습니다.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "예약" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "다시 조회" }));
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "예약" })).toBeEnabled());
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByText("아직 예약된 자재가 없습니다.")).toBeInTheDocument();
+  });
+
+  it.each([170, 0])("예약 후 남은 가용 수량 %i를 다시 조회해 반영한다", async (remaining) => {
+    reservationsMock.mockResolvedValue([]);
+    lotsMock.mockResolvedValueOnce(availablePage).mockResolvedValue({
+      ...availablePage,
+      items: remaining === 0 ? [] : [{
+        ...availableLot,
+        reservedQuantity: 200 - remaining,
+        availableQuantity: remaining,
+      }],
+      total: remaining === 0 ? 0 : 1,
+    });
+    reserveMock.mockResolvedValue([]);
+    renderPanel();
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "예약" })).toBeEnabled());
+    await userEvent.clear(screen.getByRole("spinbutton"));
+    await userEvent.type(screen.getByRole("spinbutton"), String(200 - remaining));
+    await userEvent.click(screen.getByRole("button", { name: "예약" }));
+
+    await waitFor(() => expect(screen.getByRole("spinbutton")).toHaveAttribute("max", String(remaining)));
+    if (remaining === 0) {
+      expect(screen.getByRole("combobox")).toHaveTextContent("가용 자재가 없습니다");
+      expect(screen.getByRole("button", { name: "예약" })).toBeDisabled();
+    } else {
+      expect(screen.getByRole("combobox")).toHaveTextContent("가용 170");
+      await userEvent.clear(screen.getByRole("spinbutton"));
+      await userEvent.type(screen.getByRole("spinbutton"), "171");
+      expect(screen.getByRole("button", { name: "예약" })).toBeDisabled();
+    }
+  });
+
+  it("해제 후 가용 수량이 생긴 LOT을 선택 목록에 복원한다", async () => {
+    reservationsMock.mockResolvedValueOnce([{
+      id: "alloc-1", lotNumber: availableLot.lotNumber,
+      materialCode: availableLot.materialCode, materialName: availableLot.materialName,
+      unit: "EA", quantity: 200, status: "ACTIVE", closedReason: null,
+      createdAt: "2026-09-03T01:00:00.000Z",
+    }]).mockResolvedValue([]);
+    lotsMock.mockResolvedValueOnce({ ...availablePage, items: [], total: 0 })
+      .mockResolvedValue(availablePage);
+    releaseMock.mockResolvedValue([]);
+    renderPanel();
+
+    await userEvent.click(await screen.findByRole("button", { name: "해제" }));
+
+    await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("가용 200"));
+    expect(screen.getByRole("button", { name: "예약" })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "해제" })).not.toBeInTheDocument();
+  });
+
+  it("저장 후 조회가 실패해도 저장 성공을 알리고 중복 예약을 막는다", async () => {
+    reservationsMock.mockResolvedValue([]);
+    lotsMock.mockResolvedValueOnce(availablePage)
+      .mockRejectedValueOnce(new Error("refresh failed"))
+      .mockResolvedValue(availablePage);
+    reserveMock.mockResolvedValue([]);
+    renderPanel();
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "예약" })).toBeEnabled());
+    await userEvent.click(screen.getByRole("button", { name: "예약" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("불러오지 못했습니다");
+    expect(screen.getByText("자재를 예약했습니다.")).toBeInTheDocument();
+    expect(screen.queryByText("예약하지 못했습니다.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "예약" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "다시 조회" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "예약" })).toBeEnabled());
+    expect(reserveMock).toHaveBeenCalledTimes(1);
   });
 });
