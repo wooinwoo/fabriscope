@@ -33,8 +33,8 @@ const releaseMock = vi.mocked(releaseMaterialAllocation);
 const availableLot: MaterialLotListItem = {
   id: "lot-1",
   lotNumber: "ML-2026-0301",
-  materialCode: "SEN-MAT-014",
-  materialName: "적외선 감지 다이오드 어레이",
+  materialCode: "ECM-MAT-014",
+  materialName: "메인 MCU 칩",
   unit: "EA",
   receivedQuantity: 200,
   onHand: 200,
@@ -72,8 +72,8 @@ describe("MaterialReservationPanel", () => {
       {
         id: "alloc-1",
         lotNumber: "ML-2026-0301",
-        materialCode: "SEN-MAT-014",
-        materialName: "적외선 감지 다이오드 어레이",
+        materialCode: "ECM-MAT-014",
+        materialName: "메인 MCU 칩",
         unit: "EA",
         quantity: 50,
         status: "ACTIVE",
@@ -96,8 +96,8 @@ describe("MaterialReservationPanel", () => {
         {
           id: "lot-1",
           lotNumber: "ML-2026-0301",
-          materialCode: "SEN-MAT-014",
-          materialName: "적외선 감지 다이오드 어레이",
+          materialCode: "ECM-MAT-014",
+          materialName: "메인 MCU 칩",
           unit: "EA",
           receivedQuantity: 500,
           onHand: 320,
@@ -117,7 +117,7 @@ describe("MaterialReservationPanel", () => {
     reserveMock.mockResolvedValue([]);
     renderPanel();
 
-    await screen.findByText(/적외선 감지 다이오드 어레이 ML-2026-0301/);
+    await screen.findByText(/메인 MCU 칩 ML-2026-0301/);
     await userEvent.clear(screen.getByRole("spinbutton"));
     await userEvent.type(screen.getByRole("spinbutton"), "30");
     await userEvent.click(screen.getByRole("button", { name: "예약" }));
@@ -146,8 +146,8 @@ describe("MaterialReservationPanel", () => {
       {
         id: "alloc-1",
         lotNumber: "ML-2026-0301",
-        materialCode: "SEN-MAT-014",
-        materialName: "적외선 감지 다이오드 어레이",
+        materialCode: "ECM-MAT-014",
+        materialName: "메인 MCU 칩",
         unit: "EA",
         quantity: 50,
         status: "ACTIVE",

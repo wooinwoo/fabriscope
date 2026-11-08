@@ -42,14 +42,14 @@ interface WorkOrderRow {
 const workOrders: WorkOrderRow[] = [
   {
     id: "WO-260901-004",
-    product: "광학 센서 모듈 A",
+    product: "통신 모듈 A",
     quantity: 120,
     dueDate: "09-04",
     progress: "in-progress",
   },
   {
     id: "WO-260901-007",
-    product: "열상 센서 모듈 B",
+    product: "제어 보드 B",
     quantity: 40,
     dueDate: "09-03",
     progress: "ready",

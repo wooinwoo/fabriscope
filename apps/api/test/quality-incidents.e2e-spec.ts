@@ -337,7 +337,7 @@ describe("quality incident list and register command", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        title: "적외선 다이오드 어레이 광출력 편차",
+        title: "메인 MCU 칩 클럭 편차",
         sourceType: "MATERIAL_LOT",
         sourceLotNumber: "ML-2026-0301",
         description: "공정 검사에서 광출력 하한 미달 다수 발견",
@@ -378,7 +378,7 @@ describe("quality incident list and register command", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        title: "TE 쿨링 모듈 추가 이상 소음 신고",
+        title: "방열 히트싱크 추가 이상 소음 신고",
         sourceType: "MATERIAL_LOT",
         sourceLotNumber: "ML-2026-0323",
       })

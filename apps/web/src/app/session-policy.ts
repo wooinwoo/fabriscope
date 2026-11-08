@@ -49,7 +49,7 @@ export function resolvePostLoginPath(
     return session.landingRoute;
   }
 
-  const pathname = new URL(path, "https://sensor-mes.local").pathname;
+  const pathname = new URL(path, "https://fabriscope.local").pathname;
   const permission = implementedRoutePermission[pathname];
   return permission !== undefined && sessionHasPermission(session, permission)
     ? path
@@ -103,8 +103,8 @@ function readInternalPath(value: string) {
   }
 
   try {
-    const parsed = new URL(value, "https://sensor-mes.local");
-    return parsed.origin === "https://sensor-mes.local"
+    const parsed = new URL(value, "https://fabriscope.local");
+    return parsed.origin === "https://fabriscope.local"
       ? `${parsed.pathname}${parsed.search}`
       : undefined;
   } catch {

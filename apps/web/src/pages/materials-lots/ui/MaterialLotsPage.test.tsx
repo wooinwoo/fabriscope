@@ -24,8 +24,8 @@ function sampleResult(overrides: Partial<MaterialLotListResult> = {}): MaterialL
       {
         id: "lot-1",
         lotNumber: "ML-2026-0323",
-        materialCode: "SEN-MAT-032",
-        materialName: "TE 쿨링 모듈",
+        materialCode: "ECM-MAT-032",
+        materialName: "방열 히트싱크",
         unit: "EA",
         receivedQuantity: 100,
         onHand: 100,
@@ -40,8 +40,8 @@ function sampleResult(overrides: Partial<MaterialLotListResult> = {}): MaterialL
       {
         id: "lot-2",
         lotNumber: "ML-2026-0301",
-        materialCode: "SEN-MAT-014",
-        materialName: "적외선 감지 다이오드 어레이",
+        materialCode: "ECM-MAT-014",
+        materialName: "메인 MCU 칩",
         unit: "EA",
         receivedQuantity: 500,
         onHand: 320,
@@ -81,7 +81,7 @@ describe("MaterialLotsPage", () => {
     renderPage();
 
     expect(await screen.findByText("ML-2026-0323")).toBeInTheDocument();
-    expect(screen.getByText("TE 쿨링 모듈")).toBeInTheDocument();
+    expect(screen.getByText("방열 히트싱크")).toBeInTheDocument();
     expect(screen.getByText("격리")).toBeInTheDocument();
     expect(screen.getByText("허입")).toBeInTheDocument();
     expect(

@@ -24,7 +24,7 @@ function sampleResult(
       {
         id: "incident-1",
         incidentNumber: "QI-2026-0701",
-        title: "TE 쿨링 모듈 열전달 성능 편차 의심",
+        title: "방열 히트싱크 열전달 성능 편차 의심",
         sourceType: "MATERIAL_LOT",
         sourceLotNumber: "ML-2026-0323",
         description: "동일 LOT 전량 사용 중단 후 격리 조사 중.",
@@ -77,7 +77,7 @@ describe("IncidentsPage", () => {
 
     expect(await screen.findByText("QI-2026-0701")).toBeInTheDocument();
     expect(
-      screen.getByText("TE 쿨링 모듈 열전달 성능 편차 의심"),
+      screen.getByText("방열 히트싱크 열전달 성능 편차 의심"),
     ).toBeInTheDocument();
     expect(screen.getByText("ML-2026-0323")).toBeInTheDocument();
     expect(screen.getByText("조사 중")).toBeInTheDocument();

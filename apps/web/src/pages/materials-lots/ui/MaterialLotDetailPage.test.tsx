@@ -17,8 +17,8 @@ function sampleDetail(
   return {
     id: "lot-1",
     lotNumber: "ML-2026-0301",
-    materialCode: "SEN-MAT-014",
-    materialName: "적외선 감지 다이오드 어레이",
+    materialCode: "ECM-MAT-014",
+    materialName: "메인 MCU 칩",
     unit: "EA",
     receivedQuantity: 500,
     onHand: 320,
@@ -46,7 +46,7 @@ function sampleDetail(
         actorName: "품질 데모",
         actorRole: "QUALITY_ENGINEER",
         action: "MATERIAL_LOT_DISPOSITION_DECIDED",
-        summary: "적외선 감지 다이오드 어레이 ML-2026-0301 품질 처분 결정 대기 → 합격",
+        summary: "메인 MCU 칩 ML-2026-0301 품질 처분 결정 대기 → 합격",
       },
     ],
     ...overrides,
@@ -68,7 +68,7 @@ describe("MaterialLotDetailPage", () => {
 
     expect(await screen.findByText("ML-2026-0301")).toBeInTheDocument();
     expect(
-      screen.getByText("적외선 감지 다이오드 어레이 (SEN-MAT-014)"),
+      screen.getByText("메인 MCU 칩 (ECM-MAT-014)"),
     ).toBeInTheDocument();
     expect(screen.getByText("허입")).toBeInTheDocument();
     expect(screen.getByText("WO-2026-091")).toBeInTheDocument();
