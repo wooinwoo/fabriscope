@@ -65,6 +65,6 @@ jobs:
 
       - name: Smoke test
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 https://fabriscope.pages.dev/api/health || echo "000")
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 https://fabriscope.wooki.cc/api/health || echo "000")
           echo "health -> HTTP $code"
           test "$code" = "200"
