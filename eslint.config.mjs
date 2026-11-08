@@ -24,6 +24,13 @@ export default tseslint.config(
     },
   },
   {
+    // Cloudflare Pages Functions는 브라우저와 같은 Web API(fetch, Request, URL)를 쓴다.
+    files: ["apps/web/functions/**/*.js"],
+    languageOptions: {
+      globals: globals.serviceworker,
+    },
+  },
+  {
     files: ["apps/api/**/*.ts", "apps/web/*.{ts,js}", "apps/web/**/*.config.ts"],
     languageOptions: {
       globals: globals.node,
