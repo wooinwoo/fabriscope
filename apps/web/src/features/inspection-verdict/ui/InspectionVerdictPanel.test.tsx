@@ -47,7 +47,7 @@ describe("InspectionVerdictPanel", () => {
     expect(verdictMock).not.toHaveBeenCalled();
 
     await user.click(screen.getByRole("combobox", { name: "판정" }));
-    await user.click(await screen.findByRole("option", { name: "합격 (PASS)", exact: true }));
+    await user.click(await screen.findByRole("option", { name: "합격 (PASS)" }));
     expect(submit).toBeEnabled();
     await user.click(submit);
     await waitFor(() => expect(verdictMock).toHaveBeenCalledWith(
@@ -61,7 +61,7 @@ describe("InspectionVerdictPanel", () => {
     verdictMock.mockReturnValue(response.promise);
     const { onDone, rerender } = renderPanel();
     await user.click(screen.getByRole("combobox", { name: "판정" }));
-    await user.click(await screen.findByRole("option", { name: "합격 (PASS)", exact: true }));
+    await user.click(await screen.findByRole("option", { name: "합격 (PASS)" }));
     await user.type(screen.getByLabelText("판정 메모"), "첫 검사 결과");
     await user.click(screen.getByRole("button", { name: "판정 확정" }));
     expect(screen.getByRole("button", { name: "취소" })).toBeDisabled();

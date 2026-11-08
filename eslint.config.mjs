@@ -13,6 +13,8 @@ export default tseslint.config(
       "apps/api/src/generated/**",
       "apps/web/src/app/routeTree.gen.ts",
       "apps/web/vendor/**",
+      "apps/web/worker/generated/**",
+      "**/.wrangler/**",
     ],
   },
   eslint.configs.recommended,
