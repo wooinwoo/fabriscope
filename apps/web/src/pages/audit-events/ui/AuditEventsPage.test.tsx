@@ -41,7 +41,7 @@ function sampleResult(overrides: Partial<AuditEventListResult> = {}): AuditEvent
         action: "WORK_ORDER_RELEASED",
         entityType: "WORK_ORDER",
         entityId: "WO-2026-097",
-        summary: "적외선 센서 모듈 100EA 작업지시 발행",
+        summary: "산업용 제어 보드 CB-640 100EA 작업지시 발행",
         requestId: "req-2026-09-02-0117",
       },
     ],

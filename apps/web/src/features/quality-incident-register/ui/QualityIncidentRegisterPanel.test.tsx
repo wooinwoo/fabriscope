@@ -39,7 +39,7 @@ describe("QualityIncidentRegisterPanel", () => {
     registerMock.mockResolvedValue({
       id: "incident-new",
       incidentNumber: "QI-2026-0705",
-      title: "적외선 다이오드 어레이 광출력 편차",
+      title: "메인 MCU 칩 클럭 편차",
       sourceType: "MATERIAL_LOT",
       sourceLotNumber: "ML-2026-0301",
       description: "공정 검사에서 광출력 하한 미달 다수 발견",
@@ -52,7 +52,7 @@ describe("QualityIncidentRegisterPanel", () => {
 
     await user.type(
       screen.getByLabelText("사건 제목"),
-      "적외선 다이오드 어레이 광출력 편차",
+      "메인 MCU 칩 클럭 편차",
     );
     await user.type(screen.getByLabelText("대상 식별번호"), "ML-2026-0301");
     await user.type(
@@ -64,7 +64,7 @@ describe("QualityIncidentRegisterPanel", () => {
     await waitFor(() => {
       expect(registerMock).toHaveBeenCalledWith(
         {
-          title: "적외선 다이오드 어레이 광출력 편차",
+          title: "메인 MCU 칩 클럭 편차",
           sourceType: "MATERIAL_LOT",
           sourceLotNumber: "ML-2026-0301",
           description: "공정 검사에서 광출력 하한 미달 다수 발견",
@@ -80,7 +80,7 @@ describe("QualityIncidentRegisterPanel", () => {
     registerMock.mockRejectedValue(new Error("conflict"));
     renderPanel();
 
-    await user.type(screen.getByLabelText("사건 제목"), "세라믹 패키지 균열");
+    await user.type(screen.getByLabelText("사건 제목"), "다층 PCB 기판 균열");
     await user.type(screen.getByLabelText("대상 식별번호"), "ML-2026-0311");
     await user.click(screen.getByRole("button", { name: "사건 등록" }));
 

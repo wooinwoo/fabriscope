@@ -28,7 +28,7 @@ describe("GET /api/health", () => {
 
     expect(response.body).toMatchObject({
       status: "ok",
-      service: "sensor-mes-api",
+      service: "fabriscope-api",
     });
     expect(new Date(response.body.timestamp as string).toString()).not.toBe(
       "Invalid Date",

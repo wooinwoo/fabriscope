@@ -245,7 +245,7 @@ describe("material lot detail", () => {
 
     expect(response.body).toMatchObject({
       lotNumber: "ML-2026-0301",
-      materialCode: "SEN-MAT-014",
+      materialCode: "ECM-MAT-014",
       qualityDisposition: "ACCEPTED",
     });
     expect(response.body.allocations).toHaveLength(1);

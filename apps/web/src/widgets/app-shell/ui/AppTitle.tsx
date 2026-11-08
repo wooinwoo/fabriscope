@@ -25,7 +25,7 @@ export function AppTitle() {
             <div className="grid flex-1 text-start text-sm leading-tight">
               <span className="truncate font-semibold">FabriScope MES</span>
               <span className="truncate text-xs text-sidebar-foreground/65">
-                센서 제조 운영
+                부품 제조 운영
               </span>
             </div>
           </Link>

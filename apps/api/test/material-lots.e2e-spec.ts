@@ -304,7 +304,7 @@ describe("material lot list API", () => {
     expect(response.body.total).toBe(DEMO_MATERIAL_LOTS.length);
     expect(response.body.items[0].lotNumber).toBe("ML-2026-0312");
     expect(response.body.items[0]).toMatchObject({
-      materialCode: "SEN-MAT-021",
+      materialCode: "ECM-MAT-021",
       availableQuantity: 0,
     });
   });
@@ -377,13 +377,13 @@ describe("material lot list API", () => {
     const agent = await loginAs("MATERIAL_MANAGER");
     const response = await agent
       .get("/api/material-lots")
-      .query({ q: "쿨링" })
+      .query({ q: "히트싱크" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(3);
     for (const item of response.body.items) {
-      expect(item.materialName).toContain("쿨링");
+      expect(item.materialName).toContain("히트싱크");
     }
   });
 

@@ -32,7 +32,7 @@ export function LoginPage({ onAuthenticated, reason }: LoginPageProps) {
                 FabriScope MES
               </strong>
               <span className="block truncate text-xs text-text-muted">
-                센서 제조 운영 데모
+                부품 제조 운영 데모
               </span>
             </div>
           </div>

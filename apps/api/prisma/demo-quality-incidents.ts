@@ -25,7 +25,7 @@ export interface DemoQualityIncident {
 export const DEMO_QUALITY_INCIDENTS: DemoQualityIncident[] = [
   {
     incidentNumber: "QI-2026-0701",
-    title: "TE 쿨링 모듈 열전달 성능 편차 의심",
+    title: "방열 히트싱크 열전달 성능 편차 의심",
     sourceType: "MATERIAL_LOT",
     sourceLotNumber: "ML-2026-0323",
     description:
@@ -36,7 +36,7 @@ export const DEMO_QUALITY_INCIDENTS: DemoQualityIncident[] = [
   },
   {
     incidentNumber: "QI-2026-0688",
-    title: "세라믹 패키지 표면 미세 균열 신고",
+    title: "다층 PCB 기판 표면 미세 균열 신고",
     sourceType: "MATERIAL_LOT",
     sourceLotNumber: "ML-2026-0322",
     description: "현장 작업자 신고. 영향 범위 평가 완료, 재검토 결과 대기 중.",

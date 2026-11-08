@@ -13,12 +13,27 @@ export default tseslint.config(
       "apps/api/src/generated/**",
       "apps/web/src/app/routeTree.gen.ts",
       "apps/web/vendor/**",
+      "apps/web/worker/generated/**",
+      "**/.wrangler/**",
     ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
     files: ["scripts/**/*.{js,mjs}", "eslint.config.mjs"],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+  {
+    // Cloudflare Worker는 브라우저와 같은 Web API(fetch, Request, URL)를 쓴다.
+    files: ["apps/web/worker/**/*.ts"],
+    languageOptions: {
+      globals: globals.serviceworker,
+    },
+  },
+  {
+    files: ["apps/web/worker/**/*.mjs"],
     languageOptions: {
       globals: globals.node,
     },

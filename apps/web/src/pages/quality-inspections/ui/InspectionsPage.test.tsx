@@ -24,12 +24,12 @@ function sampleResult(overrides: Partial<InspectionListResult> = {}): Inspection
         id: "inspection-1",
         inspectionNumber: "INSP-2026-0101",
         workOrderNumber: "WO-2026-091",
-        productCode: "SEN-IR-640",
-        productName: "적외선 센서 모듈 640px",
+        productCode: "ECM-CTL-640",
+        productName: "산업용 제어 보드 CB-640",
         productionLotNumber: "PL-2026-091A",
         processStepName: "최종 검사",
         gate: "LOT_COMPLETE",
-        specName: "적외선 모듈 최종검사 규격 v3",
+        specName: "제어 보드 최종검사 규격 v3",
         executionStatus: "PENDING",
         verdict: null,
         completedAt: null,
@@ -39,8 +39,8 @@ function sampleResult(overrides: Partial<InspectionListResult> = {}): Inspection
         id: "inspection-2",
         inspectionNumber: "INSP-2026-0107",
         workOrderNumber: "WO-2026-094",
-        productCode: "SEN-IR-640",
-        productName: "적외선 센서 모듈 640px",
+        productCode: "ECM-CTL-640",
+        productName: "산업용 제어 보드 CB-640",
         productionLotNumber: "PL-2026-094A",
         processStepName: "조립 2공정",
         gate: "ROUTE_ADVANCE",
@@ -82,7 +82,7 @@ describe("InspectionsPage", () => {
     expect(screen.getByText("LOT 완료")).toBeInTheDocument();
     expect(screen.getByText("미판정")).toBeInTheDocument();
     expect(screen.getByText("불합격")).toBeInTheDocument();
-    expect(screen.getByText("적외선 모듈 최종검사 규격 v3")).toBeInTheDocument();
+    expect(screen.getByText("제어 보드 최종검사 규격 v3")).toBeInTheDocument();
     expect(
       screen.getByRole("table", { name: "품질 검사 목록" }),
     ).toBeInTheDocument();
