@@ -5,7 +5,7 @@ import { ApiConnectionStatus } from "./ApiConnectionStatus";
 
 const successfulHealth = {
   status: "ok",
-  service: "sensor-mes-api",
+  service: "fabriscope-api",
   timestamp: "2026-09-01T11:30:00.000Z",
 } as const;
 
@@ -25,7 +25,7 @@ test("health 응답이 성공하면 연결 정상과 서비스명을 표시한�
   render(<ApiConnectionStatus loadHealth={loadHealth} />);
 
   expect(await screen.findByText("API 연결 정상")).toBeInTheDocument();
-  expect(screen.getByText(/sensor-mes-api/u)).toBeInTheDocument();
+  expect(screen.getByText(/fabriscope-api/u)).toBeInTheDocument();
 });
 
 test("health 응답이 실패하면 원인과 재시도 행동을 제공한다", async () => {

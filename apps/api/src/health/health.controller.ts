@@ -2,7 +2,7 @@ import { Controller, Get } from "@nestjs/common";
 
 export interface HealthResponse {
   status: "ok";
-  service: "sensor-mes-api";
+  service: "fabriscope-api";
   timestamp: string;
 }
 
@@ -12,7 +12,7 @@ export class HealthController {
   public getHealth(): HealthResponse {
     return {
       status: "ok",
-      service: "sensor-mes-api",
+      service: "fabriscope-api",
       timestamp: new Date().toISOString(),
     };
   }

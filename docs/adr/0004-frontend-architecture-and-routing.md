@@ -7,7 +7,7 @@
 
 ## Context
 
-센서 제조 MES에는 7개 업무영역과 17개 하위 화면, 역할별 행동, 상태 표현과 반응형 계약이 있다. 이제 React 구현을 시작하려면 외부 UI reference를 어느 수준까지 재사용할지, MES code를 어떤 경계로 나눌지, 화면과 URL을 누가 소유할지 결정해야 한다.
+부품 제조 MES에는 7개 업무영역과 17개 하위 화면, 역할별 행동, 상태 표현과 반응형 계약이 있다. 이제 React 구현을 시작하려면 외부 UI reference를 어느 수준까지 재사용할지, MES code를 어떤 경계로 나눌지, 화면과 URL을 누가 소유할지 결정해야 한다.
 
 [`shadcn-admin`](https://github.com/satnaing/shadcn-admin)은 React·Vite·shadcn/ui 기반의 반응형 sidebar, table, dialog와 접근성 패턴을 제공한다. 그러나 저장소 자체가 starter가 아니라고 밝히며 일부 shadcn component를 직접 수정한다. 범용 dashboard의 task, user, chat, settings, Clerk 예제도 MES 업무와 다르다. 전체 source tree를 복제하면 빠른 시작 대신 불필요한 기능, 외부 구조와 update 비용까지 함께 소유하게 된다.
 

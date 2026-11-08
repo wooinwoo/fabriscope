@@ -356,7 +356,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .expect(200);
     expect(response.body.items).toHaveLength(3);
-    expect(response.body.items[0]).toMatchObject({ code: "SEN-IR-640" });
+    expect(response.body.items[0]).toMatchObject({ code: "ECM-CTL-640" });
   });
 
   it("생성 권한과 CSRF 검증을 통과하면 초안을 생성하고 감사를 남긴다", async () => {
@@ -366,7 +366,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "SEN-IR-640",
+        productCode: "ECM-CTL-640",
         plannedQuantity: 60,
         dueDate: futureDate(7),
         priority: "HIGH",
@@ -387,7 +387,7 @@ describe("work order commands", () => {
   it("생성 입력값이 올바르지 않으면 400으로 거부한다", async () => {
     const { agent, csrfToken } = await loginAs("PRODUCTION_PLANNER");
     const base = {
-      productCode: "SEN-IR-640",
+      productCode: "ECM-CTL-640",
       plannedQuantity: 10,
       dueDate: futureDate(5),
       priority: "NORMAL",
@@ -419,7 +419,7 @@ describe("work order commands", () => {
       .post("/api/work-orders")
       .set("Origin", allowedOrigin)
       .send({
-        productCode: "SEN-IR-640",
+        productCode: "ECM-CTL-640",
         plannedQuantity: 10,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -435,7 +435,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "SEN-IR-640",
+        productCode: "ECM-CTL-640",
         plannedQuantity: 10,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -451,7 +451,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "SEN-XR-1280",
+        productCode: "ECM-PWR-1280",
         plannedQuantity: 20,
         dueDate: futureDate(3),
         priority: "URGENT",
@@ -483,7 +483,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "SEN-IR-640",
+        productCode: "ECM-CTL-640",
         plannedQuantity: 30,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -510,7 +510,7 @@ describe("work order commands", () => {
           processStepName: "조립 2공정",
         }),
         expect.objectContaining({
-          specName: "적외선 모듈 최종검사 규격 v3",
+          specName: "제어 보드 최종검사 규격 v3",
           gate: "LOT_COMPLETE",
           processStepName: null,
         }),
@@ -558,8 +558,8 @@ describe("work order commands", () => {
     prisma.workOrders.push({
       id: "work-order-released-with-execution",
       orderNumber: "WO-2026-900",
-      productCode: "SEN-IR-640",
-      productName: "적외선 센서 모듈 640px",
+      productCode: "ECM-CTL-640",
+      productName: "산업용 제어 보드 CB-640",
       plannedQuantity: 10,
       unit: "EA",
       dueDate: new Date(Date.now() + 5 * 86_400_000),

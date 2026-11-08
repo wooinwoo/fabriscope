@@ -27,8 +27,8 @@ function sampleResult(
         id: "bom-1",
         revisionNumber: "BOM-2026-R003",
         productId: "product-1",
-        productCode: "SEN-PROD-001",
-        productName: "다목적 환경 센서 모듈",
+        productCode: "ECM-PROD-001",
+        productName: "다목적 통신 모듈",
         productBaseUom: "EA",
         lifecycle: "PUBLISHED",
         description: null,
@@ -36,16 +36,16 @@ function sampleResult(
           {
             id: "bom-item-1",
             materialId: "material-1",
-            materialCode: "SEN-MAT-014",
-            materialName: "적외선 감지 다이오드 어레이",
+            materialCode: "ECM-MAT-014",
+            materialName: "메인 MCU 칩",
             materialUnit: "EA",
             quantityPerProductBaseUom: "2.000000",
           },
           {
             id: "bom-item-2",
             materialId: "material-2",
-            materialCode: "SEN-MAT-032",
-            materialName: "TE 쿨링 모듈",
+            materialCode: "ECM-MAT-032",
+            materialName: "방열 히트싱크",
             materialUnit: "EA",
             quantityPerProductBaseUom: "1.000000",
           },
@@ -56,8 +56,8 @@ function sampleResult(
         id: "bom-2",
         revisionNumber: "BOM-2026-R005-DRAFT",
         productId: "product-1",
-        productCode: "SEN-PROD-001",
-        productName: "다목적 환경 센서 모듈",
+        productCode: "ECM-PROD-001",
+        productName: "다목적 통신 모듈",
         productBaseUom: "EA",
         lifecycle: "DRAFT",
         description: null,
@@ -84,11 +84,11 @@ describe("BomsPage", () => {
     renderPage();
 
     expect(await screen.findByText("BOM-2026-R003")).toBeInTheDocument();
-    expect(screen.getAllByText("다목적 환경 센서 모듈").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("다목적 통신 모듈").length).toBeGreaterThan(0);
     expect(screen.getByText("발행")).toBeInTheDocument();
     expect(screen.getByText("초안")).toBeInTheDocument();
     expect(
-      screen.getByText("SEN-MAT-014 ×2 외 1건"),
+      screen.getByText("ECM-MAT-014 ×2 외 1건"),
     ).toBeInTheDocument();
     expect(screen.getByText("항목 없음")).toBeInTheDocument();
   });

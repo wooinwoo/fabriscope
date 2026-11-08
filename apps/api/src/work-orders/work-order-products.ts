@@ -5,7 +5,7 @@ export interface DemoProduct {
 }
 
 export const DEMO_PRODUCTS: DemoProduct[] = [
-  { code: "SEN-IR-640", name: "적외선 센서 모듈 640px", unit: "EA" },
-  { code: "SEN-XR-1280", name: "X선 검출기 패널 1280px", unit: "EA" },
-  { code: "SEN-IR-320-QC", name: "적외선 코어 320px QC 버전", unit: "EA" },
+  { code: "ECM-CTL-640", name: "산업용 제어 보드 CB-640", unit: "EA" },
+  { code: "ECM-PWR-1280", name: "전원 변환 모듈 PM-1280", unit: "EA" },
+  { code: "ECM-CTL-320-QC", name: "제어 보드 CB-320 QC 버전", unit: "EA" },
 ];

@@ -216,7 +216,7 @@ describe("demo authentication and RBAC", () => {
     const unknown = await request(app.getHttpServer())
       .post("/api/auth/login")
       .set("Origin", allowedOrigin)
-      .send({ email: "unknown@sensor-mes.local", password: "wrong" })
+      .send({ email: "unknown@fabriscope.local", password: "wrong" })
       .expect(401);
     const wrongPassword = await request(app.getHttpServer())
       .post("/api/auth/login")

@@ -48,7 +48,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "MATERIAL_LOT_DISPOSITION_DECIDED",
     entityType: "MATERIAL_LOT",
     entityId: "ML-2026-0323",
-    summary: "TE 쿨링 모듈 LOT를 격리 처분 (선행 검사 보류)",
+    summary: "방열 히트싱크 LOT를 격리 처분 (선행 검사 보류)",
     requestId: "req-2026-09-03-0038",
   },
   {
@@ -68,7 +68,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "WORK_ORDER_RELEASED",
     entityType: "WORK_ORDER",
     entityId: "WO-2026-097",
-    summary: "적외선 센서 모듈 100EA 작업지시 발행",
+    summary: "산업용 제어 보드 CB-640 100EA 작업지시 발행",
     requestId: "req-2026-09-02-0117",
   },
   {
@@ -78,7 +78,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "MATERIAL_RESERVED",
     entityType: "WORK_ORDER",
     entityId: "WO-2026-098",
-    summary: "침담 공정 자재 요구에 다이오드 어레이 30EA 예약",
+    summary: "침담 공정 자재 요구에 MCU 칩 30EA 예약",
     requestId: "req-2026-09-02-0109",
   },
   {
@@ -108,7 +108,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "WORK_ORDER_CREATED",
     entityType: "WORK_ORDER",
     entityId: "WO-2026-099",
-    summary: "적외선 코어 250EA 초안 작업지시 생성",
+    summary: "제어 보드 CB-320 250EA 초안 작업지시 생성",
     requestId: "req-2026-09-02-0084",
   },
   {

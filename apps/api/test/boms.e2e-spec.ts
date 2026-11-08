@@ -46,13 +46,13 @@ class FakePrismaService {
       id: "bom-1",
       revisionNumber: "BOM-2026-R003",
       productId: "product-1",
-      description: "TE 쿨링 모듈 사양 반영 발행본",
+      description: "방열 히트싱크 사양 반영 발행본",
       lifecycle: "PUBLISHED",
       createdAt: new Date("2026-08-20T01:00:00Z"),
       product: {
         id: "product-1",
-        code: "SEN-PROD-001",
-        name: "다목적 환경 센서 모듈",
+        code: "ECM-PROD-001",
+        name: "다목적 통신 모듈",
         baseUom: "EA",
       },
       items: [
@@ -62,8 +62,8 @@ class FakePrismaService {
           quantityPerProductBaseUom: { toString: () => "2.000000" },
           material: {
             id: "material-1",
-            code: "SEN-MAT-014",
-            name: "적외선 감지 다이오드 어레이",
+            code: "ECM-MAT-014",
+            name: "메인 MCU 칩",
             unit: "EA",
           },
         },
@@ -73,8 +73,8 @@ class FakePrismaService {
           quantityPerProductBaseUom: { toString: () => "1.000000" },
           material: {
             id: "material-2",
-            code: "SEN-MAT-032",
-            name: "TE 쿨링 모듈",
+            code: "ECM-MAT-032",
+            name: "방열 히트싱크",
             unit: "EA",
           },
         },
@@ -89,8 +89,8 @@ class FakePrismaService {
       createdAt: new Date("2026-09-01T03:00:00Z"),
       product: {
         id: "product-1",
-        code: "SEN-PROD-001",
-        name: "다목적 환경 센서 모듈",
+        code: "ECM-PROD-001",
+        name: "다목적 통신 모듈",
         baseUom: "EA",
       },
       items: [],
@@ -304,12 +304,12 @@ describe("materials/boms list API", () => {
         item.revisionNumber === "BOM-2026-R003",
     );
     expect(published).toMatchObject({
-      productCode: "SEN-PROD-001",
+      productCode: "ECM-PROD-001",
       lifecycle: "PUBLISHED",
     });
     expect(published.items).toHaveLength(2);
     expect(published.items[0]).toMatchObject({
-      materialCode: "SEN-MAT-014",
+      materialCode: "ECM-MAT-014",
       quantityPerProductBaseUom: "2.000000",
     });
   });

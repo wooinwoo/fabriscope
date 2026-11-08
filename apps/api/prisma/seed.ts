@@ -386,6 +386,10 @@ try {
     await transaction.auditEvent.createMany({
       data: DEMO_AUDIT_EVENTS.map((event) => ({ ...event })),
     });
+  }, {
+    // 원격 DB(Neon 등)는 왕복 지연이 커서 기본 5초로는 seed 전체를 끝내지 못한다.
+    maxWait: 20_000,
+    timeout: 180_000,
   });
 
   console.log(
