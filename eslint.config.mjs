@@ -24,10 +24,16 @@ export default tseslint.config(
     },
   },
   {
-    // Cloudflare Pages Functions는 브라우저와 같은 Web API(fetch, Request, URL)를 쓴다.
-    files: ["apps/web/functions/**/*.js"],
+    // Cloudflare Worker는 브라우저와 같은 Web API(fetch, Request, URL)를 쓴다.
+    files: ["apps/web/worker/**/*.ts"],
     languageOptions: {
       globals: globals.serviceworker,
+    },
+  },
+  {
+    files: ["apps/web/worker/**/*.mjs"],
+    languageOptions: {
+      globals: globals.node,
     },
   },
   {

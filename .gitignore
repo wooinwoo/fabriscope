@@ -20,3 +20,6 @@ Thumbs.db
 *.log
 *.tsbuildinfo
 .DS_Store
+apps/web/worker/generated/
+.dev.vars
+apps/web/.wrangler/
