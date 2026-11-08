@@ -21,7 +21,7 @@ function renderPanel() {
       target={{
         lotId: "lot-8",
         lotNumber: "ML-2026-0323",
-        materialName: "TE 쿨링 모듈",
+        materialName: "방열 히트싱크",
         currentDisposition: "QUARANTINED",
         onHand: 100,
         unit: "EA",
@@ -36,7 +36,7 @@ describe("MaterialLotDispositionPanel", () => {
     renderPanel();
 
     expect(
-      screen.getByText(/TE 쿨링 모듈 · ML-2026-0323/),
+      screen.getByText(/방열 히트싱크 · ML-2026-0323/),
     ).toBeInTheDocument();
     expect(screen.getByText("격리")).toBeInTheDocument();
   });

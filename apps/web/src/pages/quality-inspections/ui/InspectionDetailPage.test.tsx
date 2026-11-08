@@ -28,8 +28,8 @@ function sampleDetail(
     id: "inspection-1",
     inspectionNumber: "INSP-2026-0106",
     workOrderNumber: "WO-2026-092",
-    productCode: "SEN-PROD-100",
-    productName: "산업용 열화상 센서 모듈",
+    productCode: "ECM-PROD-100",
+    productName: "산업용 제어 보드",
     productionLotNumber: "PL-2026-092A",
     processStepName: "절단 1공정",
     gate: "ROUTE_ADVANCE",
@@ -131,7 +131,7 @@ describe("InspectionDetailPage", () => {
     expect(submit).toBeDisabled();
     await user.click(screen.getByRole("combobox", { name: "판정" }));
     await user.click(
-      await screen.findByRole("option", { name: "합격 (PASS)", exact: true }),
+      await screen.findByRole("option", { name: "합격 (PASS)" }),
     );
 
     current = sampleDetail({ executionStatus: "COMPLETED", verdict: "PASS" });

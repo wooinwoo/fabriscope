@@ -24,8 +24,8 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
       {
         id: "work-order-1",
         orderNumber: "WO-2026-091",
-        productCode: "SEN-IR-640",
-        productName: "적외선 센서 모듈 640px",
+        productCode: "ECM-CTL-640",
+        productName: "산업용 제어 보드 CB-640",
         plannedQuantity: 120,
         unit: "EA",
         dueDate: "2026-09-05T08:00:00.000Z",
@@ -39,8 +39,8 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
       {
         id: "work-order-2",
         orderNumber: "WO-2026-092",
-        productCode: "SEN-XR-1280",
-        productName: "X선 검출기 패널 1280px",
+        productCode: "ECM-PWR-1280",
+        productName: "전원 변환 모듈 PM-1280",
         plannedQuantity: 40,
         unit: "EA",
         dueDate: "2026-08-31T08:00:00.000Z",
@@ -48,7 +48,7 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
         priority: "URGENT",
         progressPercent: 0,
         currentStepName: "라인 투입 대기",
-        blockedReason: "자재 LOT 부족 (SEN-MAT-014)",
+        blockedReason: "자재 LOT 부족 (ECM-MAT-014)",
       memo: null,
       },
     ],
@@ -82,10 +82,10 @@ describe("WorkOrdersPage", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0].toString()).toBe("");
     expect(await screen.findByText("WO-2026-091")).toBeInTheDocument();
-    expect(screen.getByText("적외선 센서 모듈 640px")).toBeInTheDocument();
+    expect(screen.getByText("산업용 제어 보드 CB-640")).toBeInTheDocument();
     expect(screen.getByText("진행 중")).toBeInTheDocument();
     expect(screen.getByText("높음")).toBeInTheDocument();
-    expect(screen.getByText("자재 LOT 부족 (SEN-MAT-014)")).toBeInTheDocument();
+    expect(screen.getByText("자재 LOT 부족 (ECM-MAT-014)")).toBeInTheDocument();
     expect(
       screen.getByRole("table", { name: "작업지시 목록" }),
     ).toBeInTheDocument();

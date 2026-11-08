@@ -18,10 +18,10 @@ export interface DemoMaterial {
 }
 
 export const DEMO_MATERIALS: DemoMaterial[] = [
-  { code: "SEN-MAT-014", name: "적외선 감지 다이오드 어레이", unit: "EA" },
-  { code: "SEN-MAT-021", name: "세라믹 패키지", unit: "EA" },
-  { code: "SEN-MAT-032", name: "TE 쿨링 모듈", unit: "EA" },
-  { code: "SEN-MAT-045", name: "신호 커넥터", unit: "EA" },
+  { code: "ECM-MAT-014", name: "메인 MCU 칩", unit: "EA" },
+  { code: "ECM-MAT-021", name: "다층 PCB 기판", unit: "EA" },
+  { code: "ECM-MAT-032", name: "방열 히트싱크", unit: "EA" },
+  { code: "ECM-MAT-045", name: "신호 커넥터", unit: "EA" },
 ];
 
 export interface DemoMaterialLot {
@@ -40,7 +40,7 @@ export interface DemoMaterialLot {
 export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   {
     lotNumber: "ML-2026-0301",
-    materialCode: "SEN-MAT-014",
+    materialCode: "ECM-MAT-014",
     receivedQuantity: 500,
     onHand: 320,
     reservedQuantity: 120,
@@ -52,7 +52,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0302",
-    materialCode: "SEN-MAT-014",
+    materialCode: "ECM-MAT-014",
     receivedQuantity: 300,
     onHand: 300,
     reservedQuantity: 300,
@@ -64,7 +64,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0303",
-    materialCode: "SEN-MAT-014",
+    materialCode: "ECM-MAT-014",
     receivedQuantity: 200,
     onHand: 200,
     consumedQuantity: 0,
@@ -76,7 +76,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0311",
-    materialCode: "SEN-MAT-021",
+    materialCode: "ECM-MAT-021",
     receivedQuantity: 800,
     onHand: 640,
     reservedQuantity: 90,
@@ -88,7 +88,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0312",
-    materialCode: "SEN-MAT-021",
+    materialCode: "ECM-MAT-021",
     receivedQuantity: 400,
     onHand: 400,
     reservedQuantity: 0,
@@ -100,7 +100,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0321",
-    materialCode: "SEN-MAT-032",
+    materialCode: "ECM-MAT-032",
     receivedQuantity: 150,
     onHand: 96,
     reservedQuantity: 40,
@@ -112,7 +112,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0322",
-    materialCode: "SEN-MAT-032",
+    materialCode: "ECM-MAT-032",
     receivedQuantity: 150,
     onHand: 150,
     reservedQuantity: 0,
@@ -124,7 +124,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0323",
-    materialCode: "SEN-MAT-032",
+    materialCode: "ECM-MAT-032",
     receivedQuantity: 100,
     onHand: 100,
     reservedQuantity: 0,
@@ -136,7 +136,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0331",
-    materialCode: "SEN-MAT-045",
+    materialCode: "ECM-MAT-045",
     receivedQuantity: 1000,
     onHand: 410,
     reservedQuantity: 260,
@@ -148,7 +148,7 @@ export const DEMO_MATERIAL_LOTS: DemoMaterialLot[] = [
   },
   {
     lotNumber: "ML-2026-0332",
-    materialCode: "SEN-MAT-045",
+    materialCode: "ECM-MAT-045",
     receivedQuantity: 500,
     onHand: 0,
     reservedQuantity: 0,

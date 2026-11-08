@@ -24,8 +24,8 @@ function sampleResult(overrides: Partial<ProcessExecutionListResult> = {}): Proc
       {
         id: "step-1",
         workOrderNumber: "WO-2026-092",
-        productCode: "SEN-XR-1280",
-        productName: "X선 검출기 패널 1280px",
+        productCode: "ECM-PWR-1280",
+        productName: "전원 변환 모듈 PM-1280",
         plannedQuantity: 40,
         unit: "EA",
         dueDate: "2026-09-02T08:00:00.000Z",
@@ -38,8 +38,8 @@ function sampleResult(overrides: Partial<ProcessExecutionListResult> = {}): Proc
       {
         id: "step-2",
         workOrderNumber: "WO-2026-094",
-        productCode: "SEN-IR-640",
-        productName: "적외선 센서 모듈 640px",
+        productCode: "ECM-CTL-640",
+        productName: "산업용 제어 보드 CB-640",
         plannedQuantity: 80,
         unit: "EA",
         dueDate: "2026-09-03T03:00:00.000Z",

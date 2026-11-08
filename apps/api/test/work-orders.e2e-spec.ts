@@ -286,7 +286,7 @@ describe("work order list API", () => {
     expect(dueDates).toEqual(sorted);
     expect(response.body.items[0]).toMatchObject({
       orderNumber: "WO-2026-095",
-      productCode: "SEN-XR-1280",
+      productCode: "ECM-PWR-1280",
     });
   });
 
@@ -341,13 +341,13 @@ describe("work order list API", () => {
     const agent = await loginAsPlanner();
     const response = await agent
       .get("/api/work-orders")
-      .query({ q: "x선" })
+      .query({ q: "전원" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(3);
     for (const item of response.body.items) {
-      expect(item.productName).toContain("X선");
+      expect(item.productName).toContain("전원");
     }
   });
 

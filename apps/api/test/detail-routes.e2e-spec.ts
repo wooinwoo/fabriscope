@@ -89,7 +89,7 @@ class FakePrismaService {
     {
       id: "incident-1",
       incidentNumber: "QI-2026-0901",
-      title: "TE 쿨링 모듈 온도 편차 발견",
+      title: "방열 히트싱크 온도 편차 발견",
       sourceType: "MATERIAL_LOT",
       sourceLotNumber: "ML-2026-0323",
       description: "입고 검사에서 온도 편차 확인",
