@@ -131,7 +131,7 @@ describe("InspectionDetailPage", () => {
     expect(submit).toBeDisabled();
     await user.click(screen.getByRole("combobox", { name: "판정" }));
     await user.click(
-      await screen.findByRole("option", { name: "합격 (PASS)", exact: true }),
+      await screen.findByRole("option", { name: "합격 (PASS)" }),
     );
 
     current = sampleDetail({ executionStatus: "COMPLETED", verdict: "PASS" });
