@@ -202,6 +202,15 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
     devDependencies:
+      '@neondatabase/serverless':
+        specifier: 1.2.0
+        version: 1.2.0
+      '@prisma/adapter-neon':
+        specifier: 7.10.0
+        version: 7.10.0
+      '@prisma/client':
+        specifier: 7.10.0
+        version: 7.10.0(prisma@7.10.0(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13))
@@ -232,6 +241,9 @@ importers:
       axe-core:
         specifier: 4.13.0
         version: 4.13.0
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       jsdom:
         specifier: 30.0.1
         version: 30.0.1(@noble/hashes@1.8.0)
@@ -667,6 +679,10 @@ packages:
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
 
+  '@neondatabase/serverless@1.2.0':
+    resolution: {integrity: sha512-tnaqgixUengZQNd9ZrS3ytQfamJzLKY8QxgqWQTNHHtB+KrFQWk77JTbbpg4RD+J3qE4eO2lVytvGDX5Kj6FdQ==}
+    engines: {node: '>=19.0.0'}
+
   '@nestjs/common@12.0.1':
     resolution: {integrity: sha512-v0zTaRCTV2K2xSnb3GnJoQKtaR6VxouJtm+P2gpr5w61dlXeWpXl1WVknCSzUqx2QwTV10tBkHETxvQvkf2Exg==}
     peerDependencies:
@@ -738,6 +754,9 @@ packages:
 
   '@paralleldrive/cuid2@2.3.1':
     resolution: {integrity: sha512-XO7cAxhnTZl0Yggq6jOgjiOHhbgcO4NqFqwSmQpjK3b6TEE6Uj/jfSk6wzYyemh3+I0sHirKSetjQwn5cZktFw==}
+
+  '@prisma/adapter-neon@7.10.0':
+    resolution: {integrity: sha512-2MbMamV0URbYwQ7JFZkWdHydrqqtc+GT2WbTw3VoCQmiecGYAvn6y7vkVDNR7CL/w8QOs4bCMLrhyY1Crxzoyg==}
 
   '@prisma/adapter-pg@7.10.0':
     resolution: {integrity: sha512-N7nwSor0HO1Kz6xBv0TPAjAPysKK0fac6p4fVN3ensLOuzc/83Fgmln5k92eK/cvzqdkSR/2kkAqlbcdwVrwpw==}
@@ -4655,6 +4674,8 @@ snapshots:
 
   '@lukeed/csprng@1.1.0': {}
 
+  '@neondatabase/serverless@1.2.0': {}
+
   '@nestjs/common@12.0.1(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -4720,6 +4741,12 @@ snapshots:
   '@paralleldrive/cuid2@2.3.1':
     dependencies:
       '@noble/hashes': 1.8.0
+
+  '@prisma/adapter-neon@7.10.0':
+    dependencies:
+      '@neondatabase/serverless': 1.2.0
+      '@prisma/driver-adapter-utils': 7.10.0
+      postgres-array: 3.0.4
 
   '@prisma/adapter-pg@7.10.0':
     dependencies:
