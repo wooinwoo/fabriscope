@@ -2,7 +2,7 @@ import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
 const localDatabaseUrl =
-  "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
+  "postgresql://fabriscope:fabriscope_local@localhost:5432/fabriscope?schema=public";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
