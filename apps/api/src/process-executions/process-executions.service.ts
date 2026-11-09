@@ -87,17 +87,17 @@ export class ProcessExecutionsService {
 
   async list(query: ProcessExecutionQuery): Promise<ProcessExecutionListResult> {
     const where = this.buildWhere(query);
-    // 목록과 개수를 한 트랜잭션으로 한 번에 보낸다(대화형 트랜잭션처럼 쿼리마다 왕복하지 않는다).
-    const [rows, total] = await this.prisma.$transaction([
-      this.prisma.processStepExecution.findMany({
+    const { rows, total } = await this.prisma.$transaction(async (transaction) => {
+      const rows = await transaction.processStepExecution.findMany({
         where,
         orderBy: this.buildOrderBy(query),
         include: { workOrder: true },
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
-      }),
-      this.prisma.processStepExecution.count({ where }),
-    ]);
+      });
+      const total = await transaction.processStepExecution.count({ where });
+      return { rows, total };
+    });
 
     return {
       items: rows.map((row) => ({
