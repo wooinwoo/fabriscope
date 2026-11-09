@@ -4,7 +4,7 @@ import pg from "pg";
 const { Client } = pg;
 const connectionString =
   process.env.DATABASE_URL ??
-  "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
+  "postgresql://fabriscope:fabriscope_local@localhost:5432/fabriscope?schema=public";
 
 const client = new Client({ connectionString });
 
