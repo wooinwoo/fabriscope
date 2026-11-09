@@ -357,12 +357,12 @@ describe("inspection waitlist API", () => {
     const agent = await loginAs("QUALITY_ENGINEER");
     const response = await agent
       .get("/api/inspections")
-      .query({ q: "침담" })
+      .query({ q: "SMT" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(1);
-    expect(response.body.items[0].specName).toContain("침담");
+    expect(response.body.items[0].specName).toContain("SMT 실장");
   });
 
   it("허용되지 않은 조회 조건은 400으로 거부한다", async () => {

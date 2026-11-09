@@ -75,7 +75,7 @@ export const DEMO_PROCESS_STEPS: DemoProcessStep[] = [
   {
     workOrderNumber: "WO-2026-098",
     sequence: 20,
-    processStepName: "침담 공정",
+    processStepName: "SMT 실장 공정",
     productionLotNumber: "PL-2026-098A",
     readiness: "IN_PROGRESS",
     blockedReasonCodes: [],
