@@ -113,8 +113,8 @@ export class InspectionsService {
 
   async list(query: InspectionQuery): Promise<InspectionListResult> {
     const where = this.buildWhere(query);
-    // 목록과 개수를 한 트랜잭션으로 한 번에 보낸다(대화형 트랜잭션처럼 쿼리마다 왕복하지 않는다).
-    const [rows, total] = await this.prisma.$transaction([
+    // 목록과 개수를 동시에 보낸다. 조회는 Neon HTTP 드라이버로 가는데, 그 드라이버는 트랜잭션을 지원하지 않는다.
+    const [rows, total] = await Promise.all([
       this.prisma.inspection.findMany({
         where,
         orderBy: this.buildOrderBy(query),

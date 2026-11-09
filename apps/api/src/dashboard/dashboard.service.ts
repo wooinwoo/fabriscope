@@ -31,8 +31,8 @@ export class DashboardService {
   async summary(): Promise<DashboardSummary> {
     const weekStart = seoulWeekStart();
     const weekEnd = new Date(weekStart.getTime() + 7 * 86_400_000);
-    // 다섯 조회를 한 트랜잭션으로 한 번에 보낸다(쿼리마다 왕복하지 않는다).
-    const [workOrders, lots, inspections, materialLots, weekOrders] = await this.prisma.$transaction([
+    // 다섯 조회를 동시에 보낸다. 조회는 Neon HTTP 드라이버로 가는데, 그 드라이버는 트랜잭션을 지원하지 않는다.
+    const [workOrders, lots, inspections, materialLots, weekOrders] = await Promise.all([
       this.prisma.workOrder.findMany(),
       this.prisma.processStepExecution.findMany({
         select: { productionLotNumber: true, readiness: true },
