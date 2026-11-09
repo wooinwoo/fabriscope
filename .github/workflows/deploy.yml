@@ -50,7 +50,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build web and API worker
-        run: pnpm --filter @sensor-mes/web run build:cloudflare
+        run: pnpm --filter @fabriscope/web run build:cloudflare
 
       - name: Deploy to Cloudflare Pages
         working-directory: apps/web

@@ -1,5 +1,5 @@
 {
-  "name": "@sensor-mes/api",
+  "name": "@fabriscope/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
