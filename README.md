@@ -6,6 +6,14 @@
 
 현재 상태: **v1 배포** · 데모 <https://fabriscope.wooki.cc> (역할별 가상 계정으로 바로 로그인)
 
+![생산계획 담당자의 작업지시 목록: 납기·우선순위·진행률과 막힌 이유](docs/media/work-orders.webp)
+
+| LOT 계보 | 품질 검사 | 현장 공정 실행 |
+|---|---|---|
+| ![자재 LOT와 생산 LOT의 투입·산출 관계를 보는 LOT 계보 화면](docs/media/traceability.webp) | ![검사 실행 상태와 합격·불합격 판정을 보는 품질 검사 화면](docs/media/inspections.webp) | ![현장 작업자가 공정을 시작하고 완료를 기록하는 실행 대기열](docs/media/shop-floor.webp) |
+
+> 화면은 데모 사이트의 실제 캡처이며, 계정과 데이터는 모두 가상입니다.
+
 ## 핵심 시나리오
 
 ```text
