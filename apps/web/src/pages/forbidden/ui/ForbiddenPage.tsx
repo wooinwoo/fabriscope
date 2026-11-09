@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { LandingRoute } from "@/entities/session";
+import { withDirectionalParticle } from "@/shared/lib";
 import { Button, ForbiddenState } from "@/shared/ui";
 import { Main } from "@/widgets/app-shell";
 
@@ -24,7 +25,7 @@ export function ForbiddenPage({
         <ForbiddenState
           action={
             <Button asChild>
-              <Link to={landingRoute}>{landingLabel}로 이동</Link>
+              <Link to={landingRoute}>{withDirectionalParticle(landingLabel)} 이동</Link>
             </Button>
           }
           description={`현재 역할에 필요한 조회 권한이 없습니다.${from === undefined ? "" : ` 요청 경로: ${from}`} 역할을 전환하거나 허용된 시작 화면으로 이동하세요.`}

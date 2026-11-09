@@ -277,6 +277,7 @@ export function BomsPage({ search, onSearchChange }: BomsPageProps) {
           caption="BOM revision 목록"
           columns={columns}
           rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           getRowKey={(row) => row.id}
           emptyMessage="조건에 맞는 BOM이 없습니다."
         />

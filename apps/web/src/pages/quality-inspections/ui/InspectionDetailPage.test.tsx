@@ -31,9 +31,9 @@ function sampleDetail(
     productCode: "ECM-PROD-100",
     productName: "산업용 제어 보드",
     productionLotNumber: "PL-2026-092A",
-    processStepName: "절단 1공정",
+    processStepName: "솔더 페이스트 인쇄",
     gate: "ROUTE_ADVANCE",
-    specName: "절단 치수 검사 규격 v2",
+    specName: "SPI 검사 규격 v1",
     executionStatus: "PENDING",
     verdict: null,
     verdictMemo: null,
@@ -66,7 +66,7 @@ describe("InspectionDetailPage", () => {
     renderPage();
 
     expect(await screen.findByText("INSP-2026-0106")).toBeInTheDocument();
-    expect(screen.getByText("절단 치수 검사 규격 v2")).toBeInTheDocument();
+    expect(screen.getByText("SPI 검사 규격 v1")).toBeInTheDocument();
     expect(screen.getByText("WO-2026-092")).toBeInTheDocument();
     expect(screen.getAllByText(/PL-2026-092A/).length).toBeGreaterThan(0);
     expect(screen.getByText("미판정")).toBeInTheDocument();
@@ -105,7 +105,7 @@ describe("InspectionDetailPage", () => {
             actorName: "품질 데모",
             actorRole: "QUALITY_ENGINEER",
             action: "INSPECTION_VERDICTED",
-            summary: "절단 치수 검사 규격 v2 합격 판정 (PL-2026-092A)",
+            summary: "SPI 검사 규격 v1 합격 판정 (PL-2026-092A)",
           },
         ],
       }),

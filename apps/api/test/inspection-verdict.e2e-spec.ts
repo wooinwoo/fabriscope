@@ -478,16 +478,16 @@ describe("inspection verdict command", () => {
     const { agent, csrfToken } = await loginAs("SHOP_FLOOR_OPERATOR");
     const stepId = prisma.processSteps.find(
       (step) =>
-        step.workOrderId === "work-order-7" && step.processStepName === "절단 1공정",
+        step.workOrderId === "work-order-7" && step.processStepName === "솔더 페이스트 인쇄",
     )?.id;
     expect(stepId).toBeDefined();
     prisma.inspections.push({
       inspectionNumber: "INSP-2026-0900",
       workOrderNumber: "WO-2026-097",
       productionLotNumber: "PL-2026-097A",
-      processStepName: "절단 1공정",
+      processStepName: "솔더 페이스트 인쇄",
       gate: "ROUTE_ADVANCE",
-      specName: "절단 치수 검사 규격 v2",
+      specName: "SPI 검사 규격 v1",
       executionStatus: "PENDING",
       verdict: null,
       verdictMemo: null,
@@ -511,7 +511,7 @@ describe("inspection verdict command", () => {
 
     const following = prisma.processSteps.find(
       (step) =>
-        step.workOrderId === "work-order-7" && step.processStepName === "조립 1공정",
+        step.workOrderId === "work-order-7" && step.processStepName === "SMT 실장 공정",
     );
     expect(following?.readiness).toBe("BLOCKED");
     expect(following?.blockedReasonCodes).toContain("INSPECTION_PENDING");

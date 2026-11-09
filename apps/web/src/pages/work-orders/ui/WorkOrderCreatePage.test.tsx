@@ -24,8 +24,8 @@ function createdDetail(): WorkOrderDetail {
   return {
     id: "wo-created-1",
     orderNumber: "WO-2026-101",
-    productCode: "ECM-CTL-640",
-    productName: "산업용 제어 보드 CB-640",
+    productCode: "ECM-CTL-410",
+    productName: "산업용 제어 보드 CB-410",
     plannedQuantity: 60,
     unit: "EA",
     dueDate: "2026-09-10T08:00:00.000Z",
@@ -46,21 +46,21 @@ describe("WorkOrderCreatePage", () => {
   it("제품 목록을 불러와 양식을 채운다", async () => {
     productsMock.mockResolvedValue({
       items: [
-        { code: "ECM-CTL-640", name: "산업용 제어 보드 CB-640", unit: "EA" },
-        { code: "ECM-PWR-1280", name: "전원 변환 모듈 PM-1280", unit: "EA" },
+        { code: "ECM-CTL-410", name: "산업용 제어 보드 CB-410", unit: "EA" },
+        { code: "ECM-PWR-250", name: "전원 변환 모듈 PM-250", unit: "EA" },
       ],
     });
     render(<WorkOrderCreatePage csrfToken="csrf" onCreated={() => undefined} />);
 
     expect(
-      (await screen.findAllByText("산업용 제어 보드 CB-640 (ECM-CTL-640)")).length,
+      (await screen.findAllByText("산업용 제어 보드 CB-410 (ECM-CTL-410)")).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText("작업지시 생성")).toBeInTheDocument();
   });
 
   it("제출하면 생성 값을 서버로 전달하고 상세로 이동한다", async () => {
     productsMock.mockResolvedValue({
-      items: [{ code: "ECM-CTL-640", name: "산업용 제어 보드 CB-640", unit: "EA" }],
+      items: [{ code: "ECM-CTL-410", name: "산업용 제어 보드 CB-410", unit: "EA" }],
     });
     createMock.mockResolvedValue(createdDetail());
     const onCreated = vi.fn();
@@ -74,7 +74,7 @@ describe("WorkOrderCreatePage", () => {
     await waitFor(() => {
       expect(createMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          productCode: "ECM-CTL-640",
+          productCode: "ECM-CTL-410",
           plannedQuantity: 60,
           priority: "NORMAL",
         }),
@@ -86,7 +86,7 @@ describe("WorkOrderCreatePage", () => {
 
   it("생성 실패 시 오류 메시지를 표시한다", async () => {
     productsMock.mockResolvedValue({
-      items: [{ code: "ECM-CTL-640", name: "산업용 제어 보드 CB-640", unit: "EA" }],
+      items: [{ code: "ECM-CTL-410", name: "산업용 제어 보드 CB-410", unit: "EA" }],
     });
     createMock.mockRejectedValue(
       Object.assign(new Error("납기는 오늘 이후여야 합니다."), {

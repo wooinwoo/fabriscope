@@ -93,7 +93,7 @@ export function AuditEventsPage({ search, onSearchChange }: AuditEventsPageProps
             message:
               error instanceof ApiRequestError
                 ? error.message
-                : "감사 이벤트를 불러오지 못했습니다.",
+                : "감사이력을 불러오지 못했습니다.",
           },
         });
       });
@@ -189,20 +189,20 @@ export function AuditEventsPage({ search, onSearchChange }: AuditEventsPageProps
   return (
     <Main id="main-content" tabIndex={-1}>
       <PageHeading
-        description="상태 변경의 행위자·시각·사유를 감사 이력으로 확인합니다."
+        description="상태 변경의 행위자·시각·사유를 감사이력으로 확인합니다."
         meta={<span>가상 데모 데이터</span>}
-        title="감사 이벤트"
+        title="감사이력"
       />
 
       <FilterBar
         resultLabel={
           state.phase === "success"
             ? `총 ${state.total.toLocaleString("ko-KR")}건 중 ${state.items.length.toLocaleString("ko-KR")}건 표시 (최근 순서)`
-            : "조회 조건을 선택하면 감사 이벤트를 확인합니다."
+            : "조회 조건을 선택하면 감사이력을 확인합니다."
         }
       >
         <Input
-          aria-label="감사 이벤트 검색"
+          aria-label="감사이력 검색"
           defaultValue={search.q}
           id="audit-q"
           label="검색"
@@ -257,7 +257,7 @@ export function AuditEventsPage({ search, onSearchChange }: AuditEventsPageProps
       </FilterBar>
 
       {state.phase === "loading" ? (
-        <div className="space-y-2" aria-label="감사 이벤트 조회 중" role="status">
+        <div className="space-y-2" aria-label="감사이력 조회 중" role="status">
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-10 w-full" />
@@ -273,7 +273,7 @@ export function AuditEventsPage({ search, onSearchChange }: AuditEventsPageProps
         />
       ) : state.items.length === 0 ? (
         <EmptyState
-          title="조건에 맞는 감사 이벤트가 없습니다"
+          title="조건에 맞는 감사이력이 없습니다"
           description="조회 조건을 초기화하거나 다른 조건으로 확인해 주세요."
           action={
             hasActiveFilter ? (
@@ -286,14 +286,15 @@ export function AuditEventsPage({ search, onSearchChange }: AuditEventsPageProps
       ) : (
         <>
           <DataTable
-            caption="감사 이벤트 목록"
+            caption="감사이력 목록"
             columns={columns}
-            emptyMessage="조건에 맞는 감사 이벤트가 없습니다."
+            emptyMessage="조건에 맞는 감사이력이 없습니다."
             getRowKey={(row) => row.id}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
-            aria-label="감사 이벤트 페이지 탐색"
+            aria-label="감사이력 페이지 탐색"
             className="flex items-center justify-end gap-2"
           >
             <Button

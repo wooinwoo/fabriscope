@@ -41,7 +41,7 @@ function sampleResult(overrides: Partial<AuditEventListResult> = {}): AuditEvent
         action: "WORK_ORDER_RELEASED",
         entityType: "WORK_ORDER",
         entityId: "WO-2026-097",
-        summary: "산업용 제어 보드 CB-640 100EA 작업지시 발행",
+        summary: "산업용 제어 보드 CB-410 100EA 작업지시 발행",
         requestId: "req-2026-09-02-0117",
       },
     ],
@@ -59,7 +59,7 @@ function renderPage() {
 }
 
 describe("AuditEventsPage", () => {
-  it("감사 이벤트를 행위자·행동·대상·내용과 함께 표시한다", async () => {
+  it("감사이력를 행위자·행동·대상·내용과 함께 표시한다", async () => {
     fetchMock.mockResolvedValue(sampleResult());
     renderPage();
 
@@ -68,7 +68,7 @@ describe("AuditEventsPage", () => {
     expect(screen.getByText("품질 담당자")).toBeInTheDocument();
     expect(screen.getByText("req-2026-09-03-0042")).toBeInTheDocument();
     expect(
-      screen.getByRole("table", { name: "감사 이벤트 목록" }),
+      screen.getByRole("table", { name: "감사이력 목록" }),
     ).toBeInTheDocument();
   });
 
@@ -77,7 +77,7 @@ describe("AuditEventsPage", () => {
     renderPage();
 
     expect(
-      await screen.findByText("조건에 맞는 감사 이벤트가 없습니다"),
+      await screen.findByText("조건에 맞는 감사이력이 없습니다"),
     ).toBeInTheDocument();
   });
 

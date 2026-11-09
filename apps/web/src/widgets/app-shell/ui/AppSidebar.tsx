@@ -32,18 +32,21 @@ export function AppSidebar({
   showDevelopmentTools = import.meta.env.DEV,
 }: AppSidebarProps) {
   return (
-    <Sidebar collapsible="icon" variant="inset">
-      <SidebarHeader>
+    <Sidebar collapsible="icon" variant="sidebar">
+      <SidebarHeader className="h-16 shrink-0 justify-center border-b border-sidebar-border px-3 py-2 group-data-[collapsible=icon]:px-1">
         <AppTitle />
       </SidebarHeader>
-      <SidebarContent>
-        <nav aria-label="주요 업무영역">
+      <SidebarContent className="gap-5 px-2 py-3 group-data-[collapsible=icon]:px-1">
+        <nav
+          aria-label="주요 업무영역"
+          className="space-y-4 group-data-[collapsible=icon]:space-y-3"
+        >
           {navigation.map((group) => (
             <NavGroup group={group} key={group.label} pathname={pathname} />
           ))}
         </nav>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="shrink-0 border-t border-sidebar-border px-2 py-2 group-data-[collapsible=icon]:px-1">
         <NavUser
           csrfToken={csrfToken}
           currentRole={currentRole}

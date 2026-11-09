@@ -159,19 +159,19 @@ export function TraceNodeDetailPage({
           <div className="mt-2">
             <EmptyState
               title={`생성 ${formatDateTime(state.detail.createdAt)}`}
-              description="CONSUME 관계는 공정 시작 시점에 자동으로 기록됩니다."
+              description="자재 투입 관계는 공정을 시작할 때 자동으로 기록됩니다."
             />
           </div>
           <div className="mt-4 grid gap-4">
             <EdgeList
               title="원천 (upstream)"
-              description="이 LOT를 만들기 위해 투입된 자재"
+              description="이 LOT를 만드는 데 들어간 자재 LOT·생산 LOT"
               edges={state.detail.upstream}
               emptyText="투입 기록이 없습니다."
             />
             <EdgeList
               title="영향 (downstream)"
-              description="이 LOT가 투입된 생산 LOT"
+              description="이 LOT에서 나온 생산 LOT·완제품"
               edges={state.detail.downstream}
               emptyText="투입된 산출 기록이 없습니다."
             />

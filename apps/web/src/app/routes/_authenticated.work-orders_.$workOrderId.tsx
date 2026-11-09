@@ -29,6 +29,7 @@ function WorkOrderDetailRoute() {
       canCancel={session.permissions.includes("work-order:cancel")}
       canReserve={session.permissions.includes("material-allocation:create")}
       canReleaseAllocation={session.permissions.includes("material-allocation:release")}
+      canViewReservations={session.permissions.includes("material-allocation:read")}
     />
   );
 }

@@ -27,8 +27,8 @@ function sampleDetail(overrides: Partial<WorkOrderDetail> = {}): WorkOrderDetail
   return {
     id: "wo-1",
     orderNumber: "WO-2026-093",
-    productCode: "ECM-CTL-320-QC",
-    productName: "제어 보드 CB-320 QC 버전",
+    productCode: "ECM-CTL-210",
+    productName: "소형 제어 보드 CB-210",
     plannedQuantity: 200,
     unit: "EA",
     dueDate: "2026-09-12T08:00:00.000Z",
@@ -43,7 +43,7 @@ function sampleDetail(overrides: Partial<WorkOrderDetail> = {}): WorkOrderDetail
       {
         id: "step-1",
         sequence: 10,
-        processStepName: "절단 1공정",
+        processStepName: "솔더 페이스트 인쇄",
         productionLotNumber: "PL-2026-093A",
         readiness: "READY",
         blockedReasonCodes: [],
@@ -57,7 +57,7 @@ function sampleDetail(overrides: Partial<WorkOrderDetail> = {}): WorkOrderDetail
         actorName: "생산계획 데모",
         actorRole: "PRODUCTION_PLANNER",
         action: "WORK_ORDER_CREATED",
-        summary: "제어 보드 CB-320 QC 버전 200EA 초안 작업지시 생성",
+        summary: "소형 제어 보드 CB-210 200EA 초안 작업지시 생성",
       },
     ],
     ...overrides,
@@ -70,6 +70,7 @@ function renderPage(
     canCancel?: boolean;
     canReserve?: boolean;
     canReleaseAllocation?: boolean;
+    canViewReservations?: boolean;
   } = {},
 ) {
   render(
@@ -80,6 +81,7 @@ function renderPage(
       canCancel={overrides.canCancel ?? true}
       canReserve={overrides.canReserve ?? false}
       canReleaseAllocation={overrides.canReleaseAllocation ?? false}
+      canViewReservations={overrides.canViewReservations ?? true}
     />,
   );
 }
@@ -91,7 +93,7 @@ describe("WorkOrderDetailPage", () => {
 
     expect(await screen.findByText("WO-2026-093")).toBeInTheDocument();
     expect(screen.getByText("요약")).toBeInTheDocument();
-    expect(screen.getByText("절단 1공정")).toBeInTheDocument();
+    expect(screen.getByText("솔더 페이스트 인쇄")).toBeInTheDocument();
     expect(screen.getByText("PL-2026-093A")).toBeInTheDocument();
     expect(screen.getByText(/초안 작업지시 생성/)).toBeInTheDocument();
     expect(screen.getByText("검증용 초안")).toBeInTheDocument();
@@ -135,7 +137,7 @@ describe("WorkOrderDetailPage", () => {
       screen.queryByRole("button", { name: "작업지시 발행" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText(/발행은 생산계획 담당자 권한\(work-order:release\)이 필요합니다/),
+      screen.getByText(/발행은 생산계획 담당자만 할 수 있습니다/),
     ).toBeInTheDocument();
   });
 });

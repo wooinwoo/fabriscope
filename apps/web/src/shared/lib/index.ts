@@ -1,4 +1,5 @@
 export { cn } from "./cn";
+export { withDirectionalParticle } from "./korean";
 export { getPageNumbers } from "./pagination";
 export { getCookie, removeCookie, setCookie } from "./shadcn/cookies";
 export {

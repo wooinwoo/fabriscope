@@ -262,9 +262,9 @@ describe("audit event list API", () => {
 
     expect(response.body.total).toBe(DEMO_AUDIT_EVENTS.length);
     expect(response.body.items[0]).toMatchObject({
-      action: "INSPECTION_VERDICTED",
-      entityId: "INSP-2026-0107",
-      actorRole: "QUALITY_ENGINEER",
+      action: "SESSION_LOGIN",
+      entityId: "demo-shop-floor-operator",
+      actorRole: "SHOP_FLOOR_OPERATOR",
     });
   });
 
@@ -298,7 +298,7 @@ describe("audit event list API", () => {
 
     const byRequest = await agent
       .get("/api/audit-events")
-      .query({ requestId: "req-2026-09-03-0031" })
+      .query({ requestId: "req-demo-0031" })
       .set("Origin", allowedOrigin)
       .expect(200);
     expect(byRequest.body.total).toBe(1);

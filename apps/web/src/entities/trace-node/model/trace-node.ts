@@ -23,9 +23,9 @@ export const TRACE_NODE_TYPE_LABELS: Record<TraceNodeType, string> = {
 export const LOT_RELATION_TYPE_LABELS: Record<LotRelationType, string> = {
   CONSUME: "투입",
   SPLIT: "분할",
-  MERGE: "병합",
-  TRANSFORM: "변형",
-  SERIALIZE: "시리얼화",
+  MERGE: "합류",
+  TRANSFORM: "변환",
+  SERIALIZE: "일련번호 부여",
 };
 
 export interface TraceNodeListItem {

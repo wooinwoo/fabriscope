@@ -21,7 +21,7 @@ function renderPanel() {
       target={{
         inspectionId: "inspection-1",
         inspectionNumber: "INSP-2026-0106",
-        specName: "절단 치수 검사 규격 v2",
+        specName: "SPI 검사 규격 v1",
         productionLotNumber: "PL-2026-092A",
       }}
     />,

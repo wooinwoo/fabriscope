@@ -17,14 +17,14 @@ export function AppTitle() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton asChild size="lg">
+        <SidebarMenuButton asChild size="lg" className="p-0 group-data-[collapsible=icon]:p-1!">
           <Link onClick={() => setOpenMobile(false)} to="/dashboard">
             <div className="flex aspect-square size-8 items-center justify-center rounded-brand bg-sidebar-primary text-sidebar-primary-foreground">
               <Factory className="size-4" aria-hidden="true" />
             </div>
-            <div className="grid flex-1 text-start text-sm leading-tight">
-              <span className="truncate font-semibold">FabriScope MES</span>
-              <span className="truncate text-xs text-sidebar-foreground/65">
+            <div className="grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]:hidden">
+              <span className="truncate font-bold tracking-tight">FabriScope MES</span>
+              <span className="mt-1 truncate text-xs text-sidebar-muted">
                 부품 제조 운영
               </span>
             </div>
