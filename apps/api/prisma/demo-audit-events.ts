@@ -78,7 +78,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "MATERIAL_RESERVED",
     entityType: "WORK_ORDER",
     entityId: "WO-2026-098",
-    summary: "침담 공정 자재 요구에 MCU 칩 30EA 예약",
+    summary: "SMT 실장 공정 자재 요구에 MCU 칩 30EA 예약",
     requestId: "req-2026-09-02-0109",
   },
   {
@@ -88,7 +88,7 @@ export const DEMO_AUDIT_EVENTS: DemoAuditEvent[] = [
     action: "INSPECTION_VERDICTED",
     entityType: "INSPECTION",
     entityId: "INSP-2026-0104",
-    summary: "침담 품질 검사 판정 보류 (재측정 요청)",
+    summary: "SMT 실장 검사 판정 보류 (재측정 요청)",
     requestId: "req-2026-09-02-0103",
   },
   {
