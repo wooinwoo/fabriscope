@@ -130,8 +130,9 @@ class FakePrismaService {
     },
   };
 
-  async $transaction<T>(callback: (transaction: this) => Promise<T>) {
-    return callback(this);
+  // 실제 Prisma처럼 대화형(콜백)과 일괄(배열) 트랜잭션을 둘 다 받는다.
+  async $transaction<T>(arg: ((transaction: this) => Promise<T>) | readonly Promise<unknown>[]) {
+    return typeof arg === "function" ? arg(this) : (Promise.all(arg) as Promise<T>);
   }
 
   async $disconnect() {}
