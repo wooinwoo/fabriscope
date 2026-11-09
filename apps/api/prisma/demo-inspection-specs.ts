@@ -46,9 +46,9 @@ export const DEMO_INSPECTION_SPEC_REVISIONS: DemoInspectionSpecRevision[] = [
   {
     revisionNumber: "ISP-2026-R202",
     productCode: "ECM-PWR-1280",
-    specName: "침담 품질 검사 규격 v1",
+    specName: "SMT 실장 검사 규격 v1",
     gate: "ROUTE_ADVANCE",
-    processStepName: "침담 공정",
+    processStepName: "SMT 실장 공정",
     lifecycle: "PUBLISHED",
   },
   {
@@ -63,13 +63,13 @@ export const DEMO_INSPECTION_SPEC_REVISIONS: DemoInspectionSpecRevision[] = [
     productCode: "ECM-CTL-320-QC",
     specName: "제어 보드 납땜 검사 규격 v1",
     gate: "ROUTE_ADVANCE",
-    processStepName: "코어 조립",
+    processStepName: "납땜 공정",
     lifecycle: "PUBLISHED",
   },
   {
     revisionNumber: "ISP-2026-R302",
     productCode: "ECM-CTL-320-QC",
-    specName: "코어 최종검사 규격 v1",
+    specName: "CB-320 최종검사 규격 v1",
     gate: "LOT_COMPLETE",
     lifecycle: "PUBLISHED",
   },

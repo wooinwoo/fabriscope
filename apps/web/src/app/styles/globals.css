@@ -21,6 +21,8 @@
     font-synthesis: none;
     line-height: var(--mes-leading-body);
     text-rendering: optimizeLegibility;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   ::selection {
