@@ -15,7 +15,7 @@ import { DEMO_BOM_REVISIONS, DEMO_PRODUCTS } from "./demo-boms.js";
 import { DEMO_INSPECTION_SPEC_REVISIONS } from "./demo-inspection-specs.js";
 
 const localDatabaseUrl =
-  "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
+  "postgresql://fabriscope:fabriscope_local@localhost:5432/fabriscope?schema=public";
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL ?? localDatabaseUrl,
 });

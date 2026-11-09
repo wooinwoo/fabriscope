@@ -3,7 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client.js";
 
 const localDatabaseUrl =
-  "postgresql://sensor_mes:sensor_mes_local@localhost:5432/sensor_mes?schema=public";
+  "postgresql://fabriscope:fabriscope_local@localhost:5432/fabriscope?schema=public";
 
 @Injectable()
 export class PrismaService
