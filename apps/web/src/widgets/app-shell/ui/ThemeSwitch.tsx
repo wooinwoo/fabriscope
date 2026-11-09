@@ -51,7 +51,7 @@ export function ThemeSwitch() {
           />
           <Moon
             aria-hidden="true"
-            className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+            className="absolute inset-0 m-auto size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
           />
         </Button>
       </DropdownMenuTrigger>

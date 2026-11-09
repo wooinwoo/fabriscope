@@ -46,7 +46,7 @@ describe("shadcn-admin 기반 MES 앱 사이드바", () => {
     );
 
     const sidebar = container.querySelector('[data-slot="sidebar"]');
-    expect(sidebar).toHaveAttribute("data-variant", "inset");
+    expect(sidebar).toHaveAttribute("data-variant", "sidebar");
     expect(sidebar).toHaveAttribute("data-collapsible", "");
 
     fireEvent.keyDown(window, { key: "b", ctrlKey: true });

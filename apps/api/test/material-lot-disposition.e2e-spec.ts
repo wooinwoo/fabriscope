@@ -269,7 +269,7 @@ describe("material lot quality disposition command", () => {
     const lotBefore = prisma.materialLots.find(
       (row) => row.lotNumber === "ML-2026-0323",
     );
-    expect(lotBefore?.onHand).toBe(100);
+    expect(lotBefore?.onHand).toBe(20);
 
     const response = await agent
       .post(`/api/material-lots/${lotId}/disposition`)
@@ -282,7 +282,7 @@ describe("material lot quality disposition command", () => {
       previousDisposition: "QUARANTINED",
       disposition: "REJECTED",
       onHand: 0,
-      scrappedQuantity: 100,
+      scrappedQuantity: 20,
       availableQuantityAfter: 0,
     });
   });

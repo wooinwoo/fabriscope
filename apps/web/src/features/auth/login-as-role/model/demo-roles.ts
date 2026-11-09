@@ -39,7 +39,7 @@ export const DEMO_ROLE_OPTIONS: readonly DemoRoleOption[] = [
     email: "quality.demo@fabriscope.local",
     label: "품질 담당자",
     description: "검사 판정과 부적합 영향을 관리합니다.",
-    landingLabel: "품질검사",
+    landingLabel: "품질 검사",
   },
   {
     code: "SYSTEM_ADMIN",

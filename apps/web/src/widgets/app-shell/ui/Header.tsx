@@ -23,11 +23,11 @@ export function Header({ className, fixed, children, ...props }: HeaderProps) {
     >
       <div
         className={cn(
-          'relative flex h-full items-center gap-3 p-4 sm:gap-4'
+          'relative flex h-full w-full min-w-0 items-center gap-3 px-4 sm:gap-4 md:px-6'
         )}
       >
-        <SidebarTrigger variant='outline' className='size-11 lg:size-7' />
-        <Separator orientation='vertical' className='h-6' />
+        <SidebarTrigger variant='ghost' className='size-11 shrink-0 lg:size-9' />
+        <Separator orientation='vertical' className='h-6 shrink-0' />
         {children}
       </div>
     </header>

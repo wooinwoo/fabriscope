@@ -262,6 +262,7 @@ export function TraceabilityPage({
           caption="추적 노드 목록"
           columns={columns}
           rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           getRowKey={(row) => row.id}
           group={{
             key: (row) => row.nodeType,

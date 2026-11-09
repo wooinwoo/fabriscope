@@ -12,6 +12,8 @@
 
   html {
     @apply overflow-x-hidden;
+    /* 스크롤바가 생겼다 사라질 때 본문 폭이 흔들리지 않게 자리를 고정한다. */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -23,6 +25,7 @@
     text-rendering: optimizeLegibility;
     word-break: keep-all;
     overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
   }
 
   ::selection {

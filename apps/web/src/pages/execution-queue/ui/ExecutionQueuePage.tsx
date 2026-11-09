@@ -323,6 +323,7 @@ export function ExecutionQueuePage({
               ),
             }}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
             aria-label="공정 대기열 페이지 탐색"

@@ -482,7 +482,7 @@ describe("process execution commands", () => {
 
   it("실행 가능 공정을 시작하고 작업지시를 진행 상태로 전환한다", async () => {
     const { agent, csrfToken } = await loginAs("SHOP_FLOOR_OPERATOR");
-    const stepId = prisma.stepIdOf("WO-2026-097", "절단 1공정");
+    const stepId = prisma.stepIdOf("WO-2026-097", "솔더 페이스트 인쇄");
     expect(stepId).toBeDefined();
 
     await agent
@@ -534,7 +534,7 @@ describe("process execution commands", () => {
 
   it("공정 시작 시 활성 예약을 출고·소비로 전환한다", async () => {
     const { agent, csrfToken } = await loginAs("SHOP_FLOOR_OPERATOR");
-    const stepId = prisma.stepIdOf("WO-2026-097", "절단 1공정");
+    const stepId = prisma.stepIdOf("WO-2026-097", "솔더 페이스트 인쇄");
     const lotBefore = prisma.materialLots[0]!;
     const lotSnapshot = {
       onHand: lotBefore.onHand,
@@ -584,7 +584,7 @@ describe("process execution commands", () => {
 
   it("공정 완료는 실적을 기록하고 다음 공정을 실행 가능하게 만든다", async () => {
     const { agent, csrfToken } = await loginAs("SHOP_FLOOR_OPERATOR");
-    const stepId = prisma.stepIdOf("WO-2026-091", "조립 2공정");
+    const stepId = prisma.stepIdOf("WO-2026-091", "기구 조립 공정");
 
     await agent
       .post(`/api/process-executions/steps/${stepId}/complete`)
@@ -625,7 +625,7 @@ describe("process execution commands", () => {
       .expect(409)
       .expect(({ body }) => expect(body.code).toBe("PROCESS_NOT_IN_PROGRESS"));
 
-    const inProgressId = prisma.stepIdOf("WO-2026-091", "조립 2공정");
+    const inProgressId = prisma.stepIdOf("WO-2026-091", "기구 조립 공정");
     await agent
       .post(`/api/process-executions/steps/${inProgressId}/complete`)
       .set("Origin", allowedOrigin)
@@ -643,7 +643,7 @@ describe("process execution commands", () => {
 
   it("CSRF token 없이는 공정 command를 거부한다", async () => {
     const { agent } = await loginAs("SHOP_FLOOR_OPERATOR");
-    const stepId = prisma.stepIdOf("WO-2026-097", "절단 1공정");
+    const stepId = prisma.stepIdOf("WO-2026-097", "솔더 페이스트 인쇄");
     await agent
       .post(`/api/process-executions/steps/${stepId}/start`)
       .set("Origin", allowedOrigin)

@@ -78,7 +78,7 @@ class FakePrismaService {
       id: "inspection-1",
       inspectionNumber: "INSP-2026-0901",
       workOrderId: "work-order-1",
-      processStepName: "조립 2공정",
+      processStepName: "기구 조립 공정",
       gate: "ROUTE_ADVANCE",
       executionStatus: "PENDING",
       verdict: null,
@@ -293,7 +293,7 @@ describe("detail route APIs", () => {
       expect(response.body).toMatchObject({
         id: "step-1",
         workOrderNumber: "WO-2026-091",
-        processStepName: "조립 2공정",
+        processStepName: "기구 조립 공정",
       });
       expect(response.body.inspections).toHaveLength(1);
       expect(response.body.inspections[0]).toMatchObject({

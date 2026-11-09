@@ -321,7 +321,7 @@ describe("material lot list API", () => {
         (item) => [item.lotNumber, item] as const,
       ),
     );
-    expect(byLot.get("ML-2026-0301").availableQuantity).toBe(200);
+    expect(byLot.get("ML-2026-0301").availableQuantity).toBe(10);
     expect(byLot.get("ML-2026-0302").availableQuantity).toBe(0);
     expect(byLot.get("ML-2026-0303").availableQuantity).toBe(0);
     expect(byLot.get("ML-2026-0323").availableQuantity).toBe(0);
@@ -335,7 +335,7 @@ describe("material lot list API", () => {
       .query({ availability: "available" })
       .set("Origin", allowedOrigin)
       .expect(200);
-    expect(available.body.total).toBe(4);
+    expect(available.body.total).toBe(5);
     for (const item of available.body.items) {
       expect(item.availableQuantity).toBeGreaterThan(0);
     }

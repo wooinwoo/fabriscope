@@ -395,6 +395,7 @@ export function MaterialLotsPage({
             emptyMessage="조건에 맞는 자재 LOT가 없습니다."
             getRowKey={(row) => row.id}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
             aria-label="자재 LOT 페이지 탐색"

@@ -2,9 +2,9 @@
 
 > 부품 제조의 생산·자재·품질·LOT 이력을 하나의 흐름으로 연결하는 웹 기반 MES
 
-`FabriScope MES`는 고신뢰성 부품 제조를 가상 시나리오로 삼아, 작업지시부터 공정 실적·품질 판정·재고·LOT 계보까지 추적하는 업무시스템입니다.
+`FabriScope MES`는 전자 부품 조립(제어 보드·전원 모듈)을 가상 시나리오로 삼아, 작업지시부터 공정 실적·품질 판정·재고·LOT 계보까지 추적하는 업무시스템입니다.
 
-현재 상태: **실행 가능한 기반 구축 중**
+현재 상태: **v1 배포** · 데모 <https://fabriscope.wooki.cc> (역할별 가상 계정으로 바로 로그인)
 
 ## 핵심 시나리오
 
@@ -26,9 +26,9 @@
 
 - Web: React, TypeScript, Vite, TanStack Router, Tailwind CSS, Radix UI
 - API: Node.js, NestJS, REST API
-- Data: PostgreSQL, Prisma
+- Data: PostgreSQL, Prisma (배포 DB는 Neon)
 - Quality: Vitest, Playwright, ESLint, TypeScript
-- Delivery: Docker Compose, GitHub Actions
+- Delivery: Docker Compose, GitHub Actions, Cloudflare Pages (웹과 API를 Pages Worker 하나로 배포)
 
 기술 선택은 구현 전에 ADR로 근거를 남기고, 필요 이상으로 도구를 늘리지 않습니다.
 

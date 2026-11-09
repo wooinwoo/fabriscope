@@ -83,7 +83,7 @@ function InspectionVerdictForm({
         {`${target.inspectionNumber} · ${target.specName} (${target.productionLotNumber})`}
       </p>
       <p className="mt-1 text-xs text-text-muted">
-        판정 확정 시 감사 이력에 기록되며 불합격·보류는 다음 공정 진행을 차단합니다.
+        판정 확정 시 감사이력에 기록되며 불합격·보류는 다음 공정 진행을 차단합니다.
       </p>
       <div className="mt-3 flex flex-wrap items-end gap-3">
         <div className="min-w-44">

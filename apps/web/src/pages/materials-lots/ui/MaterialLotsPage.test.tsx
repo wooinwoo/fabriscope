@@ -83,7 +83,7 @@ describe("MaterialLotsPage", () => {
     expect(await screen.findByText("ML-2026-0323")).toBeInTheDocument();
     expect(screen.getByText("방열 히트싱크")).toBeInTheDocument();
     expect(screen.getByText("격리")).toBeInTheDocument();
-    expect(screen.getByText("허입")).toBeInTheDocument();
+    expect(screen.getByText("합격")).toBeInTheDocument();
     expect(
       screen.getByRole("table", { name: "자재 LOT 목록" }),
     ).toBeInTheDocument();

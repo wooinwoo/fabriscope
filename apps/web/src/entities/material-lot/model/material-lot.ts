@@ -1,6 +1,6 @@
 export const MATERIAL_LOT_DISPOSITION_LABELS = {
   PENDING: "검사 대기",
-  ACCEPTED: "허입",
+  ACCEPTED: "합격",
   HOLD: "보류",
   QUARANTINED: "격리",
   REJECTED: "거부",

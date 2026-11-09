@@ -91,7 +91,7 @@ export function roleLandingLabel(route: LandingRoute) {
     "/work-orders": "작업지시",
     "/materials/lots": "자재 LOT",
     "/execution/queue": "공정 실행",
-    "/quality/inspections": "품질검사",
+    "/quality/inspections": "품질 검사",
     "/audit-events": "감사이력",
   };
   return labels[route];

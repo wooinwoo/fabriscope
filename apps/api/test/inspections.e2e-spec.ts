@@ -310,12 +310,12 @@ describe("inspection waitlist API", () => {
       .set("Origin", allowedOrigin)
       .expect(200);
 
-    expect(response.body.total).toBe(3);
+    expect(response.body.total).toBe(4);
     expect(
       (response.body.items as { inspectionNumber: string }[]).map(
         (item) => item.inspectionNumber,
       ),
-    ).toEqual(["INSP-2026-0101", "INSP-2026-0106", "INSP-2026-0110"]);
+    ).toEqual(["INSP-2026-0101", "INSP-2026-0102", "INSP-2026-0106", "INSP-2026-0110"]);
   });
 
   it("verdict 필터는 판정된 검사만 반환한다", async () => {
@@ -357,12 +357,12 @@ describe("inspection waitlist API", () => {
     const agent = await loginAs("QUALITY_ENGINEER");
     const response = await agent
       .get("/api/inspections")
-      .query({ q: "SMT" })
+      .query({ q: "AOI" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(1);
-    expect(response.body.items[0].specName).toContain("SMT 실장");
+    expect(response.body.items[0].specName).toContain("AOI");
   });
 
   it("허용되지 않은 조회 조건은 400으로 거부한다", async () => {

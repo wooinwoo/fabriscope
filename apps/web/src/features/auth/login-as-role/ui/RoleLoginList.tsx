@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import type { RoleCode, Session } from "@/entities/session";
 import { ApiRequestError } from "@/shared/api";
+import { withDirectionalParticle } from "@/shared/lib";
 import { loginAsRole } from "../api/login-as-role";
 import {
   DEMO_ROLE_OPTIONS,
@@ -83,7 +84,7 @@ export function RoleLoginList({
                       {role.label}
                     </strong>
                     <span className="text-xs font-semibold text-accent-strong">
-                      {isPending ? "세션 확인 중" : `${role.landingLabel}로 시작`}
+                      {isPending ? "세션 확인 중" : `${withDirectionalParticle(role.landingLabel)} 시작`}
                     </span>
                   </span>
                   <span className="mt-1 block text-xs leading-5 text-text-muted">
