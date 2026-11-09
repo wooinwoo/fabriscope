@@ -8,12 +8,13 @@ interface FilterBarProps {
 
 export function FilterBar({ actions, children, resultLabel }: FilterBarProps) {
   return (
-    <section className="rounded-panel border border-border bg-surface p-4" aria-label="조회 조건">
-      <div className="flex flex-wrap items-end gap-3">
-        {children}
-        {actions ? <div className="ml-auto flex items-center gap-2">{actions}</div> : null}
-      </div>
-      <p className="mt-3 border-t border-border pt-3 text-xs text-text-muted" role="status">
+    <section
+      className="flex flex-wrap items-end gap-x-3 gap-y-2 rounded-panel border border-border bg-surface px-4 py-3"
+      aria-label="조회 조건"
+    >
+      {children}
+      {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+      <p className="ml-auto self-end pb-2 text-sm font-medium text-text" role="status">
         {resultLabel}
       </p>
     </section>

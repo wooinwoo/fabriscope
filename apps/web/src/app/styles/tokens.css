@@ -11,12 +11,12 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.446 0.043 257.281);
   --accent: oklch(0.951 0.026 255.585);
   --accent-foreground: oklch(0.424 0.156 258.698);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
+  --border: oklch(0.9 0.016 255.5);
+  --input: oklch(0.704 0.04 256.788);
   --ring: oklch(0.558 0.19 257.91);
   --chart-1: oklch(0.558 0.19 257.91);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -95,7 +95,7 @@
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
+  --muted-foreground: oklch(0.8 0.03 256.8);
   --accent: oklch(0.257 0.055 261.327);
   --accent-foreground: oklch(0.809 0.105 251.813);
   --destructive: oklch(0.704 0.191 22.216);
@@ -128,6 +128,11 @@
 }
 
 @theme inline {
+  /* 정보는 촘촘하게 두되 글자는 14px 아래로 내리지 않는다. */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.375rem;
   --spacing: var(--mes-space-unit);
   --font-sans: var(--mes-font-sans);
   --font-mono: var(--mes-font-mono);

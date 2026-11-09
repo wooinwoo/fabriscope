@@ -38,7 +38,7 @@ export function Badge({ children, className, icon, tone = "neutral" }: BadgeProp
   const Icon = icon ?? defaultIcon[tone];
 
   return (
-    <span className={cn("inline-flex min-h-6 items-center gap-1 rounded-md border px-2 text-xs font-semibold", toneClasses[tone], className)}>
+    <span className={cn("inline-flex min-h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded-md border px-2 text-xs font-semibold", toneClasses[tone], className)}>
       <Icon className="size-4" aria-hidden="true" />
       {children}
     </span>
