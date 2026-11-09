@@ -13,6 +13,7 @@ import {
   WORK_ORDER_VERDICT_LABELS,
   type WorkOrderDetail,
 } from "@/entities/work-order";
+import { AUDIT_ACTOR_ROLE_OPTIONS } from "@/entities/audit-event";
 import { ApiRequestError } from "@/shared/api";
 import { MaterialReservationPanel } from "@/features/material-reservations";
 import {
@@ -62,6 +63,7 @@ interface WorkOrderDetailPageProps {
   canCancel: boolean;
   canReserve: boolean;
   canReleaseAllocation: boolean;
+  canViewReservations: boolean;
 }
 
 function formatDateTime(isoDate: string): string {
@@ -82,6 +84,7 @@ export function WorkOrderDetailPage({
   canCancel,
   canReserve,
   canReleaseAllocation,
+  canViewReservations,
 }: WorkOrderDetailPageProps) {
   const [reloadCount, setReloadCount] = useState(0);
   const [result, setResult] = useState<{
@@ -344,7 +347,7 @@ export function WorkOrderDetailPage({
           <CardTitle>
             <h3>변경 이력</h3>
           </CardTitle>
-          <CardDescription>이 작업지시의 감사 기록입니다.</CardDescription>
+          <CardDescription>이 작업지시의 감사이력입니다.</CardDescription>
         </CardHeader>
         <CardContent className="px-5 py-4">
           {detail.recentAudits.length === 0 ? (
@@ -359,7 +362,9 @@ export function WorkOrderDetailPage({
                     {formatDateTime(event.occurredAt)}
                   </time>
                   <span className="text-sm font-semibold">{event.actorName}</span>
-                  <span className="text-xs text-text-muted">{event.actorRole}</span>
+                  <span className="text-xs text-text-muted">
+                    {(AUDIT_ACTOR_ROLE_OPTIONS as Record<string, string>)[event.actorRole] ?? event.actorRole}
+                  </span>
                   <span className="text-sm text-text">{event.summary}</span>
                 </li>
               ))}
@@ -368,14 +373,16 @@ export function WorkOrderDetailPage({
         </CardContent>
       </Card>
 
-      <MaterialReservationPanel
-        canRelease={canReleaseAllocation}
-        canReserve={canReserve}
-        csrfToken={csrfToken}
-        isReleased={detail.status === "RELEASED"}
-        orderNumber={detail.orderNumber}
-        workOrderId={workOrderId}
-      />
+      {canViewReservations ? (
+        <MaterialReservationPanel
+          canRelease={canReleaseAllocation}
+          canReserve={canReserve}
+          csrfToken={csrfToken}
+          isReleased={detail.status === "RELEASED"}
+          orderNumber={detail.orderNumber}
+          workOrderId={workOrderId}
+        />
+      ) : null}
 
       <section aria-label="작업지시 행동" className="space-y-3">
         <h2 className="sr-only">작업지시 행동</h2>
@@ -396,7 +403,7 @@ export function WorkOrderDetailPage({
           <div className="rounded-panel border border-border bg-surface p-4">
             <p className="text-sm font-semibold">작업지시 취소</p>
             <p className="mt-1 text-xs text-text-muted">
-              취소 사유를 남기면 감사 이력에 기록됩니다. 실적이 있는 지시는 취소할 수
+              취소 사유를 남기면 감사이력에 기록됩니다. 실적이 있는 지시는 취소할 수
               없습니다.
             </p>
             <div className="mt-3 flex flex-wrap items-end gap-3">
@@ -427,7 +434,7 @@ export function WorkOrderDetailPage({
         ) : null}
         {!canRelease && detail.status === "DRAFT" ? (
           <p className="text-xs text-text-muted">
-            발행은 생산계획 담당자 권한(work-order:release)이 필요합니다. 현재 역할로는
+            발행은 생산계획 담당자만 할 수 있습니다. 현재 역할로는
             이 작업지시의 상태와 이력을 조회할 수 있습니다.
           </p>
         ) : null}

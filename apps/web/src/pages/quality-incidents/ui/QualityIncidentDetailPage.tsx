@@ -140,7 +140,7 @@ export function QualityIncidentDetailPage({
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>감사 이력</CardTitle>
+                <CardTitle>감사이력</CardTitle>
                 <CardDescription>이 사건에 기록된 최근 감사</CardDescription>
               </CardHeader>
               <CardContent>

@@ -6,6 +6,7 @@ import {
   MATERIAL_LOT_DISPOSITION_LABELS,
   type MaterialLotDetail,
 } from "@/entities/material-lot";
+import { AUDIT_ACTOR_ROLE_OPTIONS } from "@/entities/audit-event";
 import { ApiRequestError } from "@/shared/api";
 import {
   Badge,
@@ -226,7 +227,7 @@ export function MaterialLotDetailPage({
           <CardTitle>
             <h3>예약 내역</h3>
           </CardTitle>
-          <CardDescription>이 LOT으로 작업지시에 보류한 예약입니다.</CardDescription>
+          <CardDescription>이 LOT에서 작업지시용으로 확보한 예약입니다.</CardDescription>
         </CardHeader>
         <CardContent className="px-5 py-4">
           {detail.allocations.length === 0 ? (
@@ -268,7 +269,7 @@ export function MaterialLotDetailPage({
           <CardTitle>
             <h3>품질·변경 이력</h3>
           </CardTitle>
-          <CardDescription>이 LOT의 품질 처분과 감사 기록입니다.</CardDescription>
+          <CardDescription>이 LOT의 품질 처분과 감사이력입니다.</CardDescription>
         </CardHeader>
         <CardContent className="px-5 py-4">
           {detail.recentAudits.length === 0 ? (
@@ -283,7 +284,9 @@ export function MaterialLotDetailPage({
                     {formatDateTime(event.occurredAt)}
                   </time>
                   <span className="text-sm font-semibold">{event.actorName}</span>
-                  <span className="text-xs text-text-muted">{event.actorRole}</span>
+                  <span className="text-xs text-text-muted">
+                    {(AUDIT_ACTOR_ROLE_OPTIONS as Record<string, string>)[event.actorRole] ?? event.actorRole}
+                  </span>
                   <span className="text-sm text-text">{event.summary}</span>
                 </li>
               ))}

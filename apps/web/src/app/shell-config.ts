@@ -57,7 +57,7 @@ const navigation: { label: string; items: ConfiguredNavigationItem[] }[] = [
     label: "품질",
     items: [
       {
-        label: "검사",
+        label: "품질 검사",
         icon: "inspection",
         to: "/quality/inspections",
         permission: "inspection:read",
@@ -106,7 +106,7 @@ const routeTitles: Record<string, { title: string }> = {
   "/materials/lots": { title: "자재 LOT" },
   "/materials/boms": { title: "BOM 기준정보" },
   "/execution/queue": { title: "공정 실행" },
-  "/quality/inspections": { title: "품질검사" },
+  "/quality/inspections": { title: "품질 검사" },
   "/quality/incidents": { title: "부적합·격리" },
   "/traceability": { title: "LOT 계보" },
   "/audit-events": { title: "감사이력" },
@@ -115,11 +115,27 @@ const routeTitles: Record<string, { title: string }> = {
   "/forbidden": { title: "접근 권한 없음" },
 };
 
+// 상세·생성 화면(/work-orders/:id, /work-orders/new 등)은 목록 경로의 제목을 이어 받는다.
+function resolveRouteTitle(pathname: string): { title: string } {
+  const exact = routeTitles[pathname];
+  if (exact !== undefined) {
+    return exact;
+  }
+  const parent = Object.keys(routeTitles)
+    .filter((path) => pathname.startsWith(`${path}/`))
+    .sort((left, right) => right.length - left.length)[0];
+  if (parent === undefined) {
+    return { title: "화면을 찾을 수 없음" };
+  }
+  const suffix = pathname === `${parent}/new` ? "생성" : "상세";
+  return { title: `${routeTitles[parent]!.title} ${suffix}` };
+}
+
 export function resolveShellContext(
   pathname: string,
   session: Session,
 ): AppShellConfiguration {
-  const current = routeTitles[pathname] ?? { title: "화면을 찾을 수 없음" };
+  const current = resolveRouteTitle(pathname);
   const allowedNavigation = navigation
     .map((group) => ({
       label: group.label,

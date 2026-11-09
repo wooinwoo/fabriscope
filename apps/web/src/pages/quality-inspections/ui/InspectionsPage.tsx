@@ -378,6 +378,7 @@ export function InspectionsPage({
             emptyMessage="조건에 맞는 검사가 없습니다."
             getRowKey={(row) => row.id}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
             aria-label="검사 목록 페이지 탐색"

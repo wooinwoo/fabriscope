@@ -304,7 +304,7 @@ describe("process execution queue API", () => {
     expect(response.body.items[0]).toMatchObject({
       workOrderNumber: "WO-2026-091",
       sequence: 30,
-      processStepName: "조립 2공정",
+      processStepName: "기구 조립 공정",
       productionLotNumber: "PL-2026-091A",
       readiness: "IN_PROGRESS",
     });
@@ -318,7 +318,7 @@ describe("process execution queue API", () => {
       .query({ readiness: "ready" })
       .set("Origin", allowedOrigin)
       .expect(200);
-    expect(ready.body.total).toBe(2);
+    expect(ready.body.total).toBe(1);
     for (const item of ready.body.items) {
       expect(item.readiness).toBe("READY");
     }
@@ -328,30 +328,30 @@ describe("process execution queue API", () => {
       .query({ readiness: "blocked" })
       .set("Origin", allowedOrigin)
       .expect(200);
-    expect(blocked.body.total).toBe(2);
+    expect(blocked.body.total).toBe(3);
     const blockedReasons = (blocked.body.items as { blockedReasonCodes: string[] }[])
       .flatMap((item) => item.blockedReasonCodes)
       .sort();
-    expect(blockedReasons).toEqual(["INSPECTION_HELD", "MATERIAL_SHORTAGE"]);
+    expect(blockedReasons).toEqual(["INSPECTION_FAILED", "INSPECTION_HELD", "MATERIAL_SHORTAGE"]);
 
     const completed = await agent
       .get("/api/process-executions")
       .query({ readiness: "completed" })
       .set("Origin", allowedOrigin)
       .expect(200);
-    expect(completed.body.total).toBe(2);
+    expect(completed.body.total).toBe(3);
   });
 
   it("q 검색은 작업지시 번호·공정명·생산 LOT를 포괄한다", async () => {
     const agent = await loginAs("SHOP_FLOOR_OPERATOR");
     const response = await agent
       .get("/api/process-executions")
-      .query({ q: "SMT" })
+      .query({ q: "092" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(1);
-    expect(response.body.items[0].processStepName).toBe("SMT 실장 공정");
+    expect(response.body.items[0].processStepName).toBe("솔더 페이스트 인쇄");
   });
 
   it("허용되지 않은 조회 조건은 400으로 거부한다", async () => {

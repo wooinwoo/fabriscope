@@ -122,13 +122,13 @@ export function DashboardPage() {
             data-testid="dashboard-detail-grid"
           >
             <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-4">
-              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
+              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-3 sm:px-6">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <CardTitle>
                       <h3>조치 필요</h3>
                     </CardTitle>
-                    <CardDescription className="mt-2">
+                    <CardDescription className="mt-1">
                       차단 상태와 납기 영향을 우선순위로 확인합니다.
                     </CardDescription>
                   </div>
@@ -142,13 +142,13 @@ export function DashboardPage() {
               </CardContent>
             </Card>
             <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-3">
-              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
+              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-3 sm:px-6">
                 <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem] sm:items-end xl:grid-cols-1">
                   <div>
                     <CardTitle>
                       <h3>이번 주 납기 계획 대비 진행</h3>
                     </CardTitle>
-                    <CardDescription className="mt-2">
+                    <CardDescription className="mt-1">
                       작업지시 납기별 계획 수량과 진행률 반영 수량을 비교합니다.
                     </CardDescription>
                     <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">

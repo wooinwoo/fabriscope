@@ -20,6 +20,9 @@ interface DataTableProps<Row> {
   getRowKey: (row: Row) => string;
   emptyMessage: string;
   group?: DataTableGroup<Row>;
+  /** 첫 행의 No. 전체 건수 - (페이지 - 1) × 페이지 크기를 넘기면 최신 행이 큰 번호부터 내려간다. */
+  rowNumberStart?: number;
+  showRowNumbers?: boolean;
 }
 
 function groupRows<Row>(rows: Row[], group: DataTableGroup<Row> | undefined) {
@@ -39,8 +42,20 @@ function groupRows<Row>(rows: Row[], group: DataTableGroup<Row> | undefined) {
   return groups;
 }
 
-export function DataTable<Row>({ caption, columns, emptyMessage, getRowKey, group, rows }: DataTableProps<Row>) {
+export function DataTable<Row>({
+  caption,
+  columns,
+  emptyMessage,
+  getRowKey,
+  group,
+  rowNumberStart,
+  rows,
+  showRowNumbers = true,
+}: DataTableProps<Row>) {
   const align = (column: DataTableColumn<Row>) => ({ textAlign: column.align ?? "left" }) as const;
+  const span = columns.length + (showRowNumbers ? 1 : 0);
+  const firstNumber = rowNumberStart ?? rows.length;
+  let rowIndex = 0;
 
   return (
     <div className="overflow-hidden rounded-panel border border-border bg-surface">
@@ -49,6 +64,15 @@ export function DataTable<Row>({ caption, columns, emptyMessage, getRowKey, grou
           <caption className="sr-only">{caption}</caption>
           <thead className="bg-surface-subtle text-xs text-text">
             <tr>
+              {showRowNumbers ? (
+                <th
+                  aria-label="순번"
+                  className="w-14 whitespace-nowrap border-b border-border-strong px-3 py-2 text-center font-semibold"
+                  scope="col"
+                >
+                  No
+                </th>
+              ) : null}
               {columns.map((column) => (
                 <th
                   className="whitespace-nowrap border-b border-border-strong px-3 py-2 font-semibold"
@@ -64,7 +88,7 @@ export function DataTable<Row>({ caption, columns, emptyMessage, getRowKey, grou
           {rows.length === 0 ? (
             <tbody>
               <tr>
-                <td className="px-4 py-8 text-center text-sm text-text-muted" colSpan={columns.length}>
+                <td className="px-4 py-8 text-center text-sm text-text-muted" colSpan={span}>
                   {emptyMessage}
                 </td>
               </tr>
@@ -74,7 +98,7 @@ export function DataTable<Row>({ caption, columns, emptyMessage, getRowKey, grou
               <tbody className="divide-y divide-border border-b border-border last:border-b-0" key={rowGroup.key}>
                 {group !== undefined && rowGroup.first !== undefined ? (
                   <tr className="bg-accent-soft/60">
-                    <th className="px-3 py-2 text-left font-normal" colSpan={columns.length} scope="rowgroup">
+                    <th className="px-3 py-2 text-left font-normal" colSpan={span} scope="rowgroup">
                       {group.header(rowGroup.first)}
                     </th>
                   </tr>
@@ -84,6 +108,11 @@ export function DataTable<Row>({ caption, columns, emptyMessage, getRowKey, grou
                     className="transition-colors even:bg-surface-subtle/50 hover:bg-surface-subtle focus-within:bg-accent-soft motion-reduce:transition-none"
                     key={getRowKey(row)}
                   >
+                    {showRowNumbers ? (
+                      <td className="w-14 px-3 py-2 text-center align-middle text-text-muted">
+                        {firstNumber - rowIndex++}
+                      </td>
+                    ) : null}
                     {columns.map((column) => (
                       <td className="px-3 py-2 align-middle text-text" key={column.key} style={align(column)}>
                         {column.cell(row)}

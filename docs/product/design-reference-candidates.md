@@ -6,7 +6,7 @@
 |---|---|
 | 문서 상태 | `Candidate review v1.1` |
 | 기준일 | 2026-09-01 |
-| 관련 Issue | [#24 MES 화면 설계를 위한 레퍼런스 후보군 20개를 검토한다](https://github.com/wooinwoo/sensor-manufacturing-mes-lab/issues/24) |
+| 관련 Issue | [#24 MES 화면 설계를 위한 레퍼런스 후보군 20개를 검토한다](https://github.com/wooinwoo/fabriscope/issues/24) |
 | 상위 계약 | [제품 비전](vision.md), [UI 레이아웃·상태 계약](ui-layout-contracts.md) |
 
 ## 1. 조사 기준

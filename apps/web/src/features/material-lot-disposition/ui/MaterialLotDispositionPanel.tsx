@@ -70,7 +70,7 @@ export function MaterialLotDispositionPanel({
             target.currentDisposition as keyof typeof MATERIAL_LOT_DISPOSITION_LABELS
           ] ?? target.currentDisposition}
         </Badge>{" "}
-        — 처분 확정 시 감사 이력에 기록됩니다. 합격 상태의 사후 문제는 부적합 사건
+        — 처분 확정 시 감사이력에 기록됩니다. 합격 상태의 사후 문제는 부적합 사건
         등록으로 격리한 뒤 처분해야 합니다.
       </p>
       <div className="mt-3 flex flex-wrap items-end gap-3">

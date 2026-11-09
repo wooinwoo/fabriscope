@@ -356,7 +356,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .expect(200);
     expect(response.body.items).toHaveLength(3);
-    expect(response.body.items[0]).toMatchObject({ code: "ECM-CTL-640" });
+    expect(response.body.items[0]).toMatchObject({ code: "ECM-CTL-410" });
   });
 
   it("생성 권한과 CSRF 검증을 통과하면 초안을 생성하고 감사를 남긴다", async () => {
@@ -366,7 +366,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "ECM-CTL-640",
+        productCode: "ECM-CTL-410",
         plannedQuantity: 60,
         dueDate: futureDate(7),
         priority: "HIGH",
@@ -387,7 +387,7 @@ describe("work order commands", () => {
   it("생성 입력값이 올바르지 않으면 400으로 거부한다", async () => {
     const { agent, csrfToken } = await loginAs("PRODUCTION_PLANNER");
     const base = {
-      productCode: "ECM-CTL-640",
+      productCode: "ECM-CTL-410",
       plannedQuantity: 10,
       dueDate: futureDate(5),
       priority: "NORMAL",
@@ -419,7 +419,7 @@ describe("work order commands", () => {
       .post("/api/work-orders")
       .set("Origin", allowedOrigin)
       .send({
-        productCode: "ECM-CTL-640",
+        productCode: "ECM-CTL-410",
         plannedQuantity: 10,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -435,7 +435,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "ECM-CTL-640",
+        productCode: "ECM-CTL-410",
         plannedQuantity: 10,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -451,7 +451,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "ECM-PWR-1280",
+        productCode: "ECM-PWR-250",
         plannedQuantity: 20,
         dueDate: futureDate(3),
         priority: "URGENT",
@@ -483,7 +483,7 @@ describe("work order commands", () => {
       .set("Origin", allowedOrigin)
       .set("x-csrf-token", csrfToken)
       .send({
-        productCode: "ECM-CTL-640",
+        productCode: "ECM-CTL-410",
         plannedQuantity: 30,
         dueDate: futureDate(5),
         priority: "NORMAL",
@@ -501,13 +501,23 @@ describe("work order commands", () => {
       gate: string;
       processStepName: string | null;
     }[];
-    expect(requirements).toHaveLength(2);
+    expect(requirements).toHaveLength(4);
     expect(requirements).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          specName: "조립 정밀도 검사 규격 v2",
+          specName: "SPI 검사 규격 v1",
           gate: "ROUTE_ADVANCE",
-          processStepName: "조립 2공정",
+          processStepName: "솔더 페이스트 인쇄",
+        }),
+        expect.objectContaining({
+          specName: "AOI 검사 규격 v2",
+          gate: "ROUTE_ADVANCE",
+          processStepName: "SMT 실장 공정",
+        }),
+        expect.objectContaining({
+          specName: "기구 조립 검사 규격 v2",
+          gate: "ROUTE_ADVANCE",
+          processStepName: "기구 조립 공정",
         }),
         expect.objectContaining({
           specName: "제어 보드 최종검사 규격 v3",
@@ -517,13 +527,13 @@ describe("work order commands", () => {
       ]),
     );
     expect(
-      requirements.some((requirement) => requirement.specName.includes("방수")),
+      requirements.some((requirement) => requirement.specName.includes("컨포멀")),
     ).toBe(false);
 
     const releaseAudit = (
       released.body.recentAudits as { action: string; summary: string }[]
     ).find((event) => event.action === "WORK_ORDER_RELEASED");
-    expect(releaseAudit?.summary).toContain("검사규격 스냅샷 2항목");
+    expect(releaseAudit?.summary).toContain("검사규격 스냅샷 4항목");
 
     await agent
       .post(`/api/work-orders/${created.body.id}/release`)
@@ -558,8 +568,8 @@ describe("work order commands", () => {
     prisma.workOrders.push({
       id: "work-order-released-with-execution",
       orderNumber: "WO-2026-900",
-      productCode: "ECM-CTL-640",
-      productName: "산업용 제어 보드 CB-640",
+      productCode: "ECM-CTL-410",
+      productName: "산업용 제어 보드 CB-410",
       plannedQuantity: 10,
       unit: "EA",
       dueDate: new Date(Date.now() + 5 * 86_400_000),

@@ -9,7 +9,6 @@ import type { DashboardMetricSummary } from "@/entities/dashboard";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/shared/ui";
@@ -21,7 +20,7 @@ interface OperationsSummaryProps {
 export function OperationsSummary({ metrics }: OperationsSummaryProps) {
   const items = [
     {
-      detail: `차단 ${metrics.workOrders.blocked}건 포함`,
+      detail: `차단된 작업지시 ${metrics.workOrders.blocked}건`,
       icon: ClipboardList,
       iconClassName: "bg-accent-soft text-accent-strong",
       itemClassName: "border-b sm:border-e xl:border-b-0",
@@ -41,7 +40,7 @@ export function OperationsSummary({ metrics }: OperationsSummaryProps) {
       valueClassName: "text-text-strong",
     },
     {
-      detail: `판정 보류 ${metrics.inspections.hold}건 포함`,
+      detail: `보류 판정 ${metrics.inspections.hold}건`,
       icon: ClipboardCheck,
       iconClassName: "bg-warning-soft text-warning-strong",
       itemClassName: "border-b sm:border-b-0 sm:border-e xl:border-e",
@@ -75,13 +74,10 @@ export function OperationsSummary({ metrics }: OperationsSummaryProps) {
 
   return (
     <Card className="gap-0 overflow-hidden border-border-strong py-0">
-      <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
+      <CardHeader className="border-b bg-surface-subtle/50 px-5 py-3 sm:px-6">
         <CardTitle>
           <h3>오늘의 운영 현황</h3>
         </CardTitle>
-        <CardDescription>
-          현재 생산·검사·품질 상태를 업무 단위로 분리해 표시합니다.
-        </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <dl className="grid sm:grid-cols-2 xl:grid-cols-4">

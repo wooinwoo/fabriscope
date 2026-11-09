@@ -41,7 +41,7 @@ export function NavUser({
           </span>
           <div className="grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]:hidden">
             <span className="truncate font-semibold">{currentRole}</span>
-            <span className="truncate text-xs text-sidebar-foreground/65">
+            <span className="truncate text-xs text-sidebar-muted">
               현재 역할
             </span>
           </div>

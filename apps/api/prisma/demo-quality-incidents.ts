@@ -25,33 +25,34 @@ export interface DemoQualityIncident {
 export const DEMO_QUALITY_INCIDENTS: DemoQualityIncident[] = [
   {
     incidentNumber: "QI-2026-0701",
-    title: "방열 히트싱크 열전달 성능 편차 의심",
+    title: "방열 히트싱크 밀착 불량으로 발열 시험 기준 초과",
     sourceType: "MATERIAL_LOT",
     sourceLotNumber: "ML-2026-0323",
     description:
-      "공정 중 온도 상승 예상치 벗어남. 동일 LOT 전량 사용 중단 후 격리 조사 중.",
+      "PL-2026-094A 기구 조립 검사에서 히트싱크 밀착 불량과 온도 상승 초과 확인. 같은 히트싱크 LOT 사용을 중단하고 격리 조사 중.",
     status: "OPEN",
     detectedAt: dayOffset(-1, 14),
     resolvedAt: null,
   },
   {
     incidentNumber: "QI-2026-0688",
-    title: "다층 PCB 기판 표면 미세 균열 신고",
+    title: "방열 히트싱크 표면 찍힘 신고",
     sourceType: "MATERIAL_LOT",
     sourceLotNumber: "ML-2026-0322",
-    description: "현장 작업자 신고. 영향 범위 평가 완료, 재검토 결과 대기 중.",
+    description: "입고 후 현장 작업자 신고. 사용 전에 보류해 영향 생산 LOT 없음. 공급사 재검토 결과 대기 중.",
     status: "CONTAINED",
     detectedAt: dayOffset(-6, 11),
     resolvedAt: null,
   },
   {
     incidentNumber: "QI-2026-0651",
-    title: "신호 커넥터 접점 불량 사후 발견",
+    title: "신호 커넥터 접점 도금 불량 사후 발견",
     sourceType: "MATERIAL_LOT",
     sourceLotNumber: "ML-2026-0332",
-    description: "조립 공정 불량 원인 추적에서 접점 도금 불량 확인. 잔량 폐기 처분 완료.",
+    description:
+      "출하 후 접점 불량 신고로 역추적. 이 LOT를 쓴 PL-2026-095A와 완제품 FU-2026-0001~0003을 확인하고 남은 80 EA는 폐기 처분 완료.",
     status: "CLOSED",
-    detectedAt: dayOffset(-18, 16),
-    resolvedAt: dayOffset(-14, 15),
+    detectedAt: dayOffset(-2, 10),
+    resolvedAt: dayOffset(-1, 18),
   },
 ];

@@ -24,13 +24,13 @@ function sampleResult(overrides: Partial<ProcessExecutionListResult> = {}): Proc
       {
         id: "step-1",
         workOrderNumber: "WO-2026-092",
-        productCode: "ECM-PWR-1280",
-        productName: "전원 변환 모듈 PM-1280",
+        productCode: "ECM-PWR-250",
+        productName: "전원 변환 모듈 PM-250",
         plannedQuantity: 40,
         unit: "EA",
         dueDate: "2026-09-02T08:00:00.000Z",
         sequence: 10,
-        processStepName: "절단 1공정",
+        processStepName: "솔더 페이스트 인쇄",
         productionLotNumber: "PL-2026-092A",
         readiness: "BLOCKED",
         blockedReasonCodes: ["MATERIAL_SHORTAGE"],
@@ -38,8 +38,8 @@ function sampleResult(overrides: Partial<ProcessExecutionListResult> = {}): Proc
       {
         id: "step-2",
         workOrderNumber: "WO-2026-094",
-        productCode: "ECM-CTL-640",
-        productName: "산업용 제어 보드 CB-640",
+        productCode: "ECM-CTL-410",
+        productName: "산업용 제어 보드 CB-410",
         plannedQuantity: 80,
         unit: "EA",
         dueDate: "2026-09-03T03:00:00.000Z",
@@ -76,7 +76,7 @@ describe("ExecutionQueuePage", () => {
     renderPage();
 
     expect(await screen.findByText("PL-2026-092A")).toBeInTheDocument();
-    expect(screen.getByText("절단 1공정")).toBeInTheDocument();
+    expect(screen.getByText("솔더 페이스트 인쇄")).toBeInTheDocument();
     expect(screen.getByText("차단")).toBeInTheDocument();
     expect(screen.getByText("자재 부족")).toBeInTheDocument();
     expect(screen.getByText("실행 가능")).toBeInTheDocument();
