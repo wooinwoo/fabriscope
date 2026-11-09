@@ -373,6 +373,7 @@ export function WorkOrdersPage({
             emptyMessage="조건에 맞는 작업지시가 없습니다."
             getRowKey={(row) => row.id}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
             aria-label="작업지시 페이지 탐색"

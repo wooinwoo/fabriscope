@@ -10,9 +10,17 @@ import { DEMO_PROCESS_STEPS } from "./demo-process-steps.js";
 import { DEMO_INSPECTIONS } from "./demo-inspections.js";
 import { DEMO_AUDIT_EVENTS } from "./demo-audit-events.js";
 import { DEMO_QUALITY_INCIDENTS } from "./demo-quality-incidents.js";
-import { DEMO_TRACE_RELATIONS } from "./demo-trace.js";
+import {
+  DEMO_TRACE_RELATIONS,
+  RETIRED_DEMO_PRODUCTION_LOTS,
+  RETIRED_DEMO_TRACE_RELATIONS,
+} from "./demo-trace.js";
 import { DEMO_BOM_REVISIONS, DEMO_PRODUCTS } from "./demo-boms.js";
 import { DEMO_INSPECTION_SPEC_REVISIONS } from "./demo-inspection-specs.js";
+import {
+  DEMO_PRODUCTS as WORK_ORDER_PRODUCTS,
+  RETIRED_DEMO_PRODUCT_CODES,
+} from "../src/work-orders/work-order-products.js";
 
 const localDatabaseUrl =
   "postgresql://fabriscope:fabriscope_local@localhost:5432/fabriscope?schema=public";
@@ -32,6 +40,63 @@ try {
   );
 
   await prisma.$transaction(async (transaction) => {
+    // 예전 데모 제품 코드를 쓰던 행을 새 코드로 옮긴다. 제품 행은 id를 유지해 BOM 연결이 끊기지 않는다.
+    for (const [retiredCode, currentCode] of Object.entries(RETIRED_DEMO_PRODUCT_CODES)) {
+      const current = WORK_ORDER_PRODUCTS.find((product) => product.code === currentCode);
+      if (current === undefined) {
+        throw new Error(`현재 데모 제품이 없습니다: ${currentCode}`);
+      }
+      const retired = await transaction.product.findUnique({ where: { code: retiredCode } });
+      if (retired !== null) {
+        const existing = await transaction.product.findUnique({ where: { code: currentCode } });
+        if (existing === null) {
+          await transaction.product.update({
+            where: { id: retired.id },
+            data: { code: currentCode, name: current.name },
+          });
+        } else {
+          await transaction.bomRevision.updateMany({
+            where: { productId: retired.id },
+            data: { productId: existing.id },
+          });
+          await transaction.product.delete({ where: { id: retired.id } });
+        }
+      }
+      await transaction.workOrder.updateMany({
+        where: { productCode: retiredCode },
+        data: { productCode: currentCode, productName: current.name },
+      });
+      await transaction.inspectionSpecRevision.updateMany({
+        where: { productCode: retiredCode },
+        data: { productCode: currentCode },
+      });
+    }
+
+    // 예전 seed가 만든 계보 중 지금 이야기에 없는 것만 지운다. 공정 실행이 만든 관계는 건드리지 않는다.
+    for (const relation of RETIRED_DEMO_TRACE_RELATIONS) {
+      const [parent, child] = await Promise.all([
+        transaction.traceNode.findFirst({ where: { label: relation.parentLabel } }),
+        transaction.traceNode.findFirst({ where: { label: relation.childLabel } }),
+      ]);
+      if (parent !== null && child !== null) {
+        await transaction.lotRelation.deleteMany({
+          where: {
+            relationType: relation.relationType,
+            parentNodeId: parent.id,
+            childNodeId: child.id,
+            processStepExecutionId: null,
+          },
+        });
+      }
+    }
+    await transaction.traceNode.deleteMany({
+      where: {
+        productionLotNumber: { in: [...RETIRED_DEMO_PRODUCTION_LOTS] },
+        parentRelations: { none: {} },
+        childRelations: { none: {} },
+      },
+    });
+
     for (const [code, configuration] of Object.entries(ROLE_CONFIG)) {
       await transaction.role.upsert({
         where: { code: code as keyof typeof ROLE_CONFIG },
@@ -266,6 +331,16 @@ try {
         where: { revisionNumber: revisionData.revisionNumber },
         create: { ...revisionData, productId },
         update: { ...revisionData, productId },
+      });
+      const bomMaterialIds = bomItems.map((item) => {
+        const materialId = materialIdByCode.get(item.materialCode);
+        if (materialId === undefined) {
+          throw new Error(`자재 기준정보가 없습니다: ${item.materialCode}`);
+        }
+        return materialId;
+      });
+      await transaction.bomItem.deleteMany({
+        where: { bomRevisionId: row.id, materialId: { notIn: bomMaterialIds } },
       });
       for (const item of bomItems) {
         const materialId = materialIdByCode.get(item.materialCode);

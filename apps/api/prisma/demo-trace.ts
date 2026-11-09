@@ -29,60 +29,115 @@ export type DemoTraceRelation =
       serialNumber: string;
     };
 
+// 투입 수량 = 제품당 BOM 소요량 × 생산 LOT 수량. 솔더 페이스트(g)는 LOT 단위 계보로 추적하지 않는다.
 export const DEMO_TRACE_RELATIONS: DemoTraceRelation[] = [
   {
     kind: "CONSUME",
     materialLotNumber: "ML-2026-0301",
     productionLotNumber: "PL-2026-091A",
-    quantity: 40,
+    quantity: 240,
   },
   {
     kind: "CONSUME",
-    materialLotNumber: "ML-2026-0302",
+    materialLotNumber: "ML-2026-0311",
     productionLotNumber: "PL-2026-091A",
-    quantity: 25,
+    quantity: 120,
   },
   {
     kind: "CONSUME",
     materialLotNumber: "ML-2026-0321",
+    productionLotNumber: "PL-2026-091A",
+    quantity: 120,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0331",
+    productionLotNumber: "PL-2026-091A",
+    quantity: 480,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0301",
     productionLotNumber: "PL-2026-094A",
+    quantity: 160,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0311",
+    productionLotNumber: "PL-2026-094A",
+    quantity: 80,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0323",
+    productionLotNumber: "PL-2026-094A",
+    quantity: 80,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0331",
+    productionLotNumber: "PL-2026-094A",
+    quantity: 320,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0301",
+    productionLotNumber: "PL-2026-095A",
     quantity: 60,
   },
   {
     kind: "CONSUME",
     materialLotNumber: "ML-2026-0311",
     productionLotNumber: "PL-2026-095A",
-    quantity: 50,
+    quantity: 60,
   },
   {
     kind: "CONSUME",
-    materialLotNumber: "ML-2026-0331",
+    materialLotNumber: "ML-2026-0321",
     productionLotNumber: "PL-2026-095A",
-    quantity: 35,
+    quantity: 60,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0332",
+    productionLotNumber: "PL-2026-095A",
+    quantity: 120,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0301",
+    productionLotNumber: "PL-2026-098A",
+    quantity: 30,
+  },
+  {
+    kind: "CONSUME",
+    materialLotNumber: "ML-2026-0311",
+    productionLotNumber: "PL-2026-098A",
+    quantity: 30,
   },
   {
     kind: "SPLIT",
     parentProductionLotNumber: "PL-2026-097A",
     childProductionLotNumber: "PL-2026-097B",
-    quantity: 60,
+    quantity: 30,
   },
   {
     kind: "SPLIT",
     parentProductionLotNumber: "PL-2026-097A",
     childProductionLotNumber: "PL-2026-097C",
-    quantity: 40,
+    quantity: 20,
   },
   {
     kind: "MERGE",
-    parentProductionLotNumber: "PL-2026-094A",
-    childProductionLotNumber: "PL-2026-098B",
-    quantity: 50,
-  },
-  {
-    kind: "MERGE",
-    parentProductionLotNumber: "PL-2026-098A",
-    childProductionLotNumber: "PL-2026-098B",
+    parentProductionLotNumber: "PL-2026-097B",
+    childProductionLotNumber: "PL-2026-097M",
     quantity: 30,
+  },
+  {
+    kind: "MERGE",
+    parentProductionLotNumber: "PL-2026-097C",
+    childProductionLotNumber: "PL-2026-097M",
+    quantity: 20,
   },
   {
     kind: "TRANSFORM",
@@ -106,3 +161,15 @@ export const DEMO_TRACE_RELATIONS: DemoTraceRelation[] = [
     serialNumber: "FU-2026-0003",
   },
 ];
+
+/** 이전 seed가 만들었지만 지금 이야기에는 없는 계보. seed가 이 항목만 골라 지운다. */
+export const RETIRED_DEMO_TRACE_RELATIONS = [
+  { relationType: "CONSUME", parentLabel: "ML-2026-0302", childLabel: "PL-2026-091A" },
+  { relationType: "CONSUME", parentLabel: "ML-2026-0321", childLabel: "PL-2026-094A" },
+  { relationType: "CONSUME", parentLabel: "ML-2026-0331", childLabel: "PL-2026-095A" },
+  { relationType: "MERGE", parentLabel: "PL-2026-094A", childLabel: "PL-2026-098B" },
+  { relationType: "MERGE", parentLabel: "PL-2026-098A", childLabel: "PL-2026-098B" },
+] as const;
+
+/** 서로 다른 제품을 합치던 옛 합류 결과 LOT. 남은 관계가 없을 때만 지운다. */
+export const RETIRED_DEMO_PRODUCTION_LOTS = ["PL-2026-098B"] as const;

@@ -14,31 +14,26 @@ interface AttentionQueueProps {
 interface ItemVisual {
   icon: LucideIcon;
   iconClassName: string;
-  railClassName: string;
 }
 
 const visualByStatus: Record<string, ItemVisual> = {
   차단: {
     icon: PackageSearch,
     iconClassName: "bg-danger-soft text-danger-strong",
-    railClassName: "border-danger",
   },
   "검사 대기": {
     icon: ScanSearch,
     iconClassName: "bg-warning-soft text-warning-strong",
-    railClassName: "border-warning",
   },
   "납기 임박": {
     icon: ClipboardList,
     iconClassName: "bg-warning-soft text-warning-strong",
-    railClassName: "border-warning",
   },
 };
 
 const fallbackVisual: ItemVisual = {
   icon: ClipboardList,
   iconClassName: "bg-surface-subtle text-text-muted",
-  railClassName: "border-border",
 };
 
 export function AttentionQueue({ items }: AttentionQueueProps) {
@@ -54,13 +49,13 @@ export function AttentionQueue({ items }: AttentionQueueProps) {
   }
 
   return (
-    <div className="grid h-full" style={{ gridTemplateRows: `repeat(${items.length}, minmax(0, 1fr))` }}>
+    <div className="grid h-full divide-y divide-border" style={{ gridTemplateRows: `repeat(${items.length}, minmax(0, 1fr))` }}>
       {items.map(({ code, context, reason, status, tone }) => {
         const visual = visualByStatus[status] ?? fallbackVisual;
         const Icon = visual.icon;
         return (
           <article
-            className={`flex h-full gap-3 border-s-2 py-4 ps-3 ${visual.railClassName}`}
+            className="flex h-full items-start gap-3 py-3"
             key={`${status}-${code}`}
           >
             <span

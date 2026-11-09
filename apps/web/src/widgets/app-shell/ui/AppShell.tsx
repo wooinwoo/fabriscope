@@ -55,13 +55,13 @@ export function AppShell({
         )}
       >
         <Header
-          className="border-b border-border bg-background lg:rounded-t-lg"
+          className="border-b border-border bg-surface"
           fixed
         >
           <div className="me-auto min-w-0">
             <span className="block truncate text-sm font-semibold">{pageTitle}</span>
           </div>
-          <div className="hidden h-9 items-center gap-2 rounded-md border bg-card px-3 lg:flex peer-data-[state=expanded]:hidden">
+          <div className="hidden h-8 shrink-0 items-center gap-2 rounded-full bg-surface-subtle px-3 lg:flex peer-data-[state=expanded]:hidden">
             <ShieldCheck className="size-4 text-muted-foreground" aria-hidden="true" />
             <span className="text-xs font-medium">{currentRole}</span>
           </div>

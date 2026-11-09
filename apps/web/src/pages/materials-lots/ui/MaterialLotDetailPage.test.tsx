@@ -62,7 +62,7 @@ function renderPage(materialLotId = "lot-1") {
 }
 
 describe("MaterialLotDetailPage", () => {
-  it("자재 LOT 수량 요약·예약·감사 이력을 표시한다", async () => {
+  it("자재 LOT 수량 요약·예약·감사이력을 표시한다", async () => {
     fetchMock.mockResolvedValue(sampleDetail());
     renderPage();
 
@@ -70,7 +70,7 @@ describe("MaterialLotDetailPage", () => {
     expect(
       screen.getByText("메인 MCU 칩 (ECM-MAT-014)"),
     ).toBeInTheDocument();
-    expect(screen.getByText("허입")).toBeInTheDocument();
+    expect(screen.getByText("합격")).toBeInTheDocument();
     expect(screen.getByText("WO-2026-091")).toBeInTheDocument();
     expect(screen.getByText(/품질 처분 결정 대기 → 합격/)).toBeInTheDocument();
     expect(

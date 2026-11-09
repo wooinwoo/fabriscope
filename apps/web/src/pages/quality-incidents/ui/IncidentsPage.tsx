@@ -342,6 +342,7 @@ export function IncidentsPage({
             emptyMessage="조건에 맞는 부적합 사건이 없습니다."
             getRowKey={(row) => row.id}
             rows={state.items}
+            rowNumberStart={state.total - (currentPage - 1) * PAGE_SIZE}
           />
           <nav
             aria-label="부적합 사건 페이지 탐색"

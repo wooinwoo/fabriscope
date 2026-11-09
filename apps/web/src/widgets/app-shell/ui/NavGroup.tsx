@@ -52,8 +52,10 @@ export function NavGroup({ group, pathname }: NavGroupProps) {
   const { setOpenMobile } = useSidebar();
 
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+    <SidebarGroup className="p-0">
+      <SidebarGroupLabel className="h-7 px-3 text-sm font-medium text-sidebar-muted group-data-[collapsible=icon]:hidden">
+        {group.label}
+      </SidebarGroupLabel>
       <SidebarMenu>
         {group.items.map((item) => {
           const Icon = iconByName[item.icon];
@@ -63,7 +65,7 @@ export function NavGroup({ group, pathname }: NavGroupProps) {
               {item.to ? (
                 <SidebarMenuButton
                   asChild
-                  className="relative after:absolute after:inset-y-2 after:start-0 after:w-0.5 after:rounded-full after:bg-sidebar-primary after:opacity-0 data-[active=true]:font-semibold data-[active=true]:after:opacity-100"
+                  className="text-sidebar-foreground data-[active=true]:font-semibold [&>svg]:text-sidebar-muted data-[active=true]:[&>svg]:text-sidebar-primary"
                   isActive={item.to === pathname}
                   tooltip={item.label}
                 >

@@ -276,7 +276,7 @@ describe("material reservations", () => {
   it("발행된 작업지시에 가용 자재를 예약하고 감사를 남긴다", async () => {
     const { agent, csrfToken } = await loginAs("MATERIAL_MANAGER");
     const workOrderId = prisma.orderNumberToId("WO-2026-092");
-    const lotId = prisma.lotNumberToId("ML-2026-0301");
+    const lotId = prisma.lotNumberToId("ML-2026-0311");
 
     const response = await agent
       .post(`/api/work-orders/${workOrderId}/material-reservations`)
@@ -287,12 +287,12 @@ describe("material reservations", () => {
 
     expect(response.body).toHaveLength(1);
     expect(response.body[0]).toMatchObject({
-      lotNumber: "ML-2026-0301",
+      lotNumber: "ML-2026-0311",
       quantity: 50,
       status: "ACTIVE",
     });
     const lot = prisma.materialLots.find((row) => row.id === lotId);
-    expect(lot?.reservedQuantity).toBe(170);
+    expect(lot?.reservedQuantity).toBe(150);
     expect(
       prisma.auditEvents.some(
         (event) => event.action === "MATERIAL_RESERVED" && event.entityId === "WO-2026-092",
@@ -352,7 +352,7 @@ describe("material reservations", () => {
   it("예약 해제는 잔량을 되돌리고 재해제를 거부한다", async () => {
     const { agent, csrfToken } = await loginAs("MATERIAL_MANAGER");
     const workOrderId = prisma.orderNumberToId("WO-2026-092");
-    const lotId = prisma.lotNumberToId("ML-2026-0301");
+    const lotId = prisma.lotNumberToId("ML-2026-0311");
 
     const reserved = await agent
       .post(`/api/work-orders/${workOrderId}/material-reservations`)

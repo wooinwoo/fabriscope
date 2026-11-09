@@ -24,23 +24,23 @@ function sampleResult(overrides: Partial<WorkOrderListResult> = {}): WorkOrderLi
       {
         id: "work-order-1",
         orderNumber: "WO-2026-091",
-        productCode: "ECM-CTL-640",
-        productName: "산업용 제어 보드 CB-640",
+        productCode: "ECM-CTL-410",
+        productName: "산업용 제어 보드 CB-410",
         plannedQuantity: 120,
         unit: "EA",
         dueDate: "2026-09-05T08:00:00.000Z",
         status: "IN_PROGRESS",
         priority: "HIGH",
         progressPercent: 45,
-        currentStepName: "조립 2공정",
+        currentStepName: "기구 조립 공정",
         blockedReason: null,
       memo: null,
       },
       {
         id: "work-order-2",
         orderNumber: "WO-2026-092",
-        productCode: "ECM-PWR-1280",
-        productName: "전원 변환 모듈 PM-1280",
+        productCode: "ECM-PWR-250",
+        productName: "전원 변환 모듈 PM-250",
         plannedQuantity: 40,
         unit: "EA",
         dueDate: "2026-08-31T08:00:00.000Z",
@@ -82,7 +82,7 @@ describe("WorkOrdersPage", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0].toString()).toBe("");
     expect(await screen.findByText("WO-2026-091")).toBeInTheDocument();
-    expect(screen.getByText("산업용 제어 보드 CB-640")).toBeInTheDocument();
+    expect(screen.getByText("산업용 제어 보드 CB-410")).toBeInTheDocument();
     expect(screen.getByText("진행 중")).toBeInTheDocument();
     expect(screen.getByText("높음")).toBeInTheDocument();
     expect(screen.getByText("자재 LOT 부족 (ECM-MAT-014)")).toBeInTheDocument();

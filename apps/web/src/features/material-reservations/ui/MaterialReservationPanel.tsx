@@ -307,8 +307,8 @@ function MaterialReservationForm({
           )
         ) : (
           <p className="text-xs text-text-muted">
-            예약·해제는 자재 담당자 권한(material-allocation:create/release)이
-            필요합니다. 현재 역할로는 예약 현황을 조회할 수 있습니다.
+            예약·해제는 자재 담당자만 할 수 있습니다. 현재 역할로는 예약 현황을
+            조회할 수 있습니다.
           </p>
         )}
 

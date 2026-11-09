@@ -7,6 +7,7 @@ import {
   type InspectionDetail,
 } from "@/entities/inspection";
 import { InspectionVerdictPanel } from "@/features/inspection-verdict";
+import { AUDIT_ACTOR_ROLE_OPTIONS } from "@/entities/audit-event";
 import { ApiRequestError } from "@/shared/api";
 import {
   Badge,
@@ -227,7 +228,7 @@ export function InspectionDetailPage({
           <CardTitle>
             <h3>변경 이력</h3>
           </CardTitle>
-          <CardDescription>이 검사의 감사 기록입니다.</CardDescription>
+          <CardDescription>이 검사의 감사이력입니다.</CardDescription>
         </CardHeader>
         <CardContent className="px-5 py-4">
           {detail.recentAudits.length === 0 ? (
@@ -242,7 +243,9 @@ export function InspectionDetailPage({
                     {formatDateTime(event.occurredAt)}
                   </time>
                   <span className="text-sm font-semibold">{event.actorName}</span>
-                  <span className="text-xs text-text-muted">{event.actorRole}</span>
+                  <span className="text-xs text-text-muted">
+                    {(AUDIT_ACTOR_ROLE_OPTIONS as Record<string, string>)[event.actorRole] ?? event.actorRole}
+                  </span>
                   <span className="text-sm text-text">{event.summary}</span>
                 </li>
               ))}
