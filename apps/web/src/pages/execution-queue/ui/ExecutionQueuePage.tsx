@@ -128,24 +128,6 @@ export function ExecutionQueuePage({
   const columns = useMemo<DataTableColumn<ProcessExecutionListItem>[]>(
     () => [
       {
-        key: "workOrderNumber",
-        header: "작업지시",
-        cell: (row) => (
-          <span className="font-mono text-xs font-bold text-text-strong">
-            {row.workOrderNumber}
-          </span>
-        ),
-      },
-      {
-        key: "productionLotNumber",
-        header: "생산 LOT",
-        cell: (row) => (
-          <span className="font-mono text-xs text-text-muted">
-            {row.productionLotNumber}
-          </span>
-        ),
-      },
-      {
         key: "processStepName",
         header: "공정",
         cell: (row) => (
@@ -154,28 +136,6 @@ export function ExecutionQueuePage({
               {String(row.sequence).padStart(2, "0")}
             </span>
             <span className="text-sm text-text-strong">{row.processStepName}</span>
-          </span>
-        ),
-      },
-      {
-        key: "product",
-        header: "제품",
-        cell: (row) => (
-          <span className="block min-w-32">
-            <span className="block text-sm text-text-strong">{row.productName}</span>
-            <span className="block font-mono text-xs text-text-muted">
-              {row.productCode}
-            </span>
-          </span>
-        ),
-      },
-      {
-        key: "plannedQuantity",
-        header: "계획수량",
-        align: "right",
-        cell: (row) => (
-          <span className="tabular-nums">
-            {row.plannedQuantity.toLocaleString("ko-KR")} {row.unit}
           </span>
         ),
       },
@@ -348,6 +308,20 @@ export function ExecutionQueuePage({
             columns={columns}
             emptyMessage="조건에 맞는 공정이 없습니다."
             getRowKey={(row) => row.id}
+            group={{
+              key: (row) => `${row.workOrderNumber}:${row.productionLotNumber}`,
+              header: (row) => (
+                <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-mono text-sm font-bold text-text-strong">{row.workOrderNumber}</span>
+                  <span className="font-mono text-sm text-text-muted">{row.productionLotNumber}</span>
+                  <span className="text-sm font-semibold text-text-strong">{row.productName}</span>
+                  <span className="font-mono text-xs text-text-muted">{row.productCode}</span>
+                  <span className="ml-auto text-sm tabular-nums text-text">
+                    계획 {row.plannedQuantity.toLocaleString("ko-KR")} {row.unit}
+                  </span>
+                </span>
+              ),
+            }}
             rows={state.items}
           />
           <nav
