@@ -1,12 +1,12 @@
-name: sensor-manufacturing-mes
+name: fabriscope
 
 services:
   postgres:
     image: postgres:18.6-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-sensor_mes}
-      POSTGRES_USER: ${POSTGRES_USER:-sensor_mes}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sensor_mes_local}
+      POSTGRES_DB: ${POSTGRES_DB:-fabriscope}
+      POSTGRES_USER: ${POSTGRES_USER:-fabriscope}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fabriscope_local}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -14,7 +14,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - pg_isready -U ${POSTGRES_USER:-sensor_mes} -d ${POSTGRES_DB:-sensor_mes}
+        - pg_isready -U ${POSTGRES_USER:-fabriscope} -d ${POSTGRES_DB:-fabriscope}
       interval: 5s
       timeout: 5s
       retries: 10

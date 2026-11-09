@@ -184,7 +184,7 @@ Full dark, neon, HUD, glassmorphism, 큰 gradient, 의미 없는 실시간 pulse
 
 | 순위 | 추가 후보 | 우선순위·대상 | 추가 판단 |
 |---:|---|---|---|
-| 1 | `ADD-01` [Siemens Opcenter Execution Electronics 2510](https://blogs.sw.siemens.com/opcenter/whats-new-in-opcenter-execution-electronics-2510/) | `P1` · `SCR-03B`, `SCR-03D`, `SCR-04B`, `SCR-05C`, `SCR-06A` | 전자 제조의 material queue, HOLD·해제, defect, carrier·serial 실제 화면이 센서 제조 흐름과 가장 직접적으로 맞는다. |
+| 1 | `ADD-01` [Siemens Opcenter Execution Electronics 2510](https://blogs.sw.siemens.com/opcenter/whats-new-in-opcenter-execution-electronics-2510/) | `P1` · `SCR-03B`, `SCR-03D`, `SCR-04B`, `SCR-05C`, `SCR-06A` | 전자 제조의 material queue, HOLD·해제, defect, carrier·serial 실제 화면이 부품 제조 흐름과 가장 직접적으로 맞는다. |
 | 2 | `ADD-02` [Microsoft Dynamics 365 Production Floor Execution](https://learn.microsoft.com/en-us/dynamics365/supply-chain/production-control/production-floor-execution-use) | `P1` · `SCR-04A`, `SCR-04B` | touch·고대비 환경에서 작업 목록, 선택 상세, 수량 numpad와 대표 행동을 한 작업공간에 묶는다. Full dark 외형과 과도한 부가기능은 복제하지 않는다. |
 | 3 | `ADD-03` [Oracle Redwood Product Genealogy](https://docs.oracle.com/en/cloud/saas/readiness/scm/26a/mfg26a/26A-mfg-wn-f42315.htm) | `P1` · `SCR-06B`, `SCR-07A` | `Composition`, `Where Used`, `Transaction History`를 분리해 양방향 추적과 사건 근거를 table-first로 읽게 한다. Graph는 보조 보기로 비교한다. |
 | 4 | `ADD-04` [MPDV HYDRA X Operator Inspection](https://us.mpdv.com/industry-4-0/smart-factory-glossary/operator-inspection) | `P1` · `SCR-05B` | 검사 step과 현재 측정값, 허용범위, 단위, 측정도구를 함께 보여주는 실제 operator 검사 구조다. |

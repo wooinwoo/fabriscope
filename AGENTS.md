@@ -1,4 +1,4 @@
-# Sensor Manufacturing MES Lab
+# FabriScope MES Lab
 
 - This repository is a private local improvement sandbox.
 - Never push, open a pull request, create an issue, or otherwise mutate `wooinwoo/sensor-manufacturing-mes`.
