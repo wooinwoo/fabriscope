@@ -53,6 +53,19 @@ interface Route {
 
 type Handler = (...args: unknown[]) => unknown;
 
+let readClient: { url: string; client: PrismaClient } | null = null;
+/** 조회 전용 client(Neon HTTP 드라이버). 같은 isolate 안에서 재사용한다. */
+function readClientFor(url: string) {
+  if (readClient?.url !== url) readClient = { url, client: new PrismaClient({ adapter: new PrismaNeonHttp(url, {}) }) };
+  return readClient.client;
+}
+
+let readBundle: { client: PrismaClient; bundle: ReturnType<typeof buildControllers> } | null = null;
+function readBundleFor(client: PrismaClient) {
+  if (readBundle?.client !== client) readBundle = { client, bundle: buildControllers(client as never) };
+  return readBundle.bundle;
+}
+
 // controller를 요청마다 새 Prisma client로 만들기 위한 생성 함수 목록.
 // Neon 연결은 요청 범위를 벗어나 재사용하면 안 되므로 client도 요청마다 만든다.
 function buildControllers(prisma: never) {
@@ -200,10 +213,12 @@ export async function handleApi(
   // 조회(GET·HEAD)는 HTTP 드라이버로 쿼리마다 한 번 왕복으로 끝낸다(WebSocket 연결을 맺지 않는다).
   // 데이터를 바꾸는 요청은 대화형 트랜잭션이 필요해 WebSocket 연결을 쓴다.
   const readOnly = request.method === "GET" || request.method === "HEAD";
-  const adapter = readOnly ? new PrismaNeonHttp(databaseUrl, {}) : new PrismaNeon({ connectionString: databaseUrl });
-  const prisma = new PrismaClient({ adapter });
+  // 조회 client는 열어 두는 연결이 없어 요청끼리 재사용한다. 요청마다 만들면 준비 작업에 CPU를 써서
+  // 무료 Worker의 CPU 한도를 넘는다(오류 1102). 쓰기 client는 WebSocket 연결이라 요청마다 만들고 닫는다.
+  const prisma = readOnly ? readClientFor(databaseUrl) : new PrismaClient({ adapter: new PrismaNeon({ connectionString: databaseUrl }) });
   try {
-    const { controllers, guards } = buildControllers(prisma as never);
+    // 조회 client의 controller·guard 묶음도 함께 재사용한다.
+    const { controllers, guards } = readOnly ? readBundleFor(prisma) : buildControllers(prisma as never);
     const { route, params } = matched;
     const controller = controllers.find((item) => item instanceof route.controllerType)!;
     const context = {
@@ -246,6 +261,6 @@ export async function handleApi(
     return json(500, { statusCode: 500, message: "Internal server error" }, headers);
   } finally {
     // 연결 정리는 응답을 보낸 뒤 진행한다. 정리를 기다리면 응답이 늦어지거나 멈출 수 있다.
-    waitUntil(prisma.$disconnect().catch(() => undefined));
+    if (!readOnly) waitUntil(prisma.$disconnect().catch(() => undefined));
   }
 }
