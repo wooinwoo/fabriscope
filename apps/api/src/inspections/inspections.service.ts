@@ -113,17 +113,17 @@ export class InspectionsService {
 
   async list(query: InspectionQuery): Promise<InspectionListResult> {
     const where = this.buildWhere(query);
-    const { rows, total } = await this.prisma.$transaction(async (transaction) => {
-      const rows = await transaction.inspection.findMany({
+    // 목록과 개수를 동시에 보낸다. 조회는 Neon HTTP 드라이버로 가는데, 그 드라이버는 트랜잭션을 지원하지 않는다.
+    const [rows, total] = await Promise.all([
+      this.prisma.inspection.findMany({
         where,
         orderBy: this.buildOrderBy(query),
         include: { workOrder: true },
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
-      });
-      const total = await transaction.inspection.count({ where });
-      return { rows, total };
-    });
+      }),
+      this.prisma.inspection.count({ where }),
+    ]);
 
     return {
       items: rows.map((row) => ({

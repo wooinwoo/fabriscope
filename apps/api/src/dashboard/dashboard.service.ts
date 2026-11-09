@@ -29,18 +29,15 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async summary(): Promise<DashboardSummary> {
-    const [
-      workOrders,
-      lots,
-      inspections,
-      materialLots,
-      weekOrders,
-    ] = await this.prisma.$transaction(async (transaction) => {
-      const workOrders = await transaction.workOrder.findMany();
-      const lots = await transaction.processStepExecution.findMany({
+    const weekStart = seoulWeekStart();
+    const weekEnd = new Date(weekStart.getTime() + 7 * 86_400_000);
+    // 다섯 조회를 동시에 보낸다. 조회는 Neon HTTP 드라이버로 가는데, 그 드라이버는 트랜잭션을 지원하지 않는다.
+    const [workOrders, lots, inspections, materialLots, weekOrders] = await Promise.all([
+      this.prisma.workOrder.findMany(),
+      this.prisma.processStepExecution.findMany({
         select: { productionLotNumber: true, readiness: true },
-      });
-      const inspections = await transaction.inspection.findMany({
+      }),
+      this.prisma.inspection.findMany({
         select: {
           inspectionNumber: true,
           productionLotNumber: true,
@@ -48,26 +45,23 @@ export class DashboardService {
           executionStatus: true,
           verdict: true,
         },
-      });
-      const materialLots = await transaction.materialLot.findMany({
+      }),
+      this.prisma.materialLot.findMany({
         select: {
           qualityDisposition: true,
           expiresAt: true,
           onHand: true,
           reservedQuantity: true,
         },
-      });
-      const weekStart = seoulWeekStart();
-      const weekEnd = new Date(weekStart.getTime() + 7 * 86_400_000);
-      const weekOrders = await transaction.workOrder.findMany({
+      }),
+      this.prisma.workOrder.findMany({
         where: {
           status: { not: "CANCELLED" },
           dueDate: { gte: weekStart, lt: weekEnd },
         },
         select: { dueDate: true, plannedQuantity: true, progressPercent: true },
-      });
-      return [workOrders, lots, inspections, materialLots, weekOrders] as const;
-    });
+      }),
+    ]);
 
     const todayStart = seoulStartOfToday();
     const tomorrowStart = new Date(todayStart.getTime() + 86_400_000);

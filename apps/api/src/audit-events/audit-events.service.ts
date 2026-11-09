@@ -126,16 +126,16 @@ export class AuditEventsService {
 
   async list(query: AuditEventQuery): Promise<AuditEventListResult> {
     const where = this.buildWhere(query);
-    const { rows, total } = await this.prisma.$transaction(async (transaction) => {
-      const rows = await transaction.auditEvent.findMany({
+    // 목록과 개수를 동시에 보낸다. 조회는 Neon HTTP 드라이버로 가는데, 그 드라이버는 트랜잭션을 지원하지 않는다.
+    const [rows, total] = await Promise.all([
+      this.prisma.auditEvent.findMany({
         where,
         orderBy: [{ [query.sort]: query.order }],
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
-      });
-      const total = await transaction.auditEvent.count({ where });
-      return { rows, total };
-    });
+      }),
+      this.prisma.auditEvent.count({ where }),
+    ]);
 
     return {
       items: rows.map((row) => ({
