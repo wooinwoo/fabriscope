@@ -130,16 +130,16 @@ export class WorkOrdersService {
 
   async list(query: WorkOrderQuery): Promise<WorkOrderListResult> {
     const where = this.buildWhere(query);
-    const { rows, total } = await this.prisma.$transaction(async (transaction) => {
-      const rows = await transaction.workOrder.findMany({
+    // 목록과 개수를 한 트랜잭션으로 한 번에 보낸다(대화형 트랜잭션처럼 쿼리마다 왕복하지 않는다).
+    const [rows, total] = await this.prisma.$transaction([
+      this.prisma.workOrder.findMany({
         where,
         orderBy: this.buildOrderBy(query),
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
-      });
-      const total = await transaction.workOrder.count({ where });
-      return { rows, total };
-    });
+      }),
+      this.prisma.workOrder.count({ where }),
+    ]);
 
     return {
       items: rows.map(toListItem),

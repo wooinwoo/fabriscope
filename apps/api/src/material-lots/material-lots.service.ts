@@ -155,17 +155,17 @@ export class MaterialLotsService {
     }
 
     const where = this.buildWhere(query);
-    const { rows, total } = await this.prisma.$transaction(async (transaction) => {
-      const rows = await transaction.materialLot.findMany({
+    // 목록과 개수를 한 트랜잭션으로 한 번에 보낸다(대화형 트랜잭션처럼 쿼리마다 왕복하지 않는다).
+    const [rows, total] = await this.prisma.$transaction([
+      this.prisma.materialLot.findMany({
         where,
         orderBy: this.buildOrderBy(query),
         include: { material: true },
         skip: (query.page - 1) * query.pageSize,
         take: query.pageSize,
-      });
-      const total = await transaction.materialLot.count({ where });
-      return { rows, total };
-    });
+      }),
+      this.prisma.materialLot.count({ where }),
+    ]);
 
     return {
       items: rows.map((row) => this.toListItem(row)),
