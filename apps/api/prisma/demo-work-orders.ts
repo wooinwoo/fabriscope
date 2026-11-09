@@ -129,7 +129,7 @@ export const DEMO_WORK_ORDERS: DemoWorkOrder[] = [
     status: "IN_PROGRESS",
     priority: "NORMAL",
     progressPercent: 30,
-    currentStepName: "침담 공정",
+    currentStepName: "SMT 실장 공정",
     blockedReason: "선행 검사 판정 보류",
   },
   {

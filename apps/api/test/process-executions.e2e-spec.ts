@@ -346,12 +346,12 @@ describe("process execution queue API", () => {
     const agent = await loginAs("SHOP_FLOOR_OPERATOR");
     const response = await agent
       .get("/api/process-executions")
-      .query({ q: "침담" })
+      .query({ q: "SMT" })
       .set("Origin", allowedOrigin)
       .expect(200);
 
     expect(response.body.total).toBe(1);
-    expect(response.body.items[0].processStepName).toBe("침담 공정");
+    expect(response.body.items[0].processStepName).toBe("SMT 실장 공정");
   });
 
   it("허용되지 않은 조회 조건은 400으로 거부한다", async () => {
