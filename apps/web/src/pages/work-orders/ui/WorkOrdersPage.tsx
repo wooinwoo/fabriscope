@@ -128,37 +128,41 @@ export function WorkOrdersPage({
     () => [
       {
         key: "orderNumber",
-        header: "작업지시",
+        header: "작업지시 · 제품",
         cell: (row) => (
-          <button
-            className="font-mono text-xs font-bold text-accent-strong underline-offset-4 hover:underline"
-            onClick={() => onOpenDetail(row.id)}
-            type="button"
-          >
-            {row.orderNumber}
-          </button>
-        ),
-      },
-      {
-        key: "product",
-        header: "제품",
-        cell: (row) => (
-          <span className="block min-w-32">
+          <span className="block min-w-40">
+            <button
+              className="font-mono text-sm font-bold text-accent-strong underline-offset-4 hover:underline"
+              onClick={() => onOpenDetail(row.id)}
+              type="button"
+            >
+              {row.orderNumber}
+            </button>
             <span className="block text-sm text-text-strong">{row.productName}</span>
-            <span className="block font-mono text-xs text-text-muted">
-              {row.productCode}
-            </span>
           </span>
         ),
       },
       {
-        key: "plannedQuantity",
-        header: "계획수량",
-        align: "right",
+        key: "status",
+        header: "상태",
         cell: (row) => (
-          <span className="tabular-nums">
-            {row.plannedQuantity.toLocaleString("ko-KR")} {row.unit}
+          <span className="block min-w-28">
+            <Badge tone={STATUS_TONES[row.status] ?? "neutral"}>
+              {WORK_ORDER_STATUS_LABELS[row.status]}
+            </Badge>
+            {row.blockedReason === null ? null : (
+              <span className="mt-1 block text-xs font-semibold text-warning-strong">
+                {row.blockedReason}
+              </span>
+            )}
           </span>
+        ),
+      },
+      {
+        key: "priority",
+        header: "우선순위",
+        cell: (row) => (
+          <PriorityBadge priority={toPriorityBadgeValue(row.priority)} />
         ),
       },
       {
@@ -175,6 +179,16 @@ export function WorkOrdersPage({
               {formatWorkOrderDueDate(row.dueDate)}
             </time>
           ),
+      },
+      {
+        key: "plannedQuantity",
+        header: "계획수량",
+        align: "right",
+        cell: (row) => (
+          <span className="tabular-nums">
+            {row.plannedQuantity.toLocaleString("ko-KR")} {row.unit}
+          </span>
+        ),
       },
       {
         key: "progressPercent",
@@ -199,33 +213,7 @@ export function WorkOrdersPage({
       {
         key: "currentStepName",
         header: "현재 공정",
-        cell: (row) => row.currentStepName ?? "—",
-      },
-      {
-        key: "status",
-        header: "상태",
-        cell: (row) => (
-          <Badge tone={STATUS_TONES[row.status] ?? "neutral"}>
-            {WORK_ORDER_STATUS_LABELS[row.status]}
-          </Badge>
-        ),
-      },
-      {
-        key: "blockedReason",
-        header: "차단 사유",
-        cell: (row) =>
-          row.blockedReason === null ? (
-            <span className="text-text-subtle">—</span>
-          ) : (
-            <Badge tone="warning">{row.blockedReason}</Badge>
-          ),
-      },
-      {
-        key: "priority",
-        header: "우선순위",
-        cell: (row) => (
-          <PriorityBadge priority={toPriorityBadgeValue(row.priority)} />
-        ),
+        cell: (row) => <span className="whitespace-nowrap">{row.currentStepName ?? "—"}</span>,
       },
     ],
     [],

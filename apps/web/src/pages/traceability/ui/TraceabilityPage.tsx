@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Factory, Package, Tag, type LucideIcon } from "lucide-react";
 import {
   fetchTraceNodes,
   TRACE_NODE_TYPE_LABELS,
@@ -7,8 +8,6 @@ import {
 } from "@/entities/trace-node";
 import { ApiRequestError } from "@/shared/api";
 import {
-  Badge,
-  type BadgeTone,
   Button,
   DataTable,
   type DataTableColumn,
@@ -27,10 +26,10 @@ import {
   type TraceabilitySearch,
 } from "../model/traceability-search";
 
-const NODE_TYPE_TONES: Record<TraceNodeType, BadgeTone> = {
-  MATERIAL_LOT: "info",
-  PRODUCTION_LOT: "success",
-  FINISHED_UNIT: "warning",
+const NODE_TYPE_ICONS: Record<TraceNodeType, LucideIcon> = {
+  MATERIAL_LOT: Package,
+  PRODUCTION_LOT: Factory,
+  FINISHED_UNIT: Tag,
 };
 
 const PAGE_SIZE = 20;
@@ -131,15 +130,6 @@ export function TraceabilityPage({
         ),
       },
       {
-        key: "nodeType",
-        header: "구분",
-        cell: (row) => (
-          <Badge tone={NODE_TYPE_TONES[row.nodeType]}>
-            {TRACE_NODE_TYPE_LABELS[row.nodeType]}
-          </Badge>
-        ),
-      },
-      {
         key: "upstreamCount",
         header: "원천 (투입)",
         cell: (row) => (
@@ -158,7 +148,7 @@ export function TraceabilityPage({
         header: "상세",
         cell: (row) => (
           <Button
-            variant="ghost"
+            variant="secondary"
             size="compact"
             onClick={() => onOpenDetail(row.id)}
           >
@@ -273,6 +263,18 @@ export function TraceabilityPage({
           columns={columns}
           rows={state.items}
           getRowKey={(row) => row.id}
+          group={{
+            key: (row) => row.nodeType,
+            header: (row) => {
+              const Icon = NODE_TYPE_ICONS[row.nodeType];
+              return (
+                <span className="flex items-center gap-2 text-sm font-semibold text-text-strong">
+                  <Icon aria-hidden="true" className="size-4 text-text-muted" />
+                  {TRACE_NODE_TYPE_LABELS[row.nodeType]}
+                </span>
+              );
+            },
+          }}
           emptyMessage="조건에 맞는 추적 노드가 없습니다."
         />
       )}
