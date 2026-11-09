@@ -29,15 +29,18 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async summary(): Promise<DashboardSummary> {
-    const weekStart = seoulWeekStart();
-    const weekEnd = new Date(weekStart.getTime() + 7 * 86_400_000);
-    // 다섯 조회를 한 트랜잭션으로 한 번에 보낸다(쿼리마다 왕복하지 않는다).
-    const [workOrders, lots, inspections, materialLots, weekOrders] = await this.prisma.$transaction([
-      this.prisma.workOrder.findMany(),
-      this.prisma.processStepExecution.findMany({
+    const [
+      workOrders,
+      lots,
+      inspections,
+      materialLots,
+      weekOrders,
+    ] = await this.prisma.$transaction(async (transaction) => {
+      const workOrders = await transaction.workOrder.findMany();
+      const lots = await transaction.processStepExecution.findMany({
         select: { productionLotNumber: true, readiness: true },
-      }),
-      this.prisma.inspection.findMany({
+      });
+      const inspections = await transaction.inspection.findMany({
         select: {
           inspectionNumber: true,
           productionLotNumber: true,
@@ -45,23 +48,26 @@ export class DashboardService {
           executionStatus: true,
           verdict: true,
         },
-      }),
-      this.prisma.materialLot.findMany({
+      });
+      const materialLots = await transaction.materialLot.findMany({
         select: {
           qualityDisposition: true,
           expiresAt: true,
           onHand: true,
           reservedQuantity: true,
         },
-      }),
-      this.prisma.workOrder.findMany({
+      });
+      const weekStart = seoulWeekStart();
+      const weekEnd = new Date(weekStart.getTime() + 7 * 86_400_000);
+      const weekOrders = await transaction.workOrder.findMany({
         where: {
           status: { not: "CANCELLED" },
           dueDate: { gte: weekStart, lt: weekEnd },
         },
         select: { dueDate: true, plannedQuantity: true, progressPercent: true },
-      }),
-    ]);
+      });
+      return [workOrders, lots, inspections, materialLots, weekOrders] as const;
+    });
 
     const todayStart = seoulStartOfToday();
     const tomorrowStart = new Date(todayStart.getTime() + 86_400_000);
