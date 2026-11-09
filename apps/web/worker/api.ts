@@ -1,7 +1,7 @@
 // apps/api의 controller·service·guard를 Nest 없이 그대로 연결해 /api 요청을 처리한다.
 // Nest와 같은 순서(전역 guard → controller guard → handler guard → handler)로 실행하고,
 // 예외는 Nest 기본 예외 필터와 같은 status·본문으로 바꾼다.
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaNeon, PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "./generated/prisma/client";
 import { getMeta, HttpException, type ParamSpec } from "./shims/nest-common";
 import { Reflector } from "./shims/nest-core";
@@ -197,7 +197,11 @@ export async function handleApi(
   };
 
   // Neon 연결은 요청 범위를 벗어나 재사용하면 안 되므로 요청마다 client를 만든다.
-  const prisma = new PrismaClient({ adapter: new PrismaNeon({ connectionString: databaseUrl }) });
+  // 조회(GET·HEAD)는 HTTP 드라이버로 쿼리마다 한 번 왕복으로 끝낸다(WebSocket 연결을 맺지 않는다).
+  // 데이터를 바꾸는 요청은 대화형 트랜잭션이 필요해 WebSocket 연결을 쓴다.
+  const readOnly = request.method === "GET" || request.method === "HEAD";
+  const adapter = readOnly ? new PrismaNeonHttp(databaseUrl, {}) : new PrismaNeon({ connectionString: databaseUrl });
+  const prisma = new PrismaClient({ adapter });
   try {
     const { controllers, guards } = buildControllers(prisma as never);
     const { route, params } = matched;
