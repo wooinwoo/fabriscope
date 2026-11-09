@@ -143,7 +143,7 @@ export function DashboardPage() {
             </Card>
             <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-3">
               <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
-                <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem] sm:items-end">
+                <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem] sm:items-end xl:grid-cols-1">
                   <div>
                     <CardTitle>
                       <h3>이번 주 납기 계획 대비 진행</h3>
@@ -168,7 +168,7 @@ export function DashboardPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="sm:border-s sm:border-border sm:ps-4">
+                  <div className="sm:border-s sm:border-border sm:ps-4 xl:border-s-0 xl:ps-0">
                     <p className="text-xs font-semibold text-text-muted">
                       주간 달성률
                     </p>
