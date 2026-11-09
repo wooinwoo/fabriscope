@@ -123,6 +123,26 @@ export function DashboardPage() {
           >
             <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-4">
               <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <CardTitle>
+                      <h3>조치 필요</h3>
+                    </CardTitle>
+                    <CardDescription className="mt-2">
+                      차단 상태와 납기 영향을 우선순위로 확인합니다.
+                    </CardDescription>
+                  </div>
+                  <Badge tone="danger">
+                    {`${state.summary.attentionQueue.length}건`}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 px-5 py-1 sm:px-6">
+                <AttentionQueue items={state.summary.attentionQueue} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-3">
+              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
                 <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_12rem] sm:items-end">
                   <div>
                     <CardTitle>
@@ -181,26 +201,6 @@ export function DashboardPage() {
               </CardHeader>
               <CardContent className="py-5 pe-5 ps-2 sm:py-6 sm:pe-6">
                 <Overview weekly={state.summary.weekly} />
-              </CardContent>
-            </Card>
-            <Card className="col-span-1 gap-0 overflow-hidden border-border-strong py-0 xl:col-span-3">
-              <CardHeader className="border-b bg-surface-subtle/50 px-5 py-4 sm:px-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <CardTitle>
-                      <h3>조치 필요</h3>
-                    </CardTitle>
-                    <CardDescription className="mt-2">
-                      차단 상태와 납기 영향을 우선순위로 확인합니다.
-                    </CardDescription>
-                  </div>
-                  <Badge tone="danger">
-                    {`${state.summary.attentionQueue.length}건`}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1 px-5 py-1 sm:px-6">
-                <AttentionQueue items={state.summary.attentionQueue} />
               </CardContent>
             </Card>
           </div>
