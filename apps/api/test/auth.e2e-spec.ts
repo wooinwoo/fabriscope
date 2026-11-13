@@ -213,6 +213,19 @@ describe("demo authentication and RBAC", () => {
     });
   });
 
+  it("로그인 여부 확인은 쿠키가 없으면 401 대신 session null을 돌려준다", async () => {
+    const account = DEMO_ACCOUNTS[0];
+    const agent = request.agent(app.getHttpServer());
+    await agent.get("/api/auth/session").expect(200).expect({ session: null });
+
+    const login = await agent
+      .post("/api/auth/login")
+      .set("Origin", allowedOrigin)
+      .send({ email: account.email, password: DEMO_PASSWORD })
+      .expect(200);
+    await agent.get("/api/auth/session").expect(200).expect({ session: login.body });
+  });
+
   it("없는 계정과 틀린 비밀번호를 같은 오류로 응답한다", async () => {
     const unknown = await request(app.getHttpServer())
       .post("/api/auth/login")

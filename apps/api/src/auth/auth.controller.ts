@@ -39,6 +39,18 @@ export class AuthController {
     return this.authService.toResponse(session);
   }
 
+  // 첫 화면과 로그인 화면이 로그인 여부만 확인할 때 쓴다. 세션 쿠키가 아예 없으면 401 대신
+  // { session: null }을 돌려 익명 방문마다 브라우저 콘솔에 요청 실패가 남지 않게 한다.
+  @Get("session")
+  @Header("Cache-Control", "no-store")
+  async currentSession(@Req() request: HttpRequest) {
+    if (readSessionToken(request) === undefined) {
+      return { session: null };
+    }
+    const session = await this.authService.authenticateRequest(request);
+    return { session: this.authService.toResponse(session) };
+  }
+
   @Post("logout")
   @HttpCode(200)
   @Header("Cache-Control", "no-store")

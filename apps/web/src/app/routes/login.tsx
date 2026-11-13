@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { fetchCurrentSession, type Session } from "@/entities/session";
+import { fetchOptionalSession, type Session } from "@/entities/session";
 import { LoginPage } from "@/pages/login";
 import { readLoginSearch, resolvePostLoginPath } from "@/app/session-policy";
 
@@ -7,8 +7,8 @@ export const Route = createFileRoute("/login")({
   validateSearch: readLoginSearch,
   beforeLoad: async () => {
     try {
-      const session = await fetchCurrentSession();
-      throw redirect({ to: session.landingRoute, replace: true });
+      const session = await fetchOptionalSession();
+      if (session !== null) throw redirect({ to: session.landingRoute, replace: true });
     } catch (error: unknown) {
       if (isRedirect(error)) {
         throw error;
