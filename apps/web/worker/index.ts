@@ -25,6 +25,10 @@ export default {
     if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
       return handleApi(request, env.DATABASE_URL, (promise) => context.waitUntil(promise));
     }
+    // .well-known 아래에 둔 파일이 없으므로, SPA 대체 화면(index.html) 대신 404를 돌려 JSON·텍스트를 찾는 도구가 HTML을 받지 않게 한다.
+    if (url.pathname.startsWith("/.well-known/")) {
+      return new Response("Not Found", { status: 404 });
+    }
     return env.ASSETS.fetch(request);
   },
 };

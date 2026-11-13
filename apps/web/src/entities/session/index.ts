@@ -1,4 +1,4 @@
-export { fetchCurrentSession } from "./api/session";
+export { fetchCurrentSession, fetchOptionalSession } from "./api/session";
 export {
   LANDING_ROUTES,
   ROLE_CODES,
